@@ -1,6 +1,6 @@
 baseURL = "https://example.com"
-title = "Hugo Themes"
-copyright = "Copyright © 2008–2019, Steve Francia and the Hugo Authors; all rights reserved."
+title = "Okan Bulut"
+copyright = "Copyright� 2020 Okan Bulut. All rights reserved."
 paginate = 2
 languageCode = "en"
 DefaultContentLanguage = "en"
@@ -29,7 +29,7 @@ series = "series"
 author = "authors"
 
 [params]
-  author = "Hugo Authors"
+  author = "Okan Bulut"
   description = "Lorem ipsum dolor sit amet."
   homepageImage = "/images/homepage-image.jpg"
   share = true
