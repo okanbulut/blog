@@ -1,4 +1,4 @@
-baseURL = "https://example.com"
+baseURL = "https://okanbulut.netlify.com/"
 title = "Okan Bulut"
 copyright = "Copyright&copy; 2020 Okan Bulut. All rights reserved."
 paginate = 2
@@ -34,6 +34,7 @@ author = "authors"
   homepageImage = "/images/homepage-image.jpg"
   share = true
   showLanguageSwitcher = false
+  
 
   # Custom CSS and JS. Relative to /static/css and /static/js respectively.
   customCSS = []
