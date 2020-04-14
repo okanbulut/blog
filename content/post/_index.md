@@ -5,7 +5,7 @@ aliases:
 - blog
 - showcase
 - docs
-author: Hugo Authors
+author: Okan Bulut
 tags:
 - index
 title: Posts
