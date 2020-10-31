@@ -1,9 +1,9 @@
 {
-    "path" : "~/GitHub/blog",
-    "sortOrder" : [
+    "path": "~/GitHub/blog",
+    "sortOrder": [
         {
-            "ascending" : true,
-            "columnIndex" : 2
+            "ascending": true,
+            "columnIndex": 2
         }
     ]
 }
