@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
+  <channel>
+    <title>Psychometrics and Data Science with R</title>
+    <link>https://okanbulut.github.io/blog/</link>
+    <atom:link href="https://okanbulut.github.io/blog/index.xml" rel="self" type="application/rss+xml"/>
+    <description>Conducting psychometric analysis on educational and
+psychological data.
+</description>
+    <generator>Distill</generator>
+    <lastBuildDate>Sun, 13 Dec 2020 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>The Sharpe Ratio</title>
+      <dc:creator>Nora Jones</dc:creator>
+      <link>https://okanbulut.github.io/blog/posts/2020-12-13-the-sharpe-ratio</link>
+      <description>A short description of the post.</description>
+      <guid>https://okanbulut.github.io/blog/posts/2020-12-13-the-sharpe-ratio</guid>
+      <pubDate>Sun, 13 Dec 2020 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Welcome to My Blog</title>
+      <dc:creator>Nora Jones</dc:creator>
+      <link>https://okanbulut.github.io/blog/posts/welcome</link>
+      <description>Welcome to our new blog, My Blog. We hope you enjoy 
+reading what we have to say!</description>
+      <guid>https://okanbulut.github.io/blog/posts/welcome</guid>
+      <pubDate>Sun, 13 Dec 2020 00:00:00 +0000</pubDate>
+    </item>
+  </channel>
+</rss>

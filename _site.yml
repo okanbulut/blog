@@ -1,0 +1,14 @@
+name: "psychometrics-with-r"
+title: "Psychometrics and Data Science with R"
+description: |
+  Conducting psychometric analysis on educational and
+  psychological data.
+base_url: https://okanbulut.github.io/blog/
+output_dir: "docs"
+navbar:
+  right:
+    - text: "Home"
+      href: index.html
+    - text: "About"
+      href: about.html
+output: distill::distill_article
