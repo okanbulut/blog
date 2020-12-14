@@ -8,6 +8,7 @@ navbar:
   logo:
     image: images/website_logo.jpg
     href: https://okan.cloud/
+  search: true
   right:
     - text: "Home"
       href: index.html
