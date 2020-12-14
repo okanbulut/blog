@@ -1,0 +1,22 @@
+[
+  {
+    "path": "posts/2020-12-13-the-sharpe-ratio/",
+    "title": "The Sharpe Ratio",
+    "description": "A short description of the post.",
+    "author": [
+      {
+        "name": "Okan Bulut",
+        "url": "https://sites.google.com/ualberta.ca/okanbulut"
+      }
+    ],
+    "date": "2020-12-13",
+    "categories": [
+      "portfolios",
+      "dygraphs"
+    ],
+    "contents": "\r\nDistill is a publication format for scientific and technical writing, native to the web.\r\nLearn more about using Distill at https://rstudio.github.io/distill.\r\n\r\n\r\n\r\n",
+    "preview": {},
+    "last_modified": "2020-12-13T17:34:36-07:00",
+    "input_file": {}
+  }
+]
