@@ -7,6 +7,11 @@
     <description>Conducting psychometric analysis on educational and
 psychological data.
 </description>
+    <image>
+      <title>Psychometrics and Data Science with R</title>
+      <url>https://okan.cloud//images/favicon/favicon.png</url>
+      <link>https://okan.cloud/</link>
+    </image>
     <generator>Distill</generator>
     <lastBuildDate>Mon, 14 Dec 2020 00:00:00 +0000</lastBuildDate>
     <item>
