@@ -6,14 +6,14 @@
       "description": "Conducting psychometric analysis on educational and psychological data.",
       "author": [],
       "contents": "\r\n\r\n\r\n\r\n",
-      "last_modified": "2020-12-13T18:03:37-07:00"
+      "last_modified": "2020-12-13T19:02:52-07:00"
     },
     {
       "path": "index.html",
       "title": "Psychometrics and Data Science with R",
       "author": [],
       "contents": "\r\n\r\n\r\n\r\n",
-      "last_modified": "2020-12-13T18:03:40-07:00"
+      "last_modified": "2020-12-13T19:02:55-07:00"
     }
   ],
   "collections": ["posts/posts.json"]

@@ -3,7 +3,14 @@ title: "Psychometrics and Data Science with R"
 description: |
   Conducting psychometric analysis on educational and
   psychological data.
+base_url: https://okan.cloud/
 output_dir: "docs"
+include: ["CNAME"]
+collections:
+  posts:
+    disqus: psychometrics-with-r
+    share: [twitter, linkedin]
+    subscribe: _subscribe.html
 navbar:
   logo:
     image: images/website_logo.jpg
@@ -14,4 +21,6 @@ navbar:
       href: index.html
     - text: "About"
       href: about.html
+    - icon: fa fa-rss
+      href: index.html
 output: distill::distill_article
