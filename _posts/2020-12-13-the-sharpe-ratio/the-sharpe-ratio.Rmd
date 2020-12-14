@@ -3,9 +3,12 @@ title: "The Sharpe Ratio"
 description: |
   A short description of the post.
 author:
-  - name: Nora Jones
-    url: https://example.com/norajones
+  - name: Okan Bulut
+    url: https://sites.google.com/ualberta.ca/okanbulut
 date: 12-13-2020
+categories:
+  - portfolios
+  - dygraphs
 output:
   distill::distill_article:
     self_contained: false

@@ -1,5 +1,5 @@
 ---
-title: "My Blog"
+title: "Psychometrics and Data Science with R"
 site: distill::distill_website
 listing: posts
 ---

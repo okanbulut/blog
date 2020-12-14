@@ -11,19 +11,12 @@ psychological data.
     <lastBuildDate>Sun, 13 Dec 2020 00:00:00 +0000</lastBuildDate>
     <item>
       <title>The Sharpe Ratio</title>
-      <dc:creator>Nora Jones</dc:creator>
+      <dc:creator>Okan Bulut</dc:creator>
       <link>https://okanbulut.github.io/blog/posts/2020-12-13-the-sharpe-ratio</link>
       <description>A short description of the post.</description>
+      <category>portfolios</category>
+      <category>dygraphs</category>
       <guid>https://okanbulut.github.io/blog/posts/2020-12-13-the-sharpe-ratio</guid>
-      <pubDate>Sun, 13 Dec 2020 00:00:00 +0000</pubDate>
-    </item>
-    <item>
-      <title>Welcome to My Blog</title>
-      <dc:creator>Nora Jones</dc:creator>
-      <link>https://okanbulut.github.io/blog/posts/welcome</link>
-      <description>Welcome to our new blog, My Blog. We hope you enjoy 
-reading what we have to say!</description>
-      <guid>https://okanbulut.github.io/blog/posts/welcome</guid>
       <pubDate>Sun, 13 Dec 2020 00:00:00 +0000</pubDate>
     </item>
   </channel>

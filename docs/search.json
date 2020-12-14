@@ -3,17 +3,17 @@
     {
       "path": "about.html",
       "title": "About this blog",
-      "description": "Some additional details about the blog",
+      "description": "Conducting psychometric analysis on educational and psychological data.",
       "author": [],
       "contents": "\r\n\r\n\r\n\r\n",
-      "last_modified": "2020-12-13T15:56:35-07:00"
+      "last_modified": "2020-12-13T16:12:23-07:00"
     },
     {
       "path": "index.html",
-      "title": "My Blog",
+      "title": "Psychometrics and Data Science with R",
       "author": [],
       "contents": "\r\n\r\n\r\n\r\n",
-      "last_modified": "2020-12-13T15:56:35-07:00"
+      "last_modified": "2020-12-13T17:13:16-07:00"
     }
   ],
   "collections": ["posts/posts.json"]
