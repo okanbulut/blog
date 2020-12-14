@@ -1,5 +1,6 @@
 name: "psychometrics-with-r"
 title: "Psychometrics and Data Science with R"
+theme: theme.css
 description: |
   Conducting psychometric analysis on educational and
   psychological data.
