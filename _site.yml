@@ -1,11 +1,14 @@
 name: "psychometrics-with-r"
-title: "Psychometrics and Data Science with R"
+title: "Okan Bulut"
 theme: theme.css
 description: |
   Conducting psychometric analysis on educational and
   psychological data.
 base_url: https://okan.cloud/
 favicon: /images/favicon/favicon.png
+creative_commons: CC BY
+twitter:
+  site: "@drokanbulut"
 google_analytics: "G-Y6J65ER1LP"
 output_dir: "docs"
 include: ["CNAME"]

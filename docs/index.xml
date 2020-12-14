@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
   <channel>
-    <title>Psychometrics and Data Science with R</title>
+    <title>Okan Bulut</title>
     <link>https://okan.cloud/</link>
     <atom:link href="https://okan.cloud/index.xml" rel="self" type="application/rss+xml"/>
     <description>Conducting psychometric analysis on educational and
 psychological data.
 </description>
     <image>
-      <title>Psychometrics and Data Science with R</title>
+      <title>Okan Bulut</title>
       <url>https://okan.cloud//images/favicon/favicon.png</url>
       <link>https://okan.cloud/</link>
     </image>
