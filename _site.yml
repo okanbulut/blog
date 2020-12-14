@@ -3,7 +3,7 @@ title: "Psychometrics and Data Science with R"
 description: |
   Conducting psychometric analysis on educational and
   psychological data.
-base_url: https://okanbulut.github.io/blog
+base_url: https://okan.cloud/
 collections:
   posts:
     disqus: psychometrics-with-r
@@ -12,7 +12,7 @@ collections:
 output_dir: "docs"
 navbar:
   logo:
-    imagine: images/website_logo.jpg
+    image: images/website_logo.jpg
     href: https://okan.cloud/
   right:
     - text: "Home"
