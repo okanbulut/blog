@@ -1,22 +1,23 @@
 [
   {
-    "path": "posts/2020-12-13-the-sharpe-ratio/",
-    "title": "The Sharpe Ratio",
+    "path": "posts/2020-12-14-estimating-explanatory-irt-models-with-r/",
+    "title": "Estimating Explanatory IRT Models with R",
     "description": "A short description of the post.",
     "author": [
       {
         "name": "Okan Bulut",
-        "url": "https://sites.google.com/ualberta.ca/okanbulut"
+        "url": "http://www.okanbulut.com/"
       }
     ],
-    "date": "2020-12-13",
+    "date": "2020-12-14",
     "categories": [
-      "portfolios",
-      "dygraphs"
+      "psychometrics",
+      "IRT",
+      "eirm"
     ],
     "contents": "\r\nDistill is a publication format for scientific and technical writing, native to the web.\r\nLearn more about using Distill at https://rstudio.github.io/distill.\r\n\r\n\r\n\r\n",
     "preview": {},
-    "last_modified": "2020-12-13T17:34:36-07:00",
+    "last_modified": "2020-12-14T15:40:54-07:00",
     "input_file": {}
   }
 ]

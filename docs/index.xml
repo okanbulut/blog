@@ -8,16 +8,17 @@
 psychological data.
 </description>
     <generator>Distill</generator>
-    <lastBuildDate>Sun, 13 Dec 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 14 Dec 2020 00:00:00 +0000</lastBuildDate>
     <item>
-      <title>The Sharpe Ratio</title>
+      <title>Estimating Explanatory IRT Models with R</title>
       <dc:creator>Okan Bulut</dc:creator>
-      <link>https://okan.cloud/posts/2020-12-13-the-sharpe-ratio</link>
+      <link>https://okan.cloud/posts/2020-12-14-estimating-explanatory-irt-models-with-r</link>
       <description>A short description of the post.</description>
-      <category>portfolios</category>
-      <category>dygraphs</category>
-      <guid>https://okan.cloud/posts/2020-12-13-the-sharpe-ratio</guid>
-      <pubDate>Sun, 13 Dec 2020 00:00:00 +0000</pubDate>
+      <category>psychometrics</category>
+      <category>IRT</category>
+      <category>eirm</category>
+      <guid>https://okan.cloud/posts/2020-12-14-estimating-explanatory-irt-models-with-r</guid>
+      <pubDate>Mon, 14 Dec 2020 00:00:00 +0000</pubDate>
     </item>
   </channel>
 </rss>

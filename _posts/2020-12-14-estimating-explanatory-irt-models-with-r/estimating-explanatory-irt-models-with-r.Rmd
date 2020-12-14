@@ -1,21 +1,25 @@
 ---
-title: "The Sharpe Ratio"
+title: "Estimating Explanatory IRT Models with R"
 description: |
   A short description of the post.
 author:
   - name: Okan Bulut
-    url: https://sites.google.com/ualberta.ca/okanbulut
-date: 12-13-2020
+    url: http://www.okanbulut.com/
+    affiliation: University of Alberta
+    affiliation_url: https://www.ualberta.ca
+    orcid_id: 0000-0001-5853-1267
+date: 12-14-2020
 categories:
-  - portfolios
-  - dygraphs
+  - psychometrics
+  - IRT
+  - eirm
 output:
   distill::distill_article:
     self_contained: false
 ---
 
-
 ```{r setup, include=FALSE}
+
 knitr::opts_chunk$set(echo = FALSE)
 ```
 

@@ -5,6 +5,7 @@ description: |
   Conducting psychometric analysis on educational and
   psychological data.
 base_url: https://okan.cloud/
+google_analytics: "G-Y6J65ER1LP"
 output_dir: "docs"
 include: ["CNAME"]
 collections:
