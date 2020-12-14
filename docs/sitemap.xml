@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" version="1.0">
   <url>
-    <loc>https://okanbulut.github.io/blog/about.html</loc>
+    <loc>https://okan.cloud/about.html</loc>
     <lastmod>2020-12-13T16:12:20-07:00</lastmod>
   </url>
   <url>
-    <loc>https://okanbulut.github.io/blog/</loc>
+    <loc>https://okan.cloud/</loc>
     <lastmod>2020-12-13T17:13:13-07:00</lastmod>
   </url>
   <url>
-    <loc>https://okanbulut.github.io/blog/posts/2020-12-13-the-sharpe-ratio/</loc>
+    <loc>https://okan.cloud/posts/2020-12-13-the-sharpe-ratio/</loc>
     <lastmod>2020-12-13T17:12:50-07:00</lastmod>
   </url>
 </urlset>
