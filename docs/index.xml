@@ -21,7 +21,9 @@ psychological data.
       <description>Explanatory item response modeling (EIRM) allow researchers to 
 model both person and item characteristics as predictors. In this post, 
 I demonstrate how to use the `eirm` package to estimate explanatory IRT 
-models in R.</description>
+models in R. 
+
+(1 min read)</description>
       <category>psychometrics</category>
       <category>IRT</category>
       <category>eirm</category>
