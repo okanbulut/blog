@@ -21,7 +21,6 @@ navbar:
   logo:
     image: images/blog_logo.jpg
     href: https://okan.cloud/
-  search: true
   right:
     - text: "Home"
       href: index.html
