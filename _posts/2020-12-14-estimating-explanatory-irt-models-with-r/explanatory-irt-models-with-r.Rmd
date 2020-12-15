@@ -5,7 +5,7 @@ description: |
   model both person and item characteristics as predictors. In this post, 
   I demonstrate how to use the `eirm` package to estimate explanatory IRT 
   models in R. 
-  ```{r echo=FALSE}
+  ```{r, layout="l-body", echo=FALSE}
   bytes <- file.size("explanatory-irt-models-with-r.Rmd")
   words <- bytes/10
   minutes <- words/200
