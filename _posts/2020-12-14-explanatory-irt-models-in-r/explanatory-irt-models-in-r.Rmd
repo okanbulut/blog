@@ -22,29 +22,95 @@ categories:
   - psychometrics
   - IRT
   - eirm
+bibliography: eirm.bib
 output:
   distill::distill_article:
     self_contained: false
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
-bytes <- file.size("explanatory-irt-models-in-r.Rmd")
-words <- bytes/10
-minutes <- words/200
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
-(`r round(minutes)` min read)
+
+Explanatory item response modeling (shortly EIRM) was first proposed by @deboeck. This framework allows us to turn traditional item response theory (IRT) models into explanatory models. Explanatory IRT models aim to explain how item properties (e.g., content, cognitive complexity, and presence of visual elements) and person characteristics (e.g., gender, race, and English language learner status) affect the persons' responses to items. For a brief introduction to EIRM, you can check out Wilson, De Boeck, and Carstensen's chapter [here](https://bearcenter.berkeley.edu/sites/default/files/Wilson20.pdf). 
+
+In @deboeck's book, the authors describe how to estimate explanatory IRT models using the SAS statistical software program. Given the growing popularity of R in the psychometric/measurement community, @de2011estimation published a nice article that describes how to estimate the same models using the `lme4` package [@lme4] in R. Since then, I have been using the `lme4` package to estimate explanatory IRT models for my research projects. For example, we evaluated measurement invariance of two developmental assets, Support and Positive Identity, across grade levels and ELL subgroups of Latino students in 6th through 12th grade [@bulut2015]. Also, we examined whether the linguistic complexity of items leads to gender differential item functioning (DIF) on mathematics assessments [@bulut2014].
+
+One problem that we often had to deal with when using `lme4` was the format of item responses. The `lme4` assumes a binomial distribution for item responses, which means responses must be dichotomous (i.e., 0 and 1). Although this is not a problem for dichotomous data based on multiple-choice items, it is a major drawback for polytomous data based on rating scale items (e.g., Likert scales). Therefore, we had to create a new way to transform polytomous responses into dichotomous responses without losing the original response structure [@stanke2019explanatory]. Recently, I decided to share this method in a new package that would faciliate the estimation of explanatory IRT models for both dichotomous and polytomous response data. Therefore, I created the `eirm` package [@bulut2020], which is essentially a wrapper for the `lme4` package [@lme4]. The `eirm` function in the package allows users to define an explanatory IRT model based on item-level and person-level predictors.
+
+# Example
+
+In this post, I will show how to use the `eirm` package to estimate explanatory IRT models with polytomous response data. For more examples, you can check out the `eirm` website prepared with `pkgdown` [@pkgdown]: <https://okanbulut.github.io/eirm/>. The `eirm` package is currently available on CRAN. It can be downloaded and installed using **install.packages("eirm")**. 
+
+I will use the verbal aggression dataset in the `lme4` package to demonstrate the estimation process. The dataset includes responses to a questionnaire on verbal aggression and additional variables related to items and persons. A preview of the data set is shown below:
 
 
-Distill is a publication format for scientific and technical writing, native to the web.
+```{r}
+library("eirm")
 
-Learn more about using Distill at <https://rstudio.github.io/distill>.
+data("VerbAgg")
+
+head(VerbAgg)
+```
+
+In the data, the variable resp represents each person's response to the items on the questionnaire. There are three values for resp: yes, perhaps, and no. Therefore, we need to transform these poytomous responses into dichotomous responses. To reformat the data, we will use the polyreformat function in the `eirm` package. The following example demonstrates how polytomous responses in the verbal aggression data set can be reformatted into a dichotomous form:
+
+```{r, echo = TRUE, eval = TRUE}
+VerbAgg2 <- polyreformat(data=VerbAgg, id.var = "id", var.name = "item", val.name = "resp")
+
+head(VerbAgg2)
+```
+
+In the reformatted data, polyresponse is the new response variable (i.e., pseudo-dichotomous version of the original response variable resp) and polycategory represents the response categories. Based on the reformatted data, each item has two rows (number of response categories - 1) based on the following rules:
+
+* If polycategory = "cat_perhaps" and resp = "no", then polyresponse = 0
+* If polycategory = "cat_perhaps" and resp = "perhaps", then polyresponse = 1
+* If polycategory = "cat_perhaps" and resp = "yes", then polyresponse = NA
+
+and
+
+* If polycategory = "cat_yes" and resp = "no", then polyresponse = NA
+* If polycategory = "cat_yes" and resp = "perhaps", then polyresponse = 0
+* If polycategory = "cat_yes" and resp = "yes", then polyresponse = 1
 
 
-# What is Lorem Ipsum?
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+Now we can estimate an explanatory IRT model using the reformatted data. The following model explains only the first threshold (i.e., threshold from no to perhaps) based on explanatory variables:
 
-# Why do we use it?
-It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
+```{r, echo = TRUE, eval = TRUE}
+mod1 <- eirm(formula = "polyresponse ~ -1 + situ + btype + mode + (1|id)", 
+             data = VerbAgg2)
+```
+
+The regression-like formula **polyresponse ~ -1 + situ + btype + mode + (1|id)** describes the dependent variable (polyresponse) and predictors (situ, btype, and mode). Also, (1|id) refers to the random effects for persons represented by the id column in the data set. Using the print function or simply typing mod1 in the R console, we can print out the estimated coefficients for the predictors:
+
+```{r, echo = TRUE, eval = TRUE}
+print(mod1)
+```
+
+The mod1 object is essentially a glmerMod-class object from the `lme4` package [@lme4]. All glmerMod results for the estimated model can seen with mod1$model. For example, estimated random effects for persons (i.e., theta estimates) can be obtained using:
+
+```{r, echo = TRUE, eval = FALSE}
+theta <- ranef(mod1$model)$id
+head(theta)
+```
+
+It is possible to visualize the parameters using an item-person map. Note that this plot is a modified version of the plotPImap function from the `eRm` package [@erm]. Aesthetic elements such as axis labels and plot title can be added to the plot (see **?plot.eirm** for further details).
+ 
+
+```{r, echo = TRUE, eval = TRUE}
+plot(mod1)
+```
+
+The previous model could be modified to explain the first threshold (i.e., threshold from no to perhaps) and second threshold (perhaps to yes) based on explanatory variables using the following codes:
+
+```{r, echo = TRUE, eval = FALSE}
+mod2 <- eirm(formula = "polyresponse ~ -1 + btype + situ + mode + 
+             polycategory + polycategory:btype + (1|id)", data = VerbAgg2)
+```
+
+
+Before I conclude this post, I want to mention a few caveats with the `eirm` package. As the size of dataset (i.e., items and persons), the estimation duration may increase significantly. 
+
+
 
