@@ -5,12 +5,6 @@ description: |
   model both person and item characteristics as predictors. In this post, 
   I demonstrate how to use the `eirm` package to estimate explanatory IRT 
   models in R. 
-  ```{r, layout="l-body", echo=FALSE}
-  bytes <- file.size("explanatory-irt-models-with-r.Rmd")
-  words <- bytes/10
-  minutes <- words/200
-  ```
-  (`r round(minutes)` min read)
 author:
   - name: Okan Bulut
     url: http://www.okanbulut.com/
@@ -29,7 +23,13 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+bytes <- file.size("explanatory-irt-models-in-r.Rmd")
+words <- bytes/10
+minutes <- words/200
 ```
+
+(`r round(minutes)` min read)
+
 
 Distill is a publication format for scientific and technical writing, native to the web.
 
