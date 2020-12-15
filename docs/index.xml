@@ -15,10 +15,20 @@ psychological data.
     <generator>Distill</generator>
     <lastBuildDate>Mon, 14 Dec 2020 00:00:00 +0000</lastBuildDate>
     <item>
-      <title>Estimating Explanatory IRT Models with R</title>
+      <title>Explanatory IRT Models with R</title>
       <dc:creator>Okan Bulut</dc:creator>
       <link>https://okan.cloud/posts/2020-12-14-estimating-explanatory-irt-models-with-r</link>
-      <description>A short description of the post.</description>
+      <description>Explanatory item response modeling (EIRM) allow researchers to 
+model both person and item characteristics as predictors. In this post, 
+I demonstrate how to use the `eirm` package to estimate explanatory IRT 
+models in R. 
+
+&lt;div class="layout-chunk" data-layout="l-body"&gt;
+
+
+&lt;/div&gt;
+
+(1 min read)</description>
       <category>psychometrics</category>
       <category>IRT</category>
       <category>eirm</category>
