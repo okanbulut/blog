@@ -5,14 +5,14 @@
       "title": "About this blog",
       "author": [],
       "contents": "\r\nWelcome to the Psychometrics and Data Science with R blog!\r\nMy name is Okan Bulut. I am an Associate Professor in the Measurement, Evaluation, and Data Science program at the University of Alberta. I teach graduate and undergraduate courses on psychometrics, educational measurement, and statistical modeling. Also, I develop workshops and online courses on a variety of topics, such as data mining, big data modeling, data visualization, and statistical data analysis using R. For more information on my research and teaching activities, you can visit my personal website: www.okanbulut.com.\r\nAs a passionate R user, I conduct statistical and psychometric analysis on educational and psychological data using R. I often write my own functions but I also benefit from the existing R packages available on CRAN, GitHub, and other platforms. In 2018, my colleague Chris Desjardins and I co-authored the Handbook of Educational Measurement and Psychometrics Using R. We wanted to present important topics in measurement and psychometrics as well as their applications in R. Our book comes with a complimentary package, hemp, that helps our readers reproduce the content presented in the book. The hemp package and R script files for each chapter of our book are available on GitHub: https://github.com/cddesja/hemp.\r\n\r\n\r\n\r\nIn this blog, I hope to continue sharing psychometric applications using R. In addition, I plan to present new examples focusing on the state-of-the-art methods in data science and educational data mining. Questions, comments, and suggestions from all readers are welcomed! Lastly, if my blog has helped you, you can buy me coffee :-)\r\n\r\n\r\n\r\n",
-      "last_modified": "2020-12-15T18:31:55-07:00"
+      "last_modified": "2020-12-16T16:34:19-07:00"
     },
     {
       "path": "index.html",
       "title": "Psychometrics and Data Science with R",
       "author": [],
       "contents": "\r\n\r\n\r\n\r\n",
-      "last_modified": "2020-12-15T18:31:58-07:00"
+      "last_modified": "2020-12-16T16:34:26-07:00"
     }
   ],
   "collections": ["posts/posts.json"]
