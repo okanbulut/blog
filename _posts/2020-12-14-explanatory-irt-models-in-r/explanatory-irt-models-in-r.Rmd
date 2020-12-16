@@ -1,9 +1,9 @@
 ---
 title: "Explanatory IRT Models in R"
 description: |
-  Explanatory item response modeling (EIRM) allow researchers to 
-  model both person and item characteristics as predictors. In this post, 
-  I demonstrate how to use the `eirm` package to estimate explanatory IRT 
+  Explanatory item response modeling (EIRM) is a flexible framework that 
+  allows researchers to model both person and item characteristics as predictors together. 
+  In this post, I demonstrate how to use the `eirm` package to estimate explanatory IRT 
   models in R. 
   ```{r, include=FALSE}
   bytes <- file.size("explanatory-irt-models-in-r.Rmd")
@@ -33,15 +33,13 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-Explanatory item response modeling (shortly EIRM) was first proposed by @deboeck. This framework allows us to turn traditional item response theory (IRT) models into explanatory models. Explanatory IRT models aim to explain how item properties (e.g., content, cognitive complexity, and presence of visual elements) and person characteristics (e.g., gender, race, and English language learner status) affect the persons' responses to items. For a brief introduction to EIRM, you can check out Wilson, De Boeck, and Carstensen's chapter [here](https://bearcenter.berkeley.edu/sites/default/files/Wilson20.pdf). 
+Explanatory item response modeling (shortly EIRM) was first proposed by @deboeck as an alternative to traditional item response model. This framework allows us to turn traditional item response theory (IRT) models into explanatory models with additional predictors. Explanatory IRT models aim to explain how item properties (e.g., content, cognitive complexity, and presence of visual elements) and person characteristics (e.g., gender, race, and English language learner (ELL) status) affect the persons' responses to items. For a brief introduction to EIRM, you can check out Wilson, De Boeck, and Carstensen's chapter [here](https://bearcenter.berkeley.edu/sites/default/files/Wilson20.pdf). 
 
-In @deboeck's book, the authors describe how to estimate explanatory IRT models using the SAS statistical software program. Given the growing popularity of R in the psychometric/measurement community, @de2011estimation published a nice article that describes how to estimate the same models using the `lme4` package [@lme4] in R. Since then, I have been using the `lme4` package to estimate explanatory IRT models for my research projects. For example, we evaluated measurement invariance of two developmental assets, Support and Positive Identity, across grade levels and ELL subgroups of Latino students in 6th through 12th grade [@bulut2015]. Also, we examined whether the linguistic complexity of items leads to gender differential item functioning (DIF) on mathematics assessments [@bulut2014].
+In @deboeck's book, the authors describe how to estimate explanatory IRT models using the SAS statistical software program. Given the growing popularity of R in the psychometric/measurement community, @de2011estimation published a nice article that describes how to estimate the same models using the `lme4` package [@lme4] in R. Since then, I have been using the `lme4` package to estimate explanatory IRT models for my research projects. For example, we evaluated measurement invariance of two developmental assets, Support and Positive Identity, across grade levels and ELL subgroups of Latino students in 6th through 12th grade [@bulut2015]. Also, we investigated whether the linguistic complexity of items leads to gender differential item functioning (DIF) in mathematics assessments [@bulut2014].
 
-One problem that we often had to deal with when using `lme4` was the format of item responses. The `lme4` assumes a binomial distribution for item responses, which means responses must be dichotomous (i.e., 0 and 1). Although this is not a problem for dichotomous data based on multiple-choice items, it is a major drawback for polytomous data based on rating scale items (e.g., Likert scales). Therefore, we had to create a new way to transform polytomous responses into dichotomous responses without losing the original response structure [@stanke2019explanatory]. Recently, I decided to share this method in a new package that would faciliate the estimation of explanatory IRT models for both dichotomous and polytomous response data. Therefore, I created the `eirm` package [@bulut2020], which is essentially a wrapper for the `lme4` package [@lme4]. The `eirm` function in the package allows users to define an explanatory IRT model based on item-level and person-level predictors.
+One problem that we often had to deal with when using `lme4` was the format of item responses. The `lme4` package assumes a binomial distribution for item responses, which means responses must be dichotomous (i.e., 0 and 1). Although this is not a problem for dichotomous data based on multiple-choice items, it is a major drawback for polytomous data based on rating scale items (e.g., Likert scales). Therefore, we had to develop a new way to transform polytomous responses into dichotomous responses without losing the original response structure [@stanke2019explanatory]. Recently, I decided to share this method in a new package that would faciliate the estimation of explanatory IRT models for both dichotomous and polytomous response data. Therefore, I created the `eirm` package [@bulut2020], which is essentially a wrapper for the `lme4` package [@lme4]. The `eirm` function in the package allows users to define an explanatory IRT model based on item-level and person-level predictors.
 
-# Example
-
-In this post, I will show how to use the `eirm` package to estimate explanatory IRT models with polytomous response data. For more examples, you can check out the `eirm` website prepared with `pkgdown` [@pkgdown]: <https://okanbulut.github.io/eirm/>. The `eirm` package is currently available on CRAN. It can be downloaded and installed using **install.packages("eirm")**. 
+In this post, I will show how to use the `eirm` package to estimate explanatory IRT models with polytomous response data. For more examples, you can check out the `eirm` website: <https://okanbulut.github.io/eirm/>. The `eirm` package is currently available on CRAN. It can be downloaded and installed using **install.packages("eirm")**. 
 
 I will use the verbal aggression dataset in the `lme4` package to demonstrate the estimation process. The dataset includes responses to a questionnaire on verbal aggression and additional variables related to items and persons. A preview of the data set is shown below:
 
@@ -54,7 +52,7 @@ data("VerbAgg")
 head(VerbAgg)
 ```
 
-In the data, the variable resp represents each person's response to the items on the questionnaire. There are three values for resp: yes, perhaps, and no. Therefore, we need to transform these poytomous responses into dichotomous responses. To reformat the data, we will use the polyreformat function in the `eirm` package. The following example demonstrates how polytomous responses in the verbal aggression data set can be reformatted into a dichotomous form:
+In the dataset, the variable resp represents each person's response to the items on the questionnaire. There are three values for resp: yes, perhaps, and no. Therefore, we need to transform these poytomous responses into dichotomous responses. To reformat the data, we will use the polyreformat function in the `eirm` package. The following example demonstrates how polytomous responses in the verbal aggression dataset can be reformatted into a dichotomous form:
 
 ```{r, echo = TRUE, eval = TRUE}
 VerbAgg2 <- polyreformat(data=VerbAgg, id.var = "id", var.name = "item", val.name = "resp")
@@ -62,7 +60,7 @@ VerbAgg2 <- polyreformat(data=VerbAgg, id.var = "id", var.name = "item", val.nam
 head(VerbAgg2)
 ```
 
-In the reformatted data, polyresponse is the new response variable (i.e., pseudo-dichotomous version of the original response variable resp) and polycategory represents the response categories. Based on the reformatted data, each item has two rows (number of response categories - 1) based on the following rules:
+In the reformatted data, polyresponse is the new response variable (i.e., pseudo-dichotomous version of the original response variable resp) and polycategory represents the response categories. Based on the reformatted data, each item has two rows based on the following rules:
 
 * If polycategory = "cat_perhaps" and resp = "no", then polyresponse = 0
 * If polycategory = "cat_perhaps" and resp = "perhaps", then polyresponse = 1
@@ -75,7 +73,7 @@ and
 * If polycategory = "cat_yes" and resp = "yes", then polyresponse = 1
 
 
-Now we can estimate an explanatory IRT model using the reformatted data. The following model explains only the first threshold (i.e., threshold from no to perhaps) based on explanatory variables:
+Now we can estimate an explanatory IRT model using the reformatted data. The following model explains only the first threshold (i.e., threshold from no to perhaps) based on three predictors:
 
 ```{r, echo = TRUE, eval = TRUE}
 mod1 <- eirm(formula = "polyresponse ~ -1 + situ + btype + mode + (1|id)", 
@@ -88,17 +86,17 @@ The regression-like formula **polyresponse ~ -1 + situ + btype + mode + (1|id)**
 print(mod1)
 ```
 
-The mod1 object is essentially a glmerMod-class object from the `lme4` package [@lme4]. All glmerMod results for the estimated model can seen with mod1$model. For example, estimated random effects for persons (i.e., theta estimates) can be obtained using:
+The mod1 object is essentially a glmerMod-class object from the `lme4` package [@lme4]. All glmerMod results for the estimated model can seen with **mod1$model**. For example, estimated random effects for persons (i.e., theta estimates) can be obtained using:
 
 ```{r, echo = TRUE, eval = FALSE}
 theta <- ranef(mod1$model)$id
 head(theta)
 ```
 
-It is possible to visualize the parameters using an item-person map. Note that this plot is a modified version of the plotPImap function from the `eRm` package [@erm]. Aesthetic elements such as axis labels and plot title can be added to the plot (see **?plot.eirm** for further details).
+It is possible to visualize the parameters using an item-person map. Note that this plot is a modified version of the plotPImap function from the `eRm` package [@erm]. Aesthetic elements such as axis labels and plot title can be added to the plot. Please run **?plot.eirm** for further details on the plot option.
  
 
-```{r, echo = TRUE, eval = TRUE}
+```{r, echo = TRUE, eval = TRUE, layout="l-body-outset", preview=TRUE}
 plot(mod1)
 ```
 
@@ -110,7 +108,7 @@ mod2 <- eirm(formula = "polyresponse ~ -1 + btype + situ + mode +
 ```
 
 
-Before I conclude this post, I want to mention a few caveats with the `eirm` package. As the size of dataset (i.e., items and persons), the estimation duration may increase significantly. 
+Before I conclude this post, I want to mention a few caveats with the `eirm` package. First, the `eirm` package is using a different optimizer to speed up the estimation process. However, as the size of response data (i.e., items and persons) increases, the estimation duration may increase significantly. Second, it is possible to use dichotomous and polytomous items within the same model. In that case, a single difficulty is estimated for dichotomous items (i.e., Rasch model) and multiple thresholds for polytomous items (i.e., either Partial Credit model or Rating Scale model). Lastly, the `eirm` package is not capable of estimating a discrimination parameter for the items (just like `lme4` can't). Structural equation modeling could be a good alternative for those who want to estimate both discrimination and difficulty parameters for the items.   
 
 
 
