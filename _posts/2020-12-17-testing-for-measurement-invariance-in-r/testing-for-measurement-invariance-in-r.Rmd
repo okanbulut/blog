@@ -1,0 +1,43 @@
+---
+title: "Testing for Measurement Invariance in R"
+description: |
+  Explanatory item response modeling (EIRM) is a flexible framework that 
+  allows researchers to model both person and item characteristics as predictors together. 
+  In this post, I demonstrate how to use the `eirm` package to estimate explanatory IRT 
+  models in R. 
+  ```{r, include=FALSE}
+  bytes <- file.size("explanatory-irt-models-in-r.Rmd")
+  words <- bytes/10
+  minutes <- words/200
+  ``` 
+  (`r round(minutes)` min read)
+author:
+  - name: Okan Bulut
+    url: http://www.okanbulut.com/
+    affiliation: University of Alberta
+    affiliation_url: https://www.ualberta.ca
+    orcid_id: 0000-0001-5853-1267
+date: 12-17-2020
+categories:
+  - psychometrics
+  - factor analysis
+  - measurement invariance
+bibliography: testing-mi-in-r.bib
+output:
+  distill::distill_article:
+    self_contained: false
+draft: true
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+Distill is a publication format for scientific and technical writing, native to the web.
+
+Learn more about using Distill at <https://rstudio.github.io/distill>.
+
+This post has been inspired by @van2012checklist's checklist for testing for measurement invariance. 
+
+

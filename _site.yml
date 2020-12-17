@@ -2,22 +2,22 @@ name: "psychometrics-with-r"
 title: "Okan Bulut"
 theme: theme.css
 description: |
-  Conducting psychometric analysis on educational and
-  psychological data.
+  Psychometrics and data science with educational and
+  psychological data
 base_url: https://okan.cloud/
-repository_url: https://github.com/okanbulut/blog
 favicon: /images/favicon/favicon.png
 creative_commons: CC BY
+google_analytics: "G-Y6J65ER1LP"
 twitter:
   site: "@drokanbulut"
   creator: "@drokanbulut"
-google_analytics: "G-Y6J65ER1LP"
 output_dir: "docs"
 include: ["CNAME"]
+rss:
+  full_content: true
 collections:
   posts:
-    disqus: 
-      shortname: okan-cloud
+    disqus: okan-cloud
     share: [twitter, linkedin, pinterest, facebook]
     subscribe: _subscribe.html
 navbar:
@@ -29,6 +29,10 @@ navbar:
       href: index.html
     - text: "About"
       href: about.html
+    - icon: fa fa-github
+      href: https://github.com/okanbulut
+    - icon: fa fa-twitter
+      href: https://twitter.com/drokanbulut
     - icon: fa fa-rss
       href: index.xml
 output: distill::distill_article
