@@ -38,6 +38,37 @@ Distill is a publication format for scientific and technical writing, native to 
 
 Learn more about using Distill at <https://rstudio.github.io/distill>.
 
+
+
+In the following example, I am using the [Consumer Financial Protection Bureau](https://www.consumerfinance.gov/)'s [Financial Well-Being Scale](https://www.consumerfinance.gov/consumer-tools/financial-well-being/). 
+
+
+
 This post has been inspired by @van2012checklist's checklist for testing for measurement invariance. 
+
+
+![Figure 1: A Summary of Measurement Invariance Models](mi2.jpg)
+
+
+XXX
+
+
+![Figure 2: Items in the Financial Well-Being Scale (Source: Consumer Financial Protection Bureau)](mi0.jpg)
+
+XXX
+
+
+![Figure 3: Factorial Structure of the Financial Well-Being Scale](mi1.jpg)
+
+
+
+
+
+
+
+
+
+
+
 
 
