@@ -32,6 +32,7 @@ draft: true
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+library("rmarkdown")
 ```
 
 Distill is a publication format for scientific and technical writing, native to the web.
@@ -62,10 +63,14 @@ XXX
 
 
 
+<https://github.com/okanbulut/blog/blob/master/data_and_codes/NFWBS_PUF_2016_data.csv>
+<https://github.com/okanbulut/blog/blob/master/data_and_codes/data_preparation.R>
 
 
-
-
+```{r, echo=TRUE, eval=TRUE}
+finance <- read.csv("finance.csv", header = TRUE)
+paged_table(finance, options = list(cols.print = 11))
+```
 
 
 
