@@ -22,7 +22,7 @@ collections:
     subscribe: _subscribe.html
 navbar:
   logo:
-    image: images/blog_logo.jpg
+    image: images/hexlogo.png
     href: https://okan.cloud/
   right:
     - text: "Home"
