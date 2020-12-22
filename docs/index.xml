@@ -13,7 +13,25 @@ psychological data
       <link>https://okan.cloud/</link>
     </image>
     <generator>Distill</generator>
-    <lastBuildDate>Mon, 14 Dec 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 21 Dec 2020 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Testing for Measurement Invariance in R</title>
+      <dc:creator>Okan Bulut</dc:creator>
+      <link>https://okan.cloud/posts/2020-12-21-testing-for-measurement-invariance-in-r</link>
+      <description>Researchers conduct measurement invariance analysis to ensure that the interpretation of 
+latent construct(s) being measured with their measurement instruments (e.g., scales, surveys, 
+and questionnaires) are valid across subgroups of a target population or time points. 
+In this post, I demonstrate how to test for measurement invariance (i.e., configural, metric, scalar,
+and strict invariance) of an instrument using R.
+
+(11 min read)</description>
+      <category>psychometrics</category>
+      <category>factor analysis</category>
+      <category>measurement invariance</category>
+      <guid>https://okan.cloud/posts/2020-12-21-testing-for-measurement-invariance-in-r</guid>
+      <pubDate>Mon, 21 Dec 2020 00:00:00 +0000</pubDate>
+      <media:content url="https://okan.cloud/posts/2020-12-21-testing-for-measurement-invariance-in-r/testing-for-measurement-invariance-in-r_files/figure-html5/unnamed-chunk-5-1.png" medium="image" type="image/png" width="1248" height="768"/>
+    </item>
     <item>
       <title>Explanatory IRT Models in R</title>
       <dc:creator>Okan Bulut</dc:creator>
