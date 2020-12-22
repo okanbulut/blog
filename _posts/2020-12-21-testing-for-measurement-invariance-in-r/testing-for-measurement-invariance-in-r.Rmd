@@ -24,9 +24,11 @@ categories:
   - factor analysis
   - measurement invariance
 bibliography: testing-mi-in-r.bib
+preview: mi2.jpg
 output:
   distill::distill_article:
     self_contained: false
+    toc: true
 ---
 
 
