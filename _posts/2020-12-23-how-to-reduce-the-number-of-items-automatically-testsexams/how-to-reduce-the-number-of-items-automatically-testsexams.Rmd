@@ -1,0 +1,45 @@
+---
+title: "How to Reduce the Number of Items Automatically: Tests and Exams"
+description: |
+  Researchers conduct measurement invariance analysis to ensure that the interpretation of 
+  latent construct(s) being measured with their measurement instruments (e.g., scales, surveys, 
+  and questionnaires) are valid across subgroups of a target population or time points. 
+  In this post, I demonstrate how to test for measurement invariance (i.e., configural, metric, scalar,
+  and strict invariance) of an instrument using R.
+  ```{r, include=FALSE}
+  bytes <- file.size("how-to-reduce-the-number-of-items-automatically-testsexams.Rmd")
+  words <- bytes/10
+  minutes <- words/200
+  ``` 
+  (`r round(minutes)` min read)
+author:
+  - name: Okan Bulut
+    url: http://www.okanbulut.com/
+    affiliation: University of Alberta
+    affiliation_url: https://www.ualberta.ca
+    orcid_id: 0000-0001-5853-1267
+date: 12-23-2020
+categories:
+  - psychometrics
+  - test development
+  - automation
+bibliography: reducingitems1.bib
+output:
+  distill::distill_article:
+    self_contained: false
+    toc: true
+draft: true
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE)
+library("rmarkdown")
+library("kableExtra")
+```
+
+Distill is a publication format for scientific and technical writing, native to the web.
+
+Learn more about using Distill at <https://rstudio.github.io/distill>.
+
+
