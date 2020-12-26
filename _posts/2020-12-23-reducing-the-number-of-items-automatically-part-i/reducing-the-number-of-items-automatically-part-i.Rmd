@@ -1,0 +1,141 @@
+---
+title: "How to Shorten a Measurement Instrument Automatically (Part I)"
+description: |
+  Researchers conduct measurement invariance analysis to ensure that the interpretation of 
+  latent construct(s) being measured with their measurement instruments (e.g., scales, surveys, 
+  and questionnaires) are valid across subgroups of a target population or time points. 
+  In this post, I demonstrate how to test for measurement invariance (i.e., configural, metric, scalar,
+  and strict invariance) of an instrument using R.
+  ```{r, include=FALSE}
+  bytes <- file.size("reducing-the-number-of-items-automatically-part-i.Rmd")
+  words <- bytes/10
+  minutes <- words/200
+  ``` 
+  (`r round(minutes)` min read)
+author:
+  - name: Okan Bulut
+    url: http://www.okanbulut.com/
+    affiliation: University of Alberta
+    affiliation_url: https://www.ualberta.ca
+    orcid_id: 0000-0001-5853-1267
+date: 12-23-2020
+categories:
+  - psychometrics
+  - test development
+  - automation
+bibliography: reducingitems1.bib
+preview: photo_unsplash2.jpg
+output:
+  distill::distill_article:
+    self_contained: false
+    toc: true
+draft: true
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE)
+suppressWarnings({
+library("rmarkdown")
+library("kableExtra")
+library("emo")
+})
+```
+
+![Photo by [Maxime Agnelli](https://unsplash.com/@maxa) on [Unsplash](https://unsplash.com/)](photo_unsplash2.jpg)
+
+## Introduction
+
+Since the COVID-19 pandemic started, many academic institutions around the world have promptly shifted in-person educational activities to the remote learning format. With the mandatory transition to remote learning, educators need to develop and administer online assessments (or e-assessments) because students are not able to physically attend classes in order to avoid the spread of the virus. When assessing student learning with online assessments, educators are recommended to avoid long, heavily-weighted exams and instead use shorter exams more frequently throughout the semester [e.g., @kuhfeld2020projecting]. Although this sounds like a good idea in theory, it is easier said than done in practice. 
+
+To build shorter exams, educators first need to determine which items should be removed from the exams. In addition, they need to ensure that the reliability and other psychometric qualities (e.g., content distribution) of the shortened exam are acceptable. However, making such adjustments manually could be a tedious and time-consuming task. In this two-part blog series, I want to demonstrate how to shorten exams (or, any measurement instrument) by automatically selecting the most appropriate items. 
+
+**In Part I**, I will show how to employ automated test assembly and XXX as alternative methods to automatically build shorter versions of educational assessments (e.g., multiple-choice exams, tests, and quizzes). 
+
+**In Part II**, I will demonstrate how to use more advanced algorithms, such as the ant colony optimization (ACO; `r ji("ant")`) and genetic algorithm (GA; `r ji("gene")`), for creating short forms of other types of instruments (e.g., psychological scales).  
+
+
+Let's get started `r emo::ji("biceps")`.
+
+
+## Automated Test Assembly
+
+Automated test assembly (or shortly, ATA) is.
+
+
+## Example
+
+In this example, we will create a hypothetical assessment with 80 dichotomously-scored items. The items come from four content domains (labeled as "A", "B", "C", and "D") with 20 items per content domain. 
+
+We will use the `xxIRT` package [@xxirt] for both data generation and automated test assembly. 
+
+### Item Response Theory
+
+```{r, echo=TRUE, eval=TRUE}
+library("xxIRT")
+
+# Generate item parameters, ability, and responses
+data <- model_3pl_gendata(
+  n_p = 500, # number of examinees
+  n_i = 80, # number of items
+  t_dist = c(0, 1), # theta distribution as N(0, 1)
+  a_dist = c(-0.1, 0.2), # a parameter distribution
+  b_dist = c(0, 0.7), # b parameter distribution
+  c = 0, # fix c to zero (i.e., no guessing),
+  missing = 0.1 # 10% missingness
+)
+
+# Item parameters
+items <- with(data, data.frame(id=1:80, a=a, b=b, c=c))
+items$content <- sample(LETTERS[1:4], 80, replace=TRUE)
+
+# Ability
+theta <- with(data, data.frame(theta = t))
+
+# Responses
+resp <- with(data, as.data.frame(u))
+names(resp) <- paste0("item", 1:80)
+
+# Test information function
+with(data, model_3pl_plot(a, b, c, type="info", total = TRUE))
+
+# ATA based on TIF
+x <- ata(items, 1, len = 20, max_use = 1)
+x <- ata_obj_relative(x, seq(-0.5, 0.5, .5), 'max')
+x <- ata_constraint(x, 'content', 5, 5, level = "A")
+x <- ata_constraint(x, 'content', 5, 5, level = "B")
+x <- ata_constraint(x, 'content', 5, 5, level = "C")
+x <- ata_constraint(x, 'content', 5, 5, level = "D")
+x <- ata_solve(x, 'lpsolve')
+plot(x)
+```
+
+### Classical Test Theory
+
+```{r, echo=TRUE, eval=TRUE}
+# Item difficulty (proportion-correct)
+items$difficulty <- apply(resp, 2, 
+                          function(x) mean(x, na.rm = TRUE)) 
+
+# Discrimination (i.e., item-total correlation)
+score <- rowSums(resp, na.rm = TRUE)
+items$discrimination <- apply(resp, 2, 
+                              function(x) cor(x, score, use = "pairwise.complete.obs"))
+```
+
+
+## Conclusion
+
+Xxx. 
+
+
+
+
+
+
+
+
+
+
+
+
