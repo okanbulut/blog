@@ -21,8 +21,8 @@ author:
 date: 12-23-2020
 categories:
   - psychometrics
+  - data science
   - test development
-  - automation
 bibliography: reducingitems1.bib
 preview: photo_unsplash2.jpg
 output:
@@ -60,48 +60,71 @@ Let's get started `r emo::ji("biceps")`.
 
 ## Example
 
-In this example, we will create a hypothetical assessment with 80 dichotomously-scored items. The items come from four content domains (labeled as "A", "B", "C", and "D") with 20 items per content domain. 
-
-
-### Automated Test Assembly
-
-Automated test assembly (or shortly, ATA) is XXX. We will use the `xxIRT` package [@xxirt] for both data generation and automated test assembly. 
-
+In this example, we will create a hypothetical assessment with 80 dichotomously-scored items. The items are associated with four content domains labeled as 'A', 'B', 'C', and 'D' (with 20 items per content domain). For the sake of simplicity, we will simulate the items based on the Rasch model. We will also assume that a sample of 500 examinees responded to the generated items. The ability distribution will be $\theta \sim N(0, 1)$. Finally, a response matrix with dichotomous responses will be generated based on the item and ability parameters. We will use the `xxIRT` package [@xxirt] for data generation.
 
 ```{r, echo=TRUE, eval=TRUE}
 library("xxIRT")
 
-# Generate item parameters, ability, and responses
+# Generate item parameters, abilities, and responses
 data <- model_3pl_gendata(
   n_p = 500, # number of examinees
   n_i = 80, # number of items
   t_dist = c(0, 1), # theta distribution as N(0, 1)
-  a_dist = c(-0.1, 0.2), # a parameter distribution
+  #a_dist = c(-0.1, 0.2), # a parameter distribution
+  a = 1, 
   b_dist = c(0, 0.7), # b parameter distribution
   c = 0 # fix c to zero (i.e., no guessing)
 )
 
-# Item parameters
+# Save the item parameters as a separate data set
 items <- with(data, data.frame(id=paste0("item", 1:80), a=a, b=b, c=c))
 items$content <- sample(LETTERS[1:4], 80, replace=TRUE)
+```
 
+Let's see the item bank that we have created.
+
+```{r, echo=FALSE}
+paged_table(items, options = list(cols.print = 10))
+```
+
+Based on the generated items, we can check out the test information function (TIF) for the entire item bank (i.e., 80 items).
+
+```{r, echo=TRUE, eval=TRUE}
+# Test information function
+with(data, model_3pl_plot(a, b, c, type="info", total = TRUE))
+```
+
+Finally, we will save the ability parameters and responses as separate data sets.
+
+```{r, echo=TRUE, eval=TRUE}
 # Ability
 theta <- with(data, data.frame(theta = t))
+hist(theta$theta, main = "Ability Distribution", xlab = "Theta")
 
 # Responses
 resp <- with(data, as.data.frame(u))
 names(resp) <- paste0("item", 1:80)
+```
 
-# Test information function
-with(data, model_3pl_plot(a, b, c, type="info", total = TRUE))
+```{r, echo=FALSE}
+paged_table(resp, options = list(cols.print = 10))
+```
 
-# ATA based on TIF
+Using the item bank (i.e., full test) generated above, we want to create a short form with only 20 items. In the short form, we want to maintain the same content distribution. Therefore, we will have 5 items from each content area. Furthermore, we want the short form to resemble the full test with similar levels of reliability and correlations between scores. With the traditional test assembly approach, we would go through all of the items one by one and pick the appropriate ones based on our judgment. However, this would be highly laborious and inefficient in practice. Therefore, we will use two different approaches to automatically select the items based on the psychometric and content features we are looking for. 
+
+### Automated Test Assembly
+
+Automated test assembly (or shortly, ATA) is a mathematical optimization approach that allows us to automatically select items from a large item bank (or, item pool) based on pre-defined psychometric, content, and test administration features^[You can check out @van2006linear's "Linear Models for Optimal Test Design" for further information on ATA.]. To solve an ATA task, we can use either a mixed integer programming (MIP) algorithm or a heuristic algorithm. In this example, we will use MIP to look for the most optimal test form that meets the psychometric and content requirements (i.e., constraints) that we have identified. 
+
+To utilize MIP, we need a solver that will look for the optimal solution based on an objective function (e.g., maximizing test information function) and a set of constraints. In this example, for the objective function, we aim to maximize the test information between $\theta=-0.5$ and $\theta=0.5$ to mimic the TIF distribution from the full test (i.e,, 80 items). In addition, we will use **ata_constraint** to require five items from each content domain (i.e., A, B, C, and D). For the MIP solver, we will select [lp_solve](http://lpsolve.sourceforge.net/5.5/), which is already included in the `xxIRT` package. 
+
+```{r, echo=TRUE, eval=TRUE}
 x <- ata(items, 1, len = 20, max_use = 1)
 x <- ata_obj_relative(x, seq(-0.5, 0.5, .5), 'max')
-x <- ata_constraint(x, 'content', 5, 5, level = "A")
-x <- ata_constraint(x, 'content', 5, 5, level = "B")
-x <- ata_constraint(x, 'content', 5, 5, level = "C")
-x <- ata_constraint(x, 'content', 5, 5, level = "D")
+x <- ata_constraint(x, 'content', min = 5, max = 5, level = "A")
+x <- ata_constraint(x, 'content', min = 5, max = 5, level = "B")
+x <- ata_constraint(x, 'content', min = 5, max = 5, level = "C")
+x <- ata_constraint(x, 'content', min = 5, max = 5, level = "D")
 x <- ata_solve(x, 'lpsolve')
 
 # Selected items
@@ -110,6 +133,23 @@ print(x$items)
 # TIF for the selected items
 with(x$items[[1]], 
      model_3pl_plot(a, b, c, type="info", total = TRUE))
+
+items_ATA <- x$items[[1]]$id
+```
+
+Now let's check the reliability of our new shortened form as well as the correlation among raw scores (i.e., scores from the whole test vs. scores from the shortened test). We will use the **alpha** function from the `psych` package [@psych] to compute coefficient alpha for the shortened test. 
+
+```{r, echo=TRUE, eval=TRUE}
+# Coefficient alpha
+psych::alpha(resp[,c(items_ATA)])$total
+
+# Correlation between raw scores
+score <- rowSums(resp)
+score_ATA <- rowSums(resp[,c(items_ATA)])
+cor(score, score_ATA)  
+
+plot(score_ATA, score, xlab = "Short Form (ATA)", ylab = "Full Test")
+abline(lm(score ~ score_ATA), col = "red", lty = 2, lwd = 2)
 ```
 
 ### Recursive Feature Elimination
@@ -121,9 +161,6 @@ To implement RFE for item selection, we will use the `randomForest` [@rf] and `c
 ```{r, echo=TRUE, eval=TRUE}
 library("caret")
 library("randomForest")
-
-# Compute raw scores
-score <- rowSums(resp)
 
 # Define the control using a random forest selection function
 control <- rfeControl(functions = rfFuncs, 
@@ -151,17 +188,31 @@ results_D <- rfe(x = resp[,items[items$content=="D","id"]],
                  sizes = 5, 
                  rfeControl = control)
 
-selected_items <- c(predictors(results_A)[1:5],
-                    predictors(results_B)[1:5],
-                    predictors(results_C)[1:5],
-                    predictors(results_D)[1:5])
+items_RFE <- c(predictors(results_A)[1:5],
+               predictors(results_B)[1:5],
+               predictors(results_C)[1:5],
+               predictors(results_D)[1:5])
 
-
-print(selected_items)
+# Selected items
+print(items_RFE)
 
 # TIF for the selected items
-with(items[items$id %in% selected_items, ], 
+with(items[items$id %in% items_RFE, ], 
      model_3pl_plot(a, b, c, type="info", total = TRUE))
+```
+
+Also, we will check the reliability of the shortened form and correlations among raw scores for the RFE method. 
+
+```{r, echo=TRUE, eval=TRUE}
+# Coefficient alpha
+psych::alpha(resp[,c(items_RFE)])$total
+
+# Correlation between raw scores
+score_RFE <- rowSums(resp[,c(items_RFE)])
+cor(score, score_RFE)  
+
+plot(score_RFE, score, xlab = "Short Form (RFE)", ylab = "Full Test")
+abline(lm(score ~ score_RFE), col = "red", lty = 2, lwd = 2)
 ```
 
 
