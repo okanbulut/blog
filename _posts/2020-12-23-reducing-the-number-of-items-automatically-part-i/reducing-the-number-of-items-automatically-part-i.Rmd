@@ -50,7 +50,7 @@ Since the COVID-19 pandemic started, many academic institutions around the world
 
 To build shorter exams, educators first need to determine which items should be removed from the exams. In addition, they need to ensure that the reliability and other psychometric qualities (e.g., content distribution) of the shortened exam are acceptable. However, making such adjustments manually could be a tedious and time-consuming task. In this two-part blog series, I want to demonstrate how to shorten exams (or, any measurement instrument) by automatically selecting the most appropriate items. 
 
-**In Part I**, I will show how to employ automated test assembly and XXX as alternative methods to automatically build shorter versions of educational assessments (e.g., multiple-choice exams, tests, and quizzes). 
+**In Part I**, I will show how to employ automated test assembly and recursive feature elimination as alternative methods to automatically build shorter versions of educational assessments (e.g., multiple-choice exams, tests, and quizzes). 
 
 **In Part II**, I will demonstrate how to use more advanced algorithms, such as the ant colony optimization (ACO; `r ji("ant")`) and genetic algorithm (GA; `r ji("gene")`), for creating short forms of other types of instruments (e.g., psychological scales).  
 
@@ -58,18 +58,15 @@ To build shorter exams, educators first need to determine which items should be 
 Let's get started `r emo::ji("biceps")`.
 
 
-## Automated Test Assembly
-
-Automated test assembly (or shortly, ATA) is.
-
-
 ## Example
 
 In this example, we will create a hypothetical assessment with 80 dichotomously-scored items. The items come from four content domains (labeled as "A", "B", "C", and "D") with 20 items per content domain. 
 
-We will use the `xxIRT` package [@xxirt] for both data generation and automated test assembly. 
 
-### Item Response Theory
+### Automated Test Assembly
+
+Automated test assembly (or shortly, ATA) is XXX. We will use the `xxIRT` package [@xxirt] for both data generation and automated test assembly. 
+
 
 ```{r, echo=TRUE, eval=TRUE}
 library("xxIRT")
@@ -81,12 +78,11 @@ data <- model_3pl_gendata(
   t_dist = c(0, 1), # theta distribution as N(0, 1)
   a_dist = c(-0.1, 0.2), # a parameter distribution
   b_dist = c(0, 0.7), # b parameter distribution
-  c = 0, # fix c to zero (i.e., no guessing),
-  missing = 0.1 # 10% missingness
+  c = 0 # fix c to zero (i.e., no guessing)
 )
 
 # Item parameters
-items <- with(data, data.frame(id=1:80, a=a, b=b, c=c))
+items <- with(data, data.frame(id=paste0("item", 1:80), a=a, b=b, c=c))
 items$content <- sample(LETTERS[1:4], 80, replace=TRUE)
 
 # Ability
@@ -107,20 +103,65 @@ x <- ata_constraint(x, 'content', 5, 5, level = "B")
 x <- ata_constraint(x, 'content', 5, 5, level = "C")
 x <- ata_constraint(x, 'content', 5, 5, level = "D")
 x <- ata_solve(x, 'lpsolve')
-plot(x)
+
+# Selected items
+print(x$items)
+
+# TIF for the selected items
+with(x$items[[1]], 
+     model_3pl_plot(a, b, c, type="info", total = TRUE))
 ```
 
-### Classical Test Theory
+### Recursive Feature Elimination
+
+Recursive feature elimination (or shortly, RFE).
+
+To implement RFE for item selection, we will use the `randomForest` [@rf] and `caret` [@caret] packages in R. 
 
 ```{r, echo=TRUE, eval=TRUE}
-# Item difficulty (proportion-correct)
-items$difficulty <- apply(resp, 2, 
-                          function(x) mean(x, na.rm = TRUE)) 
+library("caret")
+library("randomForest")
 
-# Discrimination (i.e., item-total correlation)
-score <- rowSums(resp, na.rm = TRUE)
-items$discrimination <- apply(resp, 2, 
-                              function(x) cor(x, score, use = "pairwise.complete.obs"))
+# Compute raw scores
+score <- rowSums(resp)
+
+# Define the control using a random forest selection function
+control <- rfeControl(functions = rfFuncs, 
+                      method = "cv", # cross-validation
+                      number = 10) # the number of folds
+
+# Run random forest for each content domain
+results_A <- rfe(x = resp[,items[items$content=="A","id"]], 
+                 y = score, 
+                 sizes = 5, 
+                 rfeControl = control)
+
+results_B <- rfe(x = resp[,items[items$content=="B","id"]], 
+                 y = score, 
+                 sizes = 5, 
+                 rfeControl = control)
+
+results_C <- rfe(x = resp[,items[items$content=="C","id"]], 
+                 y = score, 
+                 sizes = 5, 
+                 rfeControl = control)
+
+results_D <- rfe(x = resp[,items[items$content=="D","id"]], 
+                 y = score, 
+                 sizes = 5, 
+                 rfeControl = control)
+
+selected_items <- c(predictors(results_A)[1:5],
+                    predictors(results_B)[1:5],
+                    predictors(results_C)[1:5],
+                    predictors(results_D)[1:5])
+
+
+print(selected_items)
+
+# TIF for the selected items
+with(items[items$id %in% selected_items, ], 
+     model_3pl_plot(a, b, c, type="info", total = TRUE))
 ```
 
 
