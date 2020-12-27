@@ -1,9 +1,9 @@
 ---
 title: "Testing for Measurement Invariance in R"
 description: |
-  Researchers conduct measurement invariance analysis to ensure that the interpretation of 
+  Researchers conduct measurement invariance analysis to ensure that the interpretations of 
   latent construct(s) being measured with their measurement instruments (e.g., scales, surveys, 
-  and questionnaires) are valid across subgroups of a target population or time points. 
+  and questionnaires) are valid across subgroups of a target population or multiple time points. 
   In this post, I demonstrate how to test for measurement invariance (i.e., configural, metric, scalar,
   and strict invariance) of an instrument using R.
   ```{r, include=FALSE}
