@@ -56,7 +56,6 @@ To build shorter exams, educators first need to determine which items should be 
 
 **In Part II**, I will demonstrate how to use more advanced algorithms, such as the ant colony optimization (ACO; `r ji("ant")`) and genetic algorithm (GA; `r ji("gene")`), for creating short forms of other types of instruments (e.g., psychological scales).  
 
-
 Let's get started `r emo::ji("biceps")`.
 
 
@@ -256,7 +255,6 @@ cor(score, score_RFE)
 plot(score_RFE, score, xlab = "Short Form (RFE)", ylab = "Full Test")
 abline(lm(score ~ score_RFE), col = "red", lty = 2, lwd = 2)
 ```
-
 
 ## Conclusion
 
