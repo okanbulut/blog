@@ -1,11 +1,13 @@
 ---
 title: "How to Shorten a Measurement Instrument Automatically (Part I)"
 description: |
-  Researchers conduct measurement invariance analysis to ensure that the interpretation of 
-  latent construct(s) being measured with their measurement instruments (e.g., scales, surveys, 
-  and questionnaires) are valid across subgroups of a target population or time points. 
-  In this post, I demonstrate how to test for measurement invariance (i.e., configural, metric, scalar,
-  and strict invariance) of an instrument using R.
+  Reducing the number of items in an existing measurement instrument (e.g., tests, surveys,
+  questionnaires) is almost as tedious as creating a new instrument. Going through all of 
+  the items one by one and choosing the appropriate ones based on our judgment could highly 
+  laborious and inefficient. In this two-part series, I will demonstrate how to shorten a
+  measurement instrument automatically. The first part focuses on a psychometric method 
+  (automated test assembly) and a data-driven method (recursive feature elimination) for
+  automatic selection of items.
   ```{r, include=FALSE}
   bytes <- file.size("reducing-the-number-of-items-automatically-part-i.Rmd")
   words <- bytes/10
@@ -70,8 +72,7 @@ data <- model_3pl_gendata(
   n_p = 500, # number of examinees
   n_i = 80, # number of items
   t_dist = c(0, 1), # theta distribution as N(0, 1)
-  #a_dist = c(-0.1, 0.2), # a parameter distribution
-  a = 1, 
+  a = 1, # fix discrimination to 1
   b_dist = c(0, 0.7), # b parameter distribution
   c = 0 # fix c to zero (i.e., no guessing)
 )
@@ -112,15 +113,17 @@ paged_table(resp, options = list(cols.print = 10))
 
 ### Automatic Selection of Items
 
-**Goal:** Assume that using the item bank (i.e., full test) generated above, we want to create a short form with only 20 items. 
+**Goal:** Assume that using the item bank (i.e., full test) generated above, we want to create a short form with only 20 items.
 
-**Conditions:** In the short form, we want to maintain the same content distribution. Therefore, we will have 5 items from each content domain (i.e., A, B, C, and D). Furthermore, we want the short form to resemble the full test in terms of reliability and test scores. 
+**Assumptions:** We will assume that: (1) all of the items on the test measure the same latent trait (i.e., the test is unidimensional); (2) the short form will be used for the same examinee population; and (3) the test does not exhibit any psychometric issues (e.g., mode effect, context effect, or DIF).
+
+**Conditions:** In the short form, we want to maintain the same content distribution (i.e., equal number of items from each content domain). Therefore, we will have 5 items from each content domain (i.e., A, B, C, and D). Furthermore, we want the short form to resemble the full test in terms of reliability and (raw) test scores. 
 
 **Methodology:** With the traditional test assembly approach, we would go through all of the items one by one and pick the appropriate ones based on our judgment. However, this would be highly laborious and inefficient in practice. Therefore, we will use two approaches to automatically select the items:
 
-1. Automated test assembly as a psychometric approach
+1. Automated test assembly as a psychometric approach (IRT parameters are required)
 
-2. Recursive feature elimination as a data science approach
+2. Recursive feature elimination as a data-driven approach (raw responses are required)
 
 ### Automated Test Assembly
 
@@ -173,13 +176,14 @@ score <- rowSums(resp)
 score_ATA <- rowSums(resp[,c(items_ATA)])
 cor(score, score_ATA)  
 
+# Scatter plot of raw scores
 plot(score_ATA, score, xlab = "Short Form (ATA)", ylab = "Full Test")
 abline(lm(score ~ score_ATA), col = "red", lty = 2, lwd = 2)
 ```
 
 ### Recursive Feature Elimination
 
-The term **feature selection** may sound unfamiliar to those of us who have studied psychometrics but it is one of the core concepts for data scientists dealing data mining, predictive modeling, and machine learning. 
+The term *feature selection* may sound unfamiliar to those of us who have originally studied psychometrics but it is one of the core concepts for data scientists dealing data mining, predictive modeling, and machine learning. 
 
 > *Feature selection* is a process of automatic selection of a subset of relevant features or variables from a set of all features, used in the process of model building. ([Dataaspirant](https://dataaspirant.com/feature-selection-methods-machine-learning/))
 
@@ -205,7 +209,7 @@ Before moving to **rfe**, we first need to set up the options for **rfeControl**
 
 ```{r, echo=TRUE, eval=TRUE}
 # Define the control using a random forest selection function
-control <- rfeControl(functions = rfFuncs, 
+control <- rfeControl(functions = rfFuncs, # random forest
                       method = "cv", # cross-validation
                       number = 10) # the number of folds
 ```
@@ -213,32 +217,18 @@ control <- rfeControl(functions = rfFuncs,
 Next, we will run the **rfe** function with the options we have identified above. For this step, we could simply include all of the items together in a single model and select the best 20 items at the end. However, this process may not yield five items from each content domain, which is the content constraint we have specified for our short form. Therefore, we will apply the **rfe** function to each content domain separately, use **sizes = 5** to retain five items from each content domain, and then combine the results at the end.
 
 ```{r, echo=TRUE, eval=TRUE}
-# Run random forest for each content domain
-results_A <- rfe(x = resp[,items[items$content=="A","id"]], 
-                 y = score, 
-                 sizes = 5, 
-                 rfeControl = control)
+# Run random forest for each content domain with a loop
+result <- list() 
 
-results_B <- rfe(x = resp[,items[items$content=="B","id"]], 
-                 y = score, 
-                 sizes = 5, 
-                 rfeControl = control)
+for(i in c("A", "B", "C", "D")) {
+  result[[i]] <- rfe(x = resp[,items[items$content==i,"id"]], 
+                     y = score, 
+                     sizes = 5, 
+                     rfeControl = control)
+}
 
-results_C <- rfe(x = resp[,items[items$content=="C","id"]], 
-                 y = score, 
-                 sizes = 5, 
-                 rfeControl = control)
-
-results_D <- rfe(x = resp[,items[items$content=="D","id"]], 
-                 y = score, 
-                 sizes = 5, 
-                 rfeControl = control)
-
-# Combine the results
-items_RFE <- c(predictors(results_A)[1:5],
-               predictors(results_B)[1:5],
-               predictors(results_C)[1:5],
-               predictors(results_D)[1:5])
+# Extract the results (i.e., first 5 predictors for each content domain)
+items_RFE <- unlist(lapply(result, function(x) predictors(x)[1:5]))
 ```
 
 In the following section, we will view the selected items and then draw a TIF plot for the selected items. 
@@ -262,6 +252,7 @@ psych::alpha(resp[,c(items_RFE)])$total
 score_RFE <- rowSums(resp[,c(items_RFE)])
 cor(score, score_RFE)  
 
+# Scatter plot of raw scores
 plot(score_RFE, score, xlab = "Short Form (RFE)", ylab = "Full Test")
 abline(lm(score ~ score_RFE), col = "red", lty = 2, lwd = 2)
 ```
@@ -269,8 +260,11 @@ abline(lm(score ~ score_RFE), col = "red", lty = 2, lwd = 2)
 
 ## Conclusion
 
-* For more information on the caret package, see <http://topepo.github.io/caret/index.html>.
+Both methods (i.e., ATA and RFE) appear to yield very similar (and very good!) results in terms of reliability and correlations among raw scores, although they recommended different sets of items. In this example, this may not be a surprising finding because we generated a nice data set (e.g., no missing responses, no outliers, etc.) based on a psychometric model (i.e., Rasch). Both ATA and RFE might produce less desirable results if:
 
+* the sample size is smaller
+* non-random missingness was in the response data set
+* there are problematic items (e.g., items with low discrimination or high guessing).
 
 
 
