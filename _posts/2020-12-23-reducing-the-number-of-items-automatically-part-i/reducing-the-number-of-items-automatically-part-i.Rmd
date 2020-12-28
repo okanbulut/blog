@@ -21,7 +21,7 @@ author:
 date: 12-23-2020
 categories:
   - psychometrics
-  - data science
+  - machine learning
   - IRT
 bibliography: reducingitems1.bib
 preview: photo_unsplash2.jpg
@@ -50,7 +50,7 @@ Since the COVID-19 pandemic started, many academic institutions around the world
 
 To build shorter exams, educators first need to determine which items should be removed from the exams. In addition, they need to ensure that the reliability and other psychometric qualities (e.g., content distribution) of the shortened exam are acceptable. However, making such adjustments manually could be a tedious and time-consuming task. In this two-part blog series, I want to demonstrate how to shorten exams (or, any measurement instrument) by automatically selecting the most appropriate items. 
 
-**In Part I**, I will show how to employ automated test assembly and recursive feature elimination as alternative methods to automatically build shorter versions of educational assessments (e.g., multiple-choice exams, tests, and quizzes). 
+**In Part I**, I will show how to utilize automated test assembly and recursive feature elimination as alternative methods to automatically build shorter versions of educational assessments (e.g., multiple-choice exams, tests, and quizzes). 
 
 **In Part II**, I will demonstrate how to use more advanced algorithms, such as the ant colony optimization (ACO; `r ji("ant")`) and genetic algorithm (GA; `r ji("gene")`), for creating short forms of other types of instruments (e.g., psychological scales).  
 
@@ -179,19 +179,40 @@ abline(lm(score ~ score_ATA), col = "red", lty = 2, lwd = 2)
 
 ### Recursive Feature Elimination
 
-Recursive feature elimination (or shortly, RFE).
+The term **feature selection** may sound unfamiliar to those of us who have studied psychometrics but it is one of the core concepts for data scientists dealing data mining, predictive modeling, and machine learning. 
 
-To implement RFE for item selection, we will use the `randomForest` [@rf] and `caret` [@caret] packages in R. 
+> *Feature selection* is a process of automatic selection of a subset of relevant features or variables from a set of all features, used in the process of model building. ([Dataaspirant](https://dataaspirant.com/feature-selection-methods-machine-learning/))
+
+The primary goal of feature selection is to select the most important predictors by filtering out irrelevant or partially relevant predictors. By selecting the most important predictors, we can build a simple and yet accurate model and avoid problems such as overfitting. There are a number of methods for both supervised and unsupervised feature selection. [Feature Engineering and Selection: A Practical Approach for Predictive Models](http://www.feat.engineering/index.html) by @kuhn2019feature is a great resource for those who want to learn more about feature selection^[Max Kuhn is also the author of the famous `caret` package]. 
+
+In this example, we will use *recursive feature elimination* (or shortly, RFE) for automatically selecting items. As a greedy wrapper method, RFE applies backwards selection to find the optimal combination of features (i.e., predictors). First, it builds a model based on the entire set of predictors. Then, it removes predictors with the least importance iteratively until a smaller subset of predictors are retained in the model^[See <http://www.feat.engineering/recursive-feature-elimination.html> for more information on RFE]. In our example, we will use the full set of items (i.e., 80 items) to predict raw scores. RFE will help us eliminate the items that may not be important for the prediction of raw scores^[This could also be used for predicting person ability estimates in IRT or another external criterion]. 
+
+To implement RFE for automatic item selection, we will use the `randomForest` [@rf] and `caret` [@caret] packages in R. 
 
 ```{r, echo=TRUE, eval=TRUE}
 library("caret")
 library("randomForest")
+```
 
+The **rfe** function the from `caret` requires four parameters:
+
+* **x**: A matrix or data frame of features (i.e., predictors)
+* **y**: The outcome variable to be predicted
+* **sizes**: The number of features that should be retained in the feature selection process
+* **rfeControl**: A list of control options for the feature selection algorithms
+
+Before moving to **rfe**, we first need to set up the options for **rfeControl**. The `caret` package includes a number of functions, such as random forest, naive Bayes, bagged trees, and  linear regression^[See <https://topepo.github.io/caret/recursive-feature-elimination.html> for further information]. In this example, we will use the *random forest* algorithm for model estimation because random forest includes an effective mechanism for measuring feature importance [@kuhn2019feature]: **functions = rfFuncs**. In addition, we will add 10-fold cross-validation by using **method = "cv"** and **number = 10**. 
+
+```{r, echo=TRUE, eval=TRUE}
 # Define the control using a random forest selection function
 control <- rfeControl(functions = rfFuncs, 
                       method = "cv", # cross-validation
                       number = 10) # the number of folds
+```
 
+Next, we will run the **rfe** function with the options we have identified above. For this step, we could simply include all of the items together in a single model and select the best 20 items at the end. However, this process may not yield five items from each content domain, which is the content constraint we have specified for our short form. Therefore, we will apply the **rfe** function to each content domain separately, use **sizes = 5** to retain five items from each content domain, and then combine the results at the end.
+
+```{r, echo=TRUE, eval=TRUE}
 # Run random forest for each content domain
 results_A <- rfe(x = resp[,items[items$content=="A","id"]], 
                  y = score, 
@@ -213,11 +234,16 @@ results_D <- rfe(x = resp[,items[items$content=="D","id"]],
                  sizes = 5, 
                  rfeControl = control)
 
+# Combine the results
 items_RFE <- c(predictors(results_A)[1:5],
                predictors(results_B)[1:5],
                predictors(results_C)[1:5],
                predictors(results_D)[1:5])
+```
 
+In the following section, we will view the selected items and then draw a TIF plot for the selected items. 
+
+```{r, echo=TRUE, eval=TRUE}
 # Selected items
 print(items[items$id %in% items_RFE, ])
 
@@ -226,7 +252,7 @@ with(items[items$id %in% items_RFE, ],
      model_3pl_plot(a, b, c, type="info", total = TRUE))
 ```
 
-Also, we will check the reliability of the shortened form and correlations among raw scores for the RFE method. 
+Also, we will check the reliability of the short form and correlations among raw scores for the RFE method. 
 
 ```{r, echo=TRUE, eval=TRUE}
 # Coefficient alpha
@@ -243,7 +269,7 @@ abline(lm(score ~ score_RFE), col = "red", lty = 2, lwd = 2)
 
 ## Conclusion
 
-Xxx. 
+* For more information on the caret package, see <http://topepo.github.io/caret/index.html>.
 
 
 
