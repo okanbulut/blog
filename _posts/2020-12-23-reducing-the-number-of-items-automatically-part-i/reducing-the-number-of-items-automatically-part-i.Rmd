@@ -3,11 +3,10 @@ title: "How to Shorten a Measurement Instrument Automatically (Part I)"
 description: |
   Reducing the number of items in an existing measurement instrument (e.g., tests, surveys,
   questionnaires) is almost as tedious as creating a new instrument. Going through all of 
-  the items one by one and choosing the appropriate ones based on our judgment could highly 
+  the items one by one and choosing the appropriate ones based on personal judgment could highly 
   laborious and inefficient. In this two-part series, I will demonstrate how to shorten a
-  measurement instrument automatically in R. The first part focuses on a psychometric method 
-  (automated test assembly) and a data-driven method (recursive feature elimination) for
-  automatic selection of items.
+  measurement instrument automatically in R. The first part focuses on the use of automated test
+  assembly and recursive feature elimination for automatic selection of items.
   ```{r, include=FALSE}
   bytes <- file.size("reducing-the-number-of-items-automatically-part-i.Rmd")
   words <- bytes/10
@@ -61,7 +60,7 @@ Let's get started `r emo::ji("biceps")`.
 
 ## Example
 
-In this example, we will create a hypothetical exam with 80 dichotomously-scored items (i.e., 0 = Incorrect, 1 = Correct). The items are associated with four content domains labeled as 'A', 'B', 'C', and 'D' (with 20 items per content domain). For the sake of simplicity, we will simulate the items based on the Rasch model. We will also assume that a sample of 500 examinees responded to the generated items thus far. The ability distribution will be $\theta \sim N(0, 1)$. Finally, a response matrix with dichotomous responses will be generated based on the item and ability parameters. We will use the `xxIRT` package [@xxirt] for data generation.
+In this example, we will create a hypothetical exam with 80 dichotomously-scored items (i.e., 0 = Incorrect, 1 = Correct). The items are associated with four content domains labeled as 'A', 'B', 'C', and 'D' (with 20 items per content domain). For the sake of simplicity, we will simulate the items based on the Rasch model. We will also assume that a sample of 500 examinees responded to the generated items thus far. The ability distribution will be $\theta \sim N(0, 1)$. Finally, a response matrix with dichotomous responses will be generated based on the item and ability parameters. We will use the `xxIRT` package [@xxirt] for data generation^[The **model_3pl_estimate_mmle** function in the same package can be used to estimate item parameters based on raw response data.]. 
 
 ```{r, echo=TRUE, eval=TRUE}
 library("xxIRT")
@@ -75,7 +74,7 @@ data <- model_3pl_gendata(
   t_dist = c(0, 1), # theta distribution as N(0, 1)
   a = 1, # fix discrimination to 1
   b_dist = c(0, 0.7), # b parameter distribution
-  c = 0 # fix c to zero (i.e., no guessing)
+  c = 0 # fix guessing to zero (i.e., no guessing)
 )
 
 # Save the item parameters as a separate data set
@@ -132,16 +131,16 @@ paged_table(resp, options = list(cols.print = 10))
 
 Automated test assembly (or shortly, ATA) is a mathematical optimization approach that allows us to automatically select items from a large item bank (or, item pool) based on pre-defined psychometric, content, and test administration features^[You can check out @van2006linear's "Linear Models for Optimal Test Design" for further information on ATA.]. To solve an ATA task, we can use either a mixed integer programming (MIP) algorithm or a heuristic algorithm. In this example, we will use MIP to look for the optimal test form that meets the psychometric and content requirements (i.e., constraints) that we have identified. 
 
-To utilize MIP, we need a solver that will look for the optimal solution based on an objective function (e.g., maximizing test information function) and a set of constraints. In this example, we will use **ata_obj_relative** to maximize the test information between $\theta=-0.5$ and $\theta=0.5$ to mimic the TIF distribution from the full test (i.e,, 80 items). In addition, we will use **ata_constraint** to select five items from each content domain (i.e., A, B, C, and D). For the MIP solver, we will select [lp_solve](http://lpsolve.sourceforge.net/5.5/), which is already included in the `xxIRT` package. 
+To utilize MIP, we need a solver that will look for the optimal solution based on an objective function (e.g., maximizing test information function) and a set of constraints. In this example, we will use **ata_obj_relative** to maximize the test information between $\theta=-0.5$ and $\theta=0.5$ to mimic the TIF distribution from the full test (i.e,, 80 items). In addition, we will use **ata_constraint** to select five items from each content domain (i.e., A, B, C, and D). For the MIP solver, we will select the open-source solver [lp_solve](http://lpsolve.sourceforge.net/5.5/), which is already included in the `xxIRT` package. 
 
 ```{r, echo=TRUE, eval=TRUE}
-# Define the ATA problem
-x <- ata(items, 1, len = 20, max_use = 1)
+# Define the ATA problem (one form with 20 items)
+x <- ata(pool = items, num_form = 1, len = 20, max_use = 1)
 
-# Identify the objective function
+# Identify the objective function (maximizing TIF)
 x <- ata_obj_relative(x, seq(-0.5, 0.5, .5), 'max')
 
-# Set the content constraints
+# Set the content constraints (5 items from each content domain)
 x <- ata_constraint(x, 'content', min = 5, max = 5, level = "A")
 x <- ata_constraint(x, 'content', min = 5, max = 5, level = "B")
 x <- ata_constraint(x, 'content', min = 5, max = 5, level = "C")
@@ -166,7 +165,7 @@ with(x$items[[1]],
      model_3pl_plot(a, b, c, type="info", total = TRUE))
 ```
 
-Now let's check the reliability of our new shortened form as well as the correlation among raw scores (i.e., scores from the whole test vs. scores from the shortened test). We will use the **alpha** function from the `psych` package [@psych] to compute coefficient alpha for the shortened test. 
+Now let's check the reliability of our new shortened form as well as the correlation among raw scores (i.e., scores from the whole test vs. scores from the shortened test). We will use the **alpha** function from the `psych` package [@psych] to compute coefficient alpha for the short form. 
 
 ```{r, echo=TRUE, eval=TRUE}
 items_ATA <- x$items[[1]]$id
@@ -180,7 +179,7 @@ score_ATA <- rowSums(resp[,c(items_ATA)])
 cor(score, score_ATA)  
 ```
 
-This is a very high correlation. Let's also check the scatterplot of the raw scores from the full test (out of 80 points) and the short form (out of 20 points). 
+This is a very high correlation. We will also check the scatterplot of the raw scores from the full test (out of 80 points) and the short form (out of 20 points). 
 
 ```{r, echo=TRUE, eval=TRUE}
 # Scatter plot of raw scores
@@ -222,10 +221,10 @@ control <- rfeControl(functions = rfFuncs, # random forest
                       number = 10) # the number of folds
 ```
 
-Next, we will run the **rfe** function with the options we have identified above. For this step, we could simply include all of the items together in a single model and select the best 20 items at the end. However, this process may not yield five items from each content domain, which is the content constraint we have specified for our short form. Therefore, we will apply the **rfe** function to each content domain separately, use **sizes = 5** to retain five items from each content domain, and then combine the results at the end.
+Next, we will run the **rfe** function with the options we have selected above. For this step, we could simply include all of the items together in a single model and select the best 20 items. However, this process may not yield five items from each content domain, which is the content constraint we have specified for our short form. Therefore, we will apply the **rfe** function to each content domain separately, use **sizes = 5** to retain the top five items (i.e., most important items) for each content domain, and then combine the results at the end.
 
 ```{r, echo=TRUE, eval=TRUE}
-# Run RFE for each content domain with a loop
+# Run RFE for each content domain within a loop
 result <- list() 
 
 for(i in c("A", "B", "C", "D")) {
@@ -235,7 +234,7 @@ for(i in c("A", "B", "C", "D")) {
                      rfeControl = control)
 }
 
-# Extract the results (i.e., first 5 predictors for each content domain)
+# Extract the results (i.e., first 5 items for each content domain)
 items_RFE <- unlist(lapply(result, function(x) predictors(x)[1:5]))
 ```
 
@@ -250,7 +249,7 @@ with(items[items$id %in% items_RFE, ],
      model_3pl_plot(a, b, c, type="info", total = TRUE))
 ```
 
-Also, we will check the reliability of the short form and correlations among raw scores for the RFE method. 
+Also, we will check the reliability of the short form and correlations between raw scores for the RFE method. 
 
 ```{r, echo=TRUE, eval=TRUE}
 # Coefficient alpha
@@ -269,7 +268,7 @@ plot(score_RFE, score, xlab = "Short Form (RFE)", ylab = "Full Test")
 abline(lm(score ~ score_RFE), col = "red", lty = 2, lwd = 2)
 ```
 
-Lastly, we can compute percent-correct scores for the full test and the short forms generated with ATA and RFE to make an overall score comparison. We will use the `ggplot2` package [@ggplot2] to draw a violin plot and check out the score distributions. The violin plot shows that the score distributions are not exactly the same but they are pretty similar.
+Lastly, we can compute percent-correct scores for the full test and the short forms generated with ATA and RFE to make an overall score comparison. We will use the `ggplot2` package [@ggplot2] to draw a violin plot and check out the score distributions. 
 
 ```{r, echo=TRUE, eval=TRUE}
 library("ggplot2")
@@ -292,10 +291,12 @@ ggplot(data = score_all, aes(x = test, y = score)) +
   theme(legend.position="none")
 ```
 
+The violin plot shows that the score distributions are not exactly the same but they are pretty similar.
+
 
 ## Conclusion
 
-In our example, both methods (i.e., ATA and RFE) appear to yield very similar (and very good!) results in terms of reliability and correlations between raw scores, although they recommended different sets of items for the short form. This may not be a surprising finding because we generated a nice data set (e.g., no missing responses, no outliers, etc.) based on a psychometric model (i.e., Rasch). ATA and RFE may produce less desirable results if:
+In conclusion, both methods (i.e., ATA and RFE) appear to yield very similar (and very good!) results in terms of reliability and correlations between raw scores, although they recommended different sets of items for the short form. This may not be a surprising finding because we generated a nice data set (e.g., no missing responses, no outliers, etc.) based on a psychometric model (i.e., Rasch). Automatic item selection with ATA and RFE may produce less desirable results if:
 
 * the sample size is smaller,
 * non-random missingness is present in the response data set, and
