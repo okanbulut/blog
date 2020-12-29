@@ -5,7 +5,7 @@ description: |
   questionnaires) is almost as tedious as creating a new instrument. Going through all of 
   the items one by one and choosing the appropriate ones based on our judgment could highly 
   laborious and inefficient. In this two-part series, I will demonstrate how to shorten a
-  measurement instrument automatically. The first part focuses on a psychometric method 
+  measurement instrument automaticallyin R. The first part focuses on a psychometric method 
   (automated test assembly) and a data-driven method (recursive feature elimination) for
   automatic selection of items.
   ```{r, include=FALSE}
@@ -54,7 +54,7 @@ To build shorter exams, educators first need to determine which items should be 
 
 **In Part I**, I will show how to utilize automated test assembly and recursive feature elimination as alternative methods to automatically build shorter versions of educational assessments (e.g., multiple-choice exams, tests, and quizzes). 
 
-**In Part II**, I will demonstrate how to use more advanced algorithms, such as the ant colony optimization (ACO; `r ji("ant")`) and genetic algorithm (GA; `r ji("gene")`), for creating short forms of other types of instruments (e.g., psychological scales).  
+**In Part II**, I will demonstrate how to use more advanced algorithms, such as the ant colony optimization (ACO; `r ji("ant")`) and genetic algorithm (GA; `r ji("gene")`), for creating short forms of other types of instruments (e.g., psychological scales and surveys).  
 
 Let's get started `r emo::ji("biceps")`.
 
@@ -256,6 +256,26 @@ plot(score_RFE, score, xlab = "Short Form (RFE)", ylab = "Full Test")
 abline(lm(score ~ score_RFE), col = "red", lty = 2, lwd = 2)
 ```
 
+Percent-correct scores
+
+```{r, echo=TRUE, eval=TRUE}
+library("ggplot2")
+
+score_all <- data.frame(
+  test = as.factor(c(rep("Full Test", 500), rep("ATA", 500), rep("RFE", 500))),
+  score = c(score/80*100, score_ATA/20*100, score_RFE/20*100)
+)
+
+score_all$test <- relevel(score_all$test, "Full Test")
+
+ggplot(data = score_all, aes(x = test, y = score)) +
+  geom_violin(aes(fill = test), trim = FALSE) + 
+  geom_boxplot(width = 0.2)+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800", "#FC4E07")) +
+  labs(x = "", y = "Percent-Correct Scores") +
+  theme(legend.position="none")
+```
+
 ## Conclusion
 
 Both methods (i.e., ATA and RFE) appear to yield very similar (and very good!) results in terms of reliability and correlations among raw scores, although they recommended different sets of items. In this example, this may not be a surprising finding because we generated a nice data set (e.g., no missing responses, no outliers, etc.) based on a psychometric model (i.e., Rasch). Both ATA and RFE might produce less desirable results if:
@@ -263,14 +283,6 @@ Both methods (i.e., ATA and RFE) appear to yield very similar (and very good!) r
 * the sample size is smaller
 * non-random missingness was in the response data set
 * there are problematic items (e.g., items with low discrimination or high guessing).
-
-
-
-
-
-
-
-
 
 
 
