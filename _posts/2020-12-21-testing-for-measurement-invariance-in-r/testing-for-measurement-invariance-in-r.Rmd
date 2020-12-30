@@ -58,7 +58,7 @@ To test metric invariance, we need to compare the configural model against the m
 
 To assess scalar invariance, we need to follow a similar approach by comparing the scalar model against the metric model. A statistically insignificant result for the $\Delta\chi^2$ test would indicate scalar invariance of the factorial model. @van2012checklist suggest that scalar invariance must hold to be able to interpret latent means and correlations across groups. If scalar invariance is not fully satisfied, then partial MI could be established by adjusting factor loadings and/or intercepts [@steenkamp1998assessing].
 
-Finally, if either partial or full scalar variance holds, then we can test strict invariance by comparing the strict model with the scalar model. @van2012checklist notes that with the lack of strict invariance, groups can still be compared on the latent construct(s). Figure 1 shows a summary of the steps for testing different types of MI based on the four invariance models summarized above. 
+Finally, if either partial or full scalar variance holds, then we can test strict invariance by comparing the strict model with the scalar model. @van2012checklist note that with the lack of strict invariance, groups can still be compared on the latent construct(s). Figure 1 shows a summary of the steps for testing different types of MI based on the four invariance models summarized above. 
 
 
 ![**Figure 1:** A summary of measurement invariance models](mi2.jpg)
@@ -295,7 +295,7 @@ compareFit(cfa.scalar2, cfa.strict)
 
 * Strict invariance is often very difficult to establish in practice. The Financial Well-Being Scale used in the above example is a high-quality instrument that was already pilot-tested and refined by the researchers. Therefore, it is not surprising that strict invariance could be established for the scale. However, especially for new instruments that have not been validated yet, establishing scalar invariance should be the main priority.  
 
-* Measurement invariance analyses demonstrated here can be summarized using a table with model fit indices, chi-square statistics, and so on. Also, important changes in the models (e.g., those that we made to establish partial MI) should be explained in the text. @van2012checklist describes how to report the results of measurement invariance analyses.
+* Measurement invariance analyses demonstrated here can be summarized using a table with model fit indices, chi-square statistics, and so on. Also, important changes in the models (e.g., those that we made to establish partial MI) should be explained in the text. @van2012checklist describe how to report the results of measurement invariance analyses.
 
 * Testing for measurement invariance can help researchers identify which item(s) might be problematic and thus need to be altered in the future [@lugtig2011change]. To identify problematic items within the factor analysis framework, multiple indicators, multiple causes (MIMIC) models can be used [@mimic]. 
 
