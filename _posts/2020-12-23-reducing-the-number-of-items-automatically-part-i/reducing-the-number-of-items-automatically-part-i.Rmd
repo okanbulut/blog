@@ -119,7 +119,7 @@ paged_table(resp, options = list(cols.print = 10))
 
 **Assumptions:** We will assume that: (1) all of the items on the test measure the same latent trait (i.e., the test is unidimensional); (2) the short form will be used for the same examinee population; and (3) the test does not exhibit any psychometric issues (e.g., mode effect, context effect, or differential item functioning).
 
-**Conditions:** In the short form, we want to maintain the same content distribution (i.e., an equal number of items from each content domain). Therefore, we will have five items from each content domain (i.e., A, B, C, and D). Furthermore, we want the short form to resemble the full test in terms of reliability and (raw) test scores. 
+**Conditions:** In the short form, we want to maintain the same content distribution (i.e., an equal number of items from each content domain). Therefore, we will select five items from each content domain (i.e., A, B, C, and D). Furthermore, we want the short form to resemble the full test in terms of reliability and (raw) test scores. 
 
 **Methodology:** With the traditional test assembly approach, we would go through all of the items one by one and pick the appropriate ones based on our judgment. However, this would be highly laborious and inefficient in practice. Therefore, we will use two approaches to automatically select the items:
 
