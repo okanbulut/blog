@@ -8,7 +8,7 @@ description: |
   measurement instrument automatically in R. The first part focuses on the use of automated test
   assembly and recursive feature elimination for the automatic selection of items.
   ```{r, include=FALSE}
-  bytes <- file.size("reducing-the-number-of-items-automatically-part-i.Rmd")
+  bytes <- file.size("how-to-shorten-a-measurement-instrument-automatically-part-i.Rmd")
   words <- bytes/10
   minutes <- words/200
   ``` 
