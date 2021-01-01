@@ -47,7 +47,7 @@ library("emo")
 
 ## Introduction
 
-Since the COVID-19 pandemic started, many academic institutions around the world have promptly shifted in-person educational activities to the remote learning format. With the mandatory transition to remote learning, educators need to develop and administer online assessments (or e-assessments) because students are not able to physically attend classes in order to avoid the spread of the virus. When assessing student learning with online assessments, educators are recommended to avoid long, heavily-weighted exams and instead use shorter exams more frequently throughout the semester [e.g., @kuhfeld2020projecting]. Although this sounds like a good idea in theory, it is easier said than done in practice. 
+With the mandatory transition to remote learning due to the COVID-19 pandemic, many educators around the world develop and administer online assessments (or e-assessments) because students are not able to physically attend classes in order to avoid the spread of the virus. When assessing student learning with online assessments, educators need to avoid long, heavily-weighted exams and instead administer shorter exams more frequently throughout the semester [@kuhfeld2020projecting]. Although this sounds like a good idea in theory, it is easier said than done in practice. 
 
 To build shorter exams, educators first need to determine which items should be removed from the exams. In addition, they need to ensure that the reliability and other psychometric qualities (e.g., content distribution) of the shortened exam are acceptable. However, making such adjustments manually could be a tedious and time-consuming task. In this two-part series, I want to demonstrate how to shorten exams (or, any measurement instrument) by automatically selecting the most appropriate items. 
 
@@ -60,16 +60,17 @@ Let's get started `r emo::ji("biceps")`.
 
 ## Example
 
-In this example, we will create a hypothetical exam with 80 dichotomously-scored items (i.e., 0 = Incorrect, 1 = Correct). The items are associated with four content domains labeled as 'A', 'B', 'C', and 'D' (with 20 items per content domain). For the sake of simplicity, we will simulate the items based on the Rasch model. We will also assume that a sample of 500 examinees responded to the generated items thus far. The ability distribution will be $\theta \sim N(0, 1)$. Finally, a response matrix with dichotomous responses will be generated based on the item and ability parameters. We will use the `xxIRT` package [@xxirt] for data generation^[The **model_3pl_estimate_mmle** function in the same package can be used to estimate item parameters based on raw response data.]. 
+In this example, we will create a hypothetical exam with 80 dichotomously-scored items (i.e., 0 = Incorrect, 1 = Correct). We will assume that the items on the exam are associated with four content domains labeled as 'A', 'B', 'C', and 'D' (with 20 items per content domain). We will also assume that a sample of 500 students responded to the items thus far. Because this is a hypothetical exam with no real data, we will need to simulate item responses. The item difficulty distribution will be $\theta \sim N(0, 0.7)$ and the ability distribution will be $\theta \sim N(0, 1)$. We will simulate student responses based on the Rasch model with the `xxIRT` package [@xxirt]^[The **model_3pl_estimate_mmle** function in the same package can be used to estimate item parameters based on raw response data.]. 
 
 ```{r, echo=TRUE, eval=TRUE}
 library("xxIRT")
 
+# Set the seed so the simulation can be reproduced
 set.seed(2021)
 
 # Generate item parameters, abilities, and responses
 data <- model_3pl_gendata(
-  n_p = 500, # number of examinees
+  n_p = 500, # number of students
   n_i = 80, # number of items
   t_dist = c(0, 1), # theta distribution as N(0, 1)
   a = 1, # fix discrimination to 1
@@ -102,12 +103,12 @@ Finally, we will save the ability parameters and responses as separate data sets
 ```{r, echo=TRUE, eval=TRUE}
 # Ability
 theta <- with(data, data.frame(theta = t))
-hist(theta$theta, main = "Ability Distribution", xlab = "Theta")
 
 # Responses
 resp <- with(data, as.data.frame(u))
 names(resp) <- paste0("item", 1:80)
 ```
+
 
 ```{r, echo=FALSE}
 paged_table(resp, options = list(cols.print = 10))
@@ -117,7 +118,7 @@ paged_table(resp, options = list(cols.print = 10))
 
 **Goal:** Assume that using the item bank (i.e., full test with 80 items) generated above, we want to create a short form with only 20 items.
 
-**Assumptions:** We will assume that: (1) all of the items on the test measure the same latent trait (i.e., the test is unidimensional); (2) the short form will be used for the same examinee population; and (3) the test does not exhibit any psychometric issues (e.g., mode effect, context effect, or differential item functioning).
+**Assumptions:** We will assume that: (1) all of the items on the test measure the same latent trait (i.e., the test is unidimensional); (2) the short form will be used for the same student population; and (3) the test does not exhibit any psychometric issues (e.g., mode effect, context effect, or differential item functioning).
 
 **Conditions:** In the short form, we want to maintain the same content distribution (i.e., an equal number of items from each content domain). Therefore, we will select five items from each content domain (i.e., A, B, C, and D). Furthermore, we want the short form to resemble the full test in terms of reliability and (raw) test scores. 
 
@@ -190,13 +191,13 @@ abline(lm(score ~ score_ATA), col = "red", lty = 2, lwd = 2)
 
 ### Recursive Feature Elimination
 
-The term *feature selection* may sound unfamiliar to those of us who have originally studied psychometrics but it is one of the core concepts for data scientists dealing with data mining, predictive modeling, and machine learning. 
+The term *feature selection* may sound unfamiliar to those of us who have studied traditional psychometrics but it is one of the core concepts for data scientists dealing with data mining, predictive modeling, and machine learning. 
 
 > *Feature selection* is a process of automatic selection of a subset of relevant features or variables from a set of all features, used in the process of model building. ([Dataaspirant](https://dataaspirant.com/feature-selection-methods-machine-learning/))
 
-The primary goal of feature selection is to select the most important predictors by filtering out irrelevant or partially relevant predictors. By selecting the most important predictors, we can build a simple and yet accurate model and avoid problems such as overfitting. There are a number of methods for both supervised and unsupervised feature selection. [Feature Engineering and Selection: A Practical Approach for Predictive Models](http://www.feat.engineering/index.html) by @kuhn2019feature is a great resource for those who want to learn more about feature selection^[Max Kuhn is also the author of the famous `caret` package]. 
+The primary goal of feature selection is to select the most important predictors by filtering out irrelevant or partially relevant predictors. By selecting the most important predictors, we can build a simple and yet accurate model and avoid problems such as overfitting. There are a number of methods for both supervised and unsupervised feature selection. [Feature Engineering and Selection: A Practical Approach for Predictive Models](http://www.feat.engineering/index.html) by @kuhn2019feature is a great resource for those who want to learn more about feature selection^[Max Kuhn is also the author of the famous `caret` package.]. 
 
-In this example, we will use *recursive feature elimination* (or shortly, RFE) for automatically selecting items. As a greedy wrapper method, RFE applies backward selection to find the optimal combination of features (i.e., predictors). First, it builds a model based on the entire set of predictors. Then, it removes predictors with the least importance iteratively until a smaller subset of predictors is retained in the model^[See <http://www.feat.engineering/recursive-feature-elimination.html> for more information on RFE]. In our example, we will use the full set of items (i.e., 80 items) to predict raw scores. RFE will help us eliminate the items that may not be important for the prediction of raw scores^[This could also be used for predicting person ability estimates in IRT or another external criterion]. 
+In this example, we will use *recursive feature elimination* (or shortly, RFE) for automatically selecting items. As a greedy wrapper method, RFE applies backward selection to find the optimal combination of features (i.e., predictors). First, it builds a model based on the entire set of predictors. Then, it removes predictors with the least importance iteratively until a smaller subset of predictors is retained in the model^[See <http://www.feat.engineering/recursive-feature-elimination.html> for more information on RFE]. In our example, we will use the full set of items (i.e., 80 items) to predict raw scores. RFE will help us eliminate the items that may not be important for the prediction of raw scores^[This could also be used for predicting person ability estimates in IRT or another external criterion.]. 
 
 To implement RFE for automatic item selection, we will use the `randomForest` [@rf] and `caret` [@caret] packages in R. 
 
@@ -212,7 +213,7 @@ The **rfe** function the from `caret` requires four parameters:
 * **sizes**: The number of features that should be retained in the feature selection process
 * **rfeControl**: A list of control options for the feature selection algorithms
 
-Before moving to **rfe**, we first need to set up the options for **rfeControl**. The `caret` package includes a number of functions, such as random forest, naive Bayes, bagged trees, and  linear regression^[See <https://topepo.github.io/caret/recursive-feature-elimination.html> for further information]. In this example, we will use the *random forest* algorithm for model estimation because random forest includes an effective mechanism for measuring feature importance [@kuhn2019feature]: **functions = rfFuncs**. In addition, we will add 10-fold cross-validation by using **method = "cv"** and **number = 10**. 
+Before moving to **rfe**, we first need to set up the options for **rfeControl**. The `caret` package includes a number of functions, such as random forest, naive Bayes, bagged trees, and  linear regression^[See <https://topepo.github.io/caret/recursive-feature-elimination.html> for further information.]. In this example, we will use the *random forest* algorithm for model estimation because random forest includes an effective mechanism for measuring feature importance [@kuhn2019feature]: **functions = rfFuncs**. In addition, we will add 10-fold cross-validation by using **method = "cv"** and **number = 10**. 
 
 ```{r, echo=TRUE, eval=TRUE}
 # Define the control using a random forest selection function
@@ -292,7 +293,6 @@ ggplot(data = score_all, aes(x = test, y = score)) +
 ```
 
 The violin plot shows that the score distributions are not exactly the same but they are pretty similar.
-
 
 ## Conclusion
 

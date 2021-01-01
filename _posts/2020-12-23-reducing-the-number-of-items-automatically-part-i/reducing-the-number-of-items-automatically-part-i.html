@@ -1478,22 +1478,23 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <img src="photo_unsplash2.jpg" alt="" /><figcaption>Photo by <a href="https://unsplash.com/@maxa">Maxime Agnelli</a> on <a href="https://unsplash.com/">Unsplash</a></figcaption>
 </figure>
 <h2 id="introduction">Introduction</h2>
-<p>Since the COVID-19 pandemic started, many academic institutions around the world have promptly shifted in-person educational activities to the remote learning format. With the mandatory transition to remote learning, educators need to develop and administer online assessments (or e-assessments) because students are not able to physically attend classes in order to avoid the spread of the virus. When assessing student learning with online assessments, educators are recommended to avoid long, heavily-weighted exams and instead use shorter exams more frequently throughout the semester <span class="citation" data-cites="kuhfeld2020projecting">(e.g., Kuhfeld et al. <a href="#ref-kuhfeld2020projecting" role="doc-biblioref">2020</a>)</span>. Although this sounds like a good idea in theory, it is easier said than done in practice.</p>
+<p>With the mandatory transition to remote learning due to the COVID-19 pandemic, many educators around the world develop and administer online assessments (or e-assessments) because students are not able to physically attend classes in order to avoid the spread of the virus. When assessing student learning with online assessments, educators need to avoid long, heavily-weighted exams and instead administer shorter exams more frequently throughout the semester <span class="citation" data-cites="kuhfeld2020projecting">(Kuhfeld et al. <a href="#ref-kuhfeld2020projecting" role="doc-biblioref">2020</a>)</span>. Although this sounds like a good idea in theory, it is easier said than done in practice.</p>
 <p>To build shorter exams, educators first need to determine which items should be removed from the exams. In addition, they need to ensure that the reliability and other psychometric qualities (e.g., content distribution) of the shortened exam are acceptable. However, making such adjustments manually could be a tedious and time-consuming task. In this two-part series, I want to demonstrate how to shorten exams (or, any measurement instrument) by automatically selecting the most appropriate items.</p>
 <p><strong>In Part I</strong>, I will show how to utilize automated test assembly and recursive feature elimination as alternative methods to automatically build shorter versions of educational assessments (e.g., multiple-choice exams, tests, and quizzes).</p>
 <p><strong>In Part II</strong>, I will demonstrate how to use more advanced algorithms, such as the ant colony optimization (ACO; 🐜) and genetic algorithm (GA; 🧬), for creating short forms of other types of instruments (e.g., psychological scales and surveys).</p>
 <p>Let’s get started 💪.</p>
 <h2 id="example">Example</h2>
-<p>In this example, we will create a hypothetical exam with 80 dichotomously-scored items (i.e., 0 = Incorrect, 1 = Correct). The items are associated with four content domains labeled as ‘A’, ‘B’, ‘C’, and ‘D’ (with 20 items per content domain). For the sake of simplicity, we will simulate the items based on the Rasch model. We will also assume that a sample of 500 examinees responded to the generated items thus far. The ability distribution will be <span class="math inline">\(\theta \sim N(0, 1)\)</span>. Finally, a response matrix with dichotomous responses will be generated based on the item and ability parameters. We will use the <code>xxIRT</code> package <span class="citation" data-cites="xxirt">(Luo <a href="#ref-xxirt" role="doc-biblioref">2019</a>)</span> for data generation<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<p>In this example, we will create a hypothetical exam with 80 dichotomously-scored items (i.e., 0 = Incorrect, 1 = Correct). We will assume that the items on the exam are associated with four content domains labeled as ‘A’, ‘B’, ‘C’, and ‘D’ (with 20 items per content domain). We will also assume that a sample of 500 students responded to the items thus far. Because this is a hypothetical exam with no real data, we will need to simulate item responses. The item difficulty distribution will be <span class="math inline">\(\theta \sim N(0, 0.7)\)</span> and the ability distribution will be <span class="math inline">\(\theta \sim N(0, 1)\)</span>. We will simulate student responses based on the Rasch model with the <code>xxIRT</code> package <span class="citation" data-cites="xxirt">(Luo <a href="#ref-xxirt" role="doc-biblioref">2019</a>)</span><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre><code><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='st'><a href='https://github.com/xluo11/xxIRT'>"xxIRT"</a></span><span class='op'>)</span>
 
+<span class='co'># Set the seed so the simulation can be reproduced</span>
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>2021</span><span class='op'>)</span>
 
 <span class='co'># Generate item parameters, abilities, and responses</span>
 <span class='va'>data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/xxIRT/man/model_3pl.html'>model_3pl_gendata</a></span><span class='op'>(</span>
-  n_p <span class='op'>=</span> <span class='fl'>500</span>, <span class='co'># number of examinees</span>
+  n_p <span class='op'>=</span> <span class='fl'>500</span>, <span class='co'># number of students</span>
   n_i <span class='op'>=</span> <span class='fl'>80</span>, <span class='co'># number of items</span>
   t_dist <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>, <span class='co'># theta distribution as N(0, 1)</span>
   a <span class='op'>=</span> <span class='fl'>1</span>, <span class='co'># fix discrimination to 1</span>
@@ -1531,12 +1532,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <div class="sourceCode">
 <pre><code><span class='co'># Ability</span>
 <span class='va'>theta</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/with.html'>with</a></span><span class='op'>(</span><span class='va'>data</span>, <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>theta <span class='op'>=</span> <span class='va'>t</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/hist.html'>hist</a></span><span class='op'>(</span><span class='va'>theta</span><span class='op'>$</span><span class='va'>theta</span>, main <span class='op'>=</span> <span class='st'>"Ability Distribution"</span>, xlab <span class='op'>=</span> <span class='st'>"Theta"</span><span class='op'>)</span>
-</code></pre>
-</div>
-<img src="reducing-the-number-of-items-automatically-part-i_files/figure-html5/unnamed-chunk-5-1.png" width="624" />
-<div class="sourceCode">
-<pre><code><span class='co'># Responses</span>
+
+<span class='co'># Responses</span>
 <span class='va'>resp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/with.html'>with</a></span><span class='op'>(</span><span class='va'>data</span>, <span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span><span class='op'>(</span><span class='va'>u</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>resp</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"item"</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>80</span><span class='op'>)</span>
 </code></pre>
@@ -1551,7 +1548,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </div>
 <h3 id="automatic-selection-of-items">Automatic Selection of Items</h3>
 <p><strong>Goal:</strong> Assume that using the item bank (i.e., full test with 80 items) generated above, we want to create a short form with only 20 items.</p>
-<p><strong>Assumptions:</strong> We will assume that: (1) all of the items on the test measure the same latent trait (i.e., the test is unidimensional); (2) the short form will be used for the same examinee population; and (3) the test does not exhibit any psychometric issues (e.g., mode effect, context effect, or differential item functioning).</p>
+<p><strong>Assumptions:</strong> We will assume that: (1) all of the items on the test measure the same latent trait (i.e., the test is unidimensional); (2) the short form will be used for the same student population; and (3) the test does not exhibit any psychometric issues (e.g., mode effect, context effect, or differential item functioning).</p>
 <p><strong>Conditions:</strong> In the short form, we want to maintain the same content distribution (i.e., an equal number of items from each content domain). Therefore, we will select five items from each content domain (i.e., A, B, C, and D). Furthermore, we want the short form to resemble the full test in terms of reliability and (raw) test scores.</p>
 <p><strong>Methodology:</strong> With the traditional test assembly approach, we would go through all of the items one by one and pick the appropriate ones based on our judgment. However, this would be highly laborious and inefficient in practice. Therefore, we will use two approaches to automatically select the items:</p>
 <ol type="1">
@@ -1654,7 +1651,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <p><img src="reducing-the-number-of-items-automatically-part-i_files/figure-html5/unnamed-chunk-11-1.png" width="624" /></p>
 </div>
 <h3 id="recursive-feature-elimination">Recursive Feature Elimination</h3>
-<p>The term <em>feature selection</em> may sound unfamiliar to those of us who have originally studied psychometrics but it is one of the core concepts for data scientists dealing with data mining, predictive modeling, and machine learning.</p>
+<p>The term <em>feature selection</em> may sound unfamiliar to those of us who have studied traditional psychometrics but it is one of the core concepts for data scientists dealing with data mining, predictive modeling, and machine learning.</p>
 <blockquote>
 <p><em>Feature selection</em> is a process of automatic selection of a subset of relevant features or variables from a set of all features, used in the process of model building. (<a href="https://dataaspirant.com/feature-selection-methods-machine-learning/">Dataaspirant</a>)</p>
 </blockquote>
@@ -1834,10 +1831,10 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <li id="fn1" role="doc-endnote"><p>The <strong>model_3pl_estimate_mmle</strong> function in the same package can be used to estimate item parameters based on raw response data.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2" role="doc-endnote"><p>Item response theory (IRT) is a psychometric framework for the design, analysis, and scoring of tests, questionnaires, and similar instruments. If you are not familiar with IRT, you can move to the second approach: Recursive feature elimination.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn3" role="doc-endnote"><p>You can check out <span class="citation" data-cites="van2006linear">Van der Linden (<a href="#ref-van2006linear" role="doc-biblioref">2006</a>)</span>’s “Linear Models for Optimal Test Design” for further information on ATA.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn4" role="doc-endnote"><p>Max Kuhn is also the author of the famous <code>caret</code> package<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4" role="doc-endnote"><p>Max Kuhn is also the author of the famous <code>caret</code> package.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn5" role="doc-endnote"><p>See <a href="http://www.feat.engineering/recursive-feature-elimination.html" class="uri">http://www.feat.engineering/recursive-feature-elimination.html</a> for more information on RFE<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn6" role="doc-endnote"><p>This could also be used for predicting person ability estimates in IRT or another external criterion<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn7" role="doc-endnote"><p>See <a href="https://topepo.github.io/caret/recursive-feature-elimination.html" class="uri">https://topepo.github.io/caret/recursive-feature-elimination.html</a> for further information<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6" role="doc-endnote"><p>This could also be used for predicting person ability estimates in IRT or another external criterion.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7" role="doc-endnote"><p>See <a href="https://topepo.github.io/caret/recursive-feature-elimination.html" class="uri">https://topepo.github.io/caret/recursive-feature-elimination.html</a> for further information.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 <!--radix_placeholder_article_footer-->
