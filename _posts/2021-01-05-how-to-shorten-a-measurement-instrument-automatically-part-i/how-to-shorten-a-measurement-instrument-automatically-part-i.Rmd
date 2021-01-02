@@ -47,9 +47,9 @@ library("emo")
 
 ## Introduction
 
-With the mandatory transition to remote learning due to the COVID-19 pandemic, many educators around the world develop and administer online assessments (or e-assessments) because students are not able to physically attend classes in order to avoid the spread of the virus. When assessing student learning with online assessments, educators need to avoid long, heavily-weighted exams and instead administer shorter exams more frequently throughout the semester [@kuhfeld2020projecting]. Although this sounds like a good idea in theory, it is easier said than done in practice. 
+With the mandatory transition to remote learning due to COVID-19, many educators around the world use online assessments (or e-assessments) because students are not able to physically attend classes in order to avoid the spread of the virus. When assessing student learning with online assessments, educators need to avoid long, heavily-weighted exams and instead administer shorter exams more frequently throughout the semester [@kuhfeld2020projecting]. Although this sounds like a good idea in theory, it is easier said than done in practice. 
 
-To build shorter exams, educators first need to determine which items should be removed from the exams. In addition, they need to ensure that the reliability and other psychometric qualities (e.g., content distribution) of the shortened exam are acceptable. However, making such adjustments manually could be a tedious and time-consuming task. In this two-part series, I want to demonstrate how to shorten exams (or, any measurement instrument) by automatically selecting the most appropriate items. 
+To build shorter exams, educators first need to determine which items should be removed from the existing exams. In addition, they need to ensure that the reliability and other psychometric qualities (e.g., content distribution) of the shortened exam are acceptable. However, making such adjustments manually could be tedious and time-consuming. In this two-part series, I want to demonstrate how to shorten exams (or, any measurement instrument) by automatically selecting the most appropriate items. 
 
 **In Part I**, I will show how to utilize automated test assembly and recursive feature elimination as alternative methods to automatically build shorter versions of educational assessments (e.g., multiple-choice exams, tests, and quizzes). 
 
@@ -60,7 +60,7 @@ Let's get started `r emo::ji("biceps")`.
 
 ## Example
 
-In this example, we will create a hypothetical exam with 80 dichotomously-scored items (i.e., 0 = Incorrect, 1 = Correct). We will assume that the items on the exam are associated with four content domains labeled as 'A', 'B', 'C', and 'D' (with 20 items per content domain). We will also assume that a sample of 500 students responded to the items thus far. Because this is a hypothetical exam with no real data, we will need to simulate item responses. The item difficulty distribution will be $\theta \sim N(0, 0.7)$ and the ability distribution will be $\theta \sim N(0, 1)$. We will simulate student responses based on the Rasch model with the `xxIRT` package [@xxirt]^[The **model_3pl_estimate_mmle** function in the same package can be used to estimate item parameters based on raw response data.]. 
+In this example, we will create a hypothetical exam with 80 dichotomously-scored items (i.e., 0 = Incorrect, 1 = Correct). We will assume that the items on the exam are associated with four content domains labeled as 'A', 'B', 'C', and 'D' (with 20 items per content domain). We will also assume that a sample of 500 students responded to the items thus far. Because this is a hypothetical exam with no real data, we will need to simulate item responses. The item difficulty distribution will be $\theta \sim N(0, 0.7)$ and the ability distribution will be $\theta \sim N(0, 1)$. We will simulate student responses based on the [Rasch model](https://www.oecd-ilibrary.org/docserver/9789264056251-6-en.pdf?expires=1609592648&id=id&accname=guest&checksum=D9BB971DCAC2924EF57131E7FF83D86C) with the `xxIRT` package [@xxirt]^[The **model_3pl_estimate_mmle** function in the same package can be used to estimate item parameters based on raw response data.]. 
 
 ```{r, echo=TRUE, eval=TRUE}
 library("xxIRT")
@@ -296,7 +296,7 @@ The violin plot shows that the score distributions are not exactly the same but 
 
 ## Conclusion
 
-Both methods (i.e., ATA and RFE) appear to yield very similar (and very good!) results in terms of reliability and correlations between raw scores, although they recommended different sets of items for the short form. This may not be a surprising finding because we generated an ordinary data set (e.g., no missing responses, no outliers, etc.) based on a psychometric model (i.e., Rasch). Automatic item selection with ATA and RFE may produce less desirable results if:
+Both methods (i.e., ATA and RFE) appear to yield very similar (and very good!) results in terms of reliability and correlations between raw scores, although they recommended different sets of items for the short form. This may not be a surprising finding because we generated a nice and clean data set (e.g., no missing responses, no outliers, etc.) based on a psychometric model (i.e., Rasch). Automatic item selection with ATA and RFE may produce less desirable results if:
 
 * the sample size is smaller,
 * non-random missingness is present in the response data set, and
