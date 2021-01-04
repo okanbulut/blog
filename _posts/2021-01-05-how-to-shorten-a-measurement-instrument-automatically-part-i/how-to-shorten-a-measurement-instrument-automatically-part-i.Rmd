@@ -47,9 +47,9 @@ library("emo")
 
 ## Introduction
 
-With the mandatory transition to remote learning due to COVID-19, many educators around the world use online assessments (or e-assessments) because students are not able to physically attend classes in order to avoid the spread of the virus. When assessing student learning with online assessments, educators need to avoid long, heavily-weighted exams and instead administer shorter exams more frequently throughout the semester [@kuhfeld2020projecting]. Although this sounds like a good idea in theory, it is easier said than done in practice. 
+With the COVID-19 pandemic, many educators around the world have begun to use online assessments because students are not able to physically attend classes in order to avoid the spread of the virus. When assessing student learning with online assessments, educators are recommended to avoid long, heavily-weighted exams and instead administer shorter exams more frequently throughout the semester [@kuhfeld2020projecting]. Although this sounds like a good idea in theory, it is easier said than done in practice. 
 
-To build shorter exams, educators first need to determine which items should be removed from the existing exams. In addition, they need to ensure that the reliability and other psychometric qualities (e.g., content distribution) of the shortened exam are acceptable. However, making such adjustments manually could be tedious and time-consuming. In this two-part series, I want to demonstrate how to shorten exams (or, any measurement instrument) by automatically selecting the most appropriate items. 
+To build shorter exams, educators first need to determine which items should be removed from their existing exams. In addition, they need to ensure that the reliability and other psychometric qualities (e.g., content distribution) of the shortened exams are acceptable. However, making such adjustments manually could be tedious and time-consuming. In this two-part series, I want to demonstrate how to shorten exams (or, any measurement instrument) by automatically selecting the most appropriate items. 
 
 **In Part I**, I will show how to utilize automated test assembly and recursive feature elimination as alternative methods to automatically build shorter versions of educational assessments (e.g., multiple-choice exams, tests, and quizzes). 
 
@@ -60,7 +60,7 @@ Let's get started `r emo::ji("biceps")`.
 
 ## Example
 
-In this example, we will create a hypothetical exam with 80 dichotomously-scored items (i.e., 0 = Incorrect, 1 = Correct). We will assume that the items on the exam are associated with four content domains labeled as 'A', 'B', 'C', and 'D' (with 20 items per content domain). We will also assume that a sample of 500 students responded to the items thus far. Because this is a hypothetical exam with no real data, we will need to simulate item responses. The item difficulty distribution will be $\theta \sim N(0, 0.7)$ and the ability distribution will be $\theta \sim N(0, 1)$. We will simulate student responses based on the [Rasch model](https://en.wikipedia.org/wiki/Rasch_model#:~:text=The%20Rasch%20model%2C%20named%20after,(b)%20the%20item%20difficulty.) with the `xxIRT` package [@xxirt]^[The **model_3pl_estimate_mmle** function in the same package can be used to estimate item parameters based on raw response data.]. 
+In this example, we will create a hypothetical exam with 80 dichotomously-scored items (i.e., 0 = Incorrect, 1 = Correct). We will assume that the items on the exam are associated with four content domains labeled as 'A', 'B', 'C', and 'D' (with 20 items per content domain). We will also assume that a sample of 500 students responded to the items thus far. Because this is a hypothetical exam with no real data, we will need to simulate item responses. The item difficulty distribution will be $b \sim N(0, 0.7)$ and the ability distribution will be $\theta \sim N(0, 1)$. We will simulate student responses based on the [Rasch model](https://en.wikipedia.org/wiki/Rasch_model#:~:text=The%20Rasch%20model%2C%20named%20after,(b)%20the%20item%20difficulty.) with the `xxIRT` package [@xxirt]^[The **model_3pl_estimate_mmle** function in the same package can be used to estimate item parameters based on raw response data.]. 
 
 ```{r, echo=TRUE, eval=TRUE}
 library("xxIRT")
@@ -74,7 +74,7 @@ data <- model_3pl_gendata(
   n_i = 80, # number of items
   t_dist = c(0, 1), # theta distribution as N(0, 1)
   a = 1, # fix discrimination to 1
-  b_dist = c(0, 0.7), # b parameter distribution
+  b_dist = c(0, 0.7), # difficulty distribution
   c = 0 # fix guessing to zero (i.e., no guessing)
 )
 
@@ -180,14 +180,27 @@ score_ATA <- rowSums(resp[,c(items_ATA)])
 cor(score, score_ATA)  
 ```
 
-The reliability of the short form is quite high. Also, there is a very high correlation between the raw scores. Lastly, we will check the scatterplot of the raw scores from the full test (out of 80 points) and the short form (out of 20 points). 
+The reliability of the short form is quite high. Also, there is a very high correlation between the raw scores. Lastly, we will check the scatterplot of the raw scores from the full test (out of 80 points) and the short form (out of 20 points). We will use the `ggplot2` package [@ggplot2] to create the scatterplot.
 
-```{r, echo=TRUE, eval=TRUE}
+```{r, echo=FALSE, eval=FALSE}
 # Scatter plot of raw scores
 plot(score_ATA, score, xlab = "Short Form (ATA)", ylab = "Full Test")
 abline(lm(score ~ score_ATA), col = "red", lty = 2, lwd = 2)
 ```
 
+```{r, echo=TRUE, eval=TRUE}
+library("ggplot2")
+
+# Combine the scores
+score1 <- as.data.frame(cbind(score_ATA, score))
+
+# Draw a scatterplot
+ggplot(score1, aes(x = score_ATA, y = score)) + 
+  geom_point() +
+  geom_smooth() +
+  labs(x = "Short Form (ATA)", y = "Full Test") +
+  theme_bw()
+```
 
 ### Recursive Feature Elimination
 
@@ -263,17 +276,27 @@ cor(score, score_RFE)
 
 As for the ATA method, the correlation between the raw scores is very high for the RFE method. We will also check out the scatterplot of the raw scores.
 
-```{r, echo=TRUE, eval=TRUE}
+```{r, echo=FALSE, eval=FALSE}
 # Scatter plot of raw scores
 plot(score_RFE, score, xlab = "Short Form (RFE)", ylab = "Full Test")
 abline(lm(score ~ score_RFE), col = "red", lty = 2, lwd = 2)
 ```
 
-Lastly, we can compute percent-correct scores for the full test and the short forms generated with ATA and RFE to make an overall score comparison. We will use the `ggplot2` package [@ggplot2] to draw a violin plot and check out the score distributions. 
+```{r, echo=TRUE, eval=TRUE}
+# Combine the scores
+score2 <- as.data.frame(cbind(score_RFE, score))
+
+# Draw a scatterplot
+ggplot(score2, aes(x = score_RFE, y = score)) + 
+  geom_point() +
+  geom_smooth() +
+  labs(x = "Short Form (RFE)", y = "Full Test") +
+  theme_bw()
+```
+
+Lastly, we can compute percent-correct scores for the full test and the short forms generated with ATA and RFE to make an overall score comparison. We will use the `ggplot2` package to draw a violin plot and check out the score distributions. 
 
 ```{r, echo=TRUE, eval=TRUE}
-library("ggplot2")
-
 # Compute percent-correct scores
 score_all <- data.frame(
   test = as.factor(c(rep("Full Test", 500), rep("ATA", 500), rep("RFE", 500))),
@@ -289,7 +312,7 @@ ggplot(data = score_all, aes(x = test, y = score)) +
   geom_boxplot(width = 0.2)+
   scale_fill_manual(values = c("#00AFBB", "#E7B800", "#FC4E07")) +
   labs(x = "", y = "Percent-Correct Scores") +
-  theme(legend.position="none")
+  theme_bw() + theme(legend.position="none")
 ```
 
 The violin plot shows that the score distributions are not exactly the same but they are pretty similar.
