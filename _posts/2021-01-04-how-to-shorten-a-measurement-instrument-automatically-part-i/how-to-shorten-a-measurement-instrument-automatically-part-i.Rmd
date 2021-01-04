@@ -19,7 +19,7 @@ author:
     affiliation: University of Alberta
     affiliation_url: https://www.ualberta.ca
     orcid_id: 0000-0001-5853-1267
-date: 01-05-2021
+date: 01-04-2021
 categories:
   - psychometrics
   - machine learning
@@ -30,7 +30,6 @@ output:
   distill::distill_article:
     self_contained: false
     toc: true
-draft: true
 ---
 
 
