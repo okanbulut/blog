@@ -218,7 +218,7 @@ library("caret")
 library("randomForest")
 ```
 
-The **rfe** function the from `caret` requires four parameters:
+The **rfe** function from `caret` requires four parameters:
 
 * **x**: A matrix or data frame of features (i.e., predictors)
 * **y**: The outcome variable to be predicted
