@@ -3,7 +3,7 @@ title: "How to Shorten a Measurement Instrument Automatically (Part I)"
 description: |
   Reducing the number of items in an existing measurement instrument (e.g., tests, surveys,
   questionnaires) is almost as tedious as creating a new instrument. Going through all of 
-  the items one by one and choosing the appropriate ones based on personal judgment could highly 
+  the items one by one and choosing the appropriate ones based on personal judgment could be highly 
   laborious and inefficient. In this two-part series, I will demonstrate how to shorten a
   measurement instrument automatically in R. The first part focuses on the use of automated test
   assembly and recursive feature elimination for the automatic selection of items.
