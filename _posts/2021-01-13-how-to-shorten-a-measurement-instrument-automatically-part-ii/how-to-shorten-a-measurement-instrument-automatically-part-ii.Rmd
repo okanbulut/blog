@@ -1,0 +1,49 @@
+---
+title: "How to Shorten a Measurement Instrument Automatically (Part II)"
+description: |
+  Reducing the number of items in an existing measurement instrument (e.g., tests, surveys,
+  questionnaires) is almost as tedious as creating a new instrument. Going through all of 
+  the items one by one and choosing the appropriate ones based on personal judgment could be highly 
+  laborious and inefficient. In this two-part series, I will demonstrate how to shorten a
+  measurement instrument automatically in R. The first part focuses on the use of automated test
+  assembly and recursive feature elimination for the automatic selection of items.
+  ```{r, include=FALSE}
+  bytes <- file.size("how-to-shorten-a-measurement-instrument-automatically-part-ii.Rmd")
+  words <- bytes/10
+  minutes <- words/200
+  ``` 
+  (`r round(minutes)` min read)
+author:
+  - name: Okan Bulut
+    url: http://www.okanbulut.com/
+    affiliation: University of Alberta
+    affiliation_url: https://www.ualberta.ca
+    orcid_id: 0000-0001-5853-1267
+date: 01-13-2021
+categories:
+  - psychometrics
+  - machine learning
+  - optimization
+bibliography: reducingitems2.bib
+preview: pexels-poranimm.jpg
+output:
+  distill::distill_article:
+    self_contained: false
+    toc: true
+draft: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE)
+suppressWarnings({
+library("rmarkdown")
+library("kableExtra")
+library("emo")
+})
+```
+
+![Photo by [Poranimm Athithawatthee](https://www.pexels.com/@poranimm-athithawatthee-284222) on [Pexels](https://www.pexels.com/)](pexels-poranimm.jpg)
+
+## Introduction
+
+With the COVID-19 pandemic, many educators around the world have ...
