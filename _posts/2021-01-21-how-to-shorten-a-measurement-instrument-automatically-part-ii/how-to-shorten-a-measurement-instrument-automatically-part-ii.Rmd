@@ -63,7 +63,7 @@ In the [first part of this series](https://okan.cloud/posts/2021-01-04-how-to-sh
 
 ### Optimization with GA and ACO
 
-In computer science, a genetic algorithm (GA) is essentially a search heuristic that mimics Charles Darwin’s theory of natural evolution. The algorithm reflects the process of natural selection by iteratively selecting and mating high-quality individuals (i.e., solutions) that are more likely to survive and eliminating weak individuals from generating more weak individuals. This process continues until GA finds an optimal or acceptable solution.
+In computer science, a genetic algorithm (GA) is essentially a search heuristic that mimics Charles Darwin’s theory of natural evolution. The algorithm reflects the process of natural selection by iteratively selecting and mating strong individuals (i.e., solutions) that are more likely to survive and eliminating weak individuals from generating more weak individuals. This process continues until GA finds an optimal or acceptable solution.
 
 > Genetic algorithms are commonly used to generate high-quality solutions to optimization and search problems by relying on biologically inspired operators such as mutation, crossover and selection. [@mitchell1998introduction]
 
@@ -72,22 +72,51 @@ In the context of survey abbreviation, GA can be used as an optimization tool fo
 $$Cost = Ik + \Sigma^s_i w_i(1-R^2_i)$$
 where $I$ represents a user-specified fixed item cost, $k$ represents the number of items to be retained by GA, $s$ is the number of subscales in the measure, $w_i$ are the weights associated with each subscale, and $R^2$ is the amount of variance in the $i^{th}$ subscale explained by its items. If the cost of retaining a particular item is larger than the loss in $R^2$, then the item is dropped from its subscale (i.e., GA returns a shorter subscale). @yarkoni2010abbreviation demonstrated the use of GA in abbreviating lengthy personality scales and thereafter many researchers have used GA to abbreviate psychological scales (e.g., @crone2020developing, @eisenbarth2015using, @gaarticle1)^[See Yarkoni's blog post on the use of GA at https://www.talyarkoni.org/blog/2010/03/31/abbreviating-personality-measures-in-r-a-tutorial/]. 
 
-Like GA, the ant colony optimization (ACO) is also an optimization method. ACO was first inspired by the collective behavior of Argentine ants called *iridomyrmex humilis* [@goss1989self]. While searching for food, ants deposit pheromone on the ground and follow pheromone previously deposited by other ants. Since the shortest path is more likely to retain pheromone, ants are able to follow this path and find promising food sources more quickly. Figure 1 illustrates this process. 
+Like GA, the ant colony optimization (ACO) is also an optimization method. ACO was first inspired by the collective behavior of Argentine ants called *iridomyrmex humilis* [@goss1989self]. While searching for food, these ants drop pheromone on the ground and follow pheromone previously dropped by other ants. Since the shortest path is more likely to retain pheromone, ants are able to follow this path and find promising food sources more quickly. Figure 1 illustrates this process. 
 
-![**Figure 1:** How real ants find a shortest path. (a) Ants arrive at a decision point. (b) Some ants choose the upper path and some the lower path. The choice is random. (c) Since ants move at approximately a constant speed, the ants which choose the lower, shorter, path reach the opposite decision point faster than those which choose the upper, longer, path. (d) Pheromone accumulates at a higher rate on the shorter path. The number of dashed lines is approximately proportional to the amount of pheromone deposited by ants (Obtained from page 54 in @dorigo1996ant)](aco.png)
+![**Figure 1:** How real ants find a shortest path. (a) Ants arrive at a decision point. (b) Some ants choose the upper path and some the lower path. The choice is random. (c) Since ants move at approximately a constant speed, the ants which choose the lower, shorter, path reach the opposite decision point faster than those which choose the upper, longer, path. (d) Pheromone accumulates at a higher rate on the shorter path. The number of dashed lines is approximately proportional to the amount of pheromone deposited by ants (Obtained from @dorigo1996ant, page 54)](aco.png)
 
 Engineers decided to use the way Argentine ant colonies function as an analogy to solve the shortest path problem and created the ACO algorithm [@dorigo1996ant; @dorigo1997ant]. Then, @marcoulides2003model applied ACO to model specification searches in structural equation modeling (SEM). The goal of this approach is to automate the model fitting process in SEM by starting with a user-specified model and then fitting alternative models to fix missing paths or parameters. This iterative process continues until an optimal model (e.g., a model with good model-fit indices) is identified. @leite2008item used the ACO algorithm for the development of short forms of scales and found that ACO outperformed traditionally used methods of item selection. In a more recent study, @falk demonstrated how to use ACO for model specification searches in R. 
 
 
 ## Example
 
-In this example, we will use the [Experiences in Close Relationships Scale](http://labs.psychology.illinois.edu/~rcfraley/measures/brennan.html) [@brennan1998self]. The [original data set](http://openpsychometrics.org/_rawdata/ECR-data-1March2018.zip) is available on the Open-Source Psychometric Project [website](https://openpsychometrics.org/). For demonstration purposes, we will use a subset of the original data set based on the following rules: 
+In this example, we will use the [Experiences in Close Relationships (ECR)](http://labs.psychology.illinois.edu/~rcfraley/measures/brennan.html) scale [@brennan1998self]. The ECR scale consists of 36 items measuring two higher-order attachment dimensions for adults (18 items per dimension): avoidance and anxiety (see Figure 2)^[See <http://labs.psychology.illinois.edu/~rcfraley/measures/measures.html> for more information.]. For each subscale (i.e., dimension), higher scores indicate higher levels of avoidance (or anxiety). Individuals who score high on either or both of these dimensions are assumed to have an insecure adult attachment orientation [@wei2007experiences].
+
+![**Figure 2:** The two-dimensional model of individual differences in adult attachment (Adapted from the figure at <http://labs.psychology.illinois.edu/~rcfraley/measures/measures.html>)](figure2.jpg)
+
+@wei2007experiences developed a 12-item, short form of the ERC scale using traditional methods (e.g., dropping items with low item-total correlation and keeping items with the highest factor loadings). In our example, we will use the GA and ACO algorithms to automatically select the best items for the two subscales of the ECR scale. The [original data set](http://openpsychometrics.org/_rawdata/ECR-data-1March2018.zip) for the ERC scale is available on the Open-Source Psychometric Project [website](https://openpsychometrics.org/). For demonstration purposes, we will use a subset of the original data set based on the following rules: 
 
 * Respondents must participate the survey from the United States, and
 * Respondents must be between 18 and 30 years of age. 
 
-In addition, some items have been reverse-coded (items 3, 15, 19, 22, 25, 29, 31, 33, 35) and the participants with missing responses have been eliminated from the data set. The final data set is available [here](https://raw.githubusercontent.com/okanbulut/tds/main/scale_abbreviation/ecr_data.csv). 
+In the ERC scale, some items are positively phrased and thus indicate lower avoidance (or anxiety) for respondents. Therefore, these items (items 3, 15, 19, 22, 25, 29, 31, 33, 35) have been reverse-coded^[See the full list of questions at <http://labs.psychology.illinois.edu/~rcfraley/measures/brennan.html>.]. Lastly, the respondents with missing responses have been eliminated from the data set. The final data set is available [here](https://raw.githubusercontent.com/okanbulut/tds/main/scale_abbreviation/ecr_data.csv). 
 
+Now, let's import the data into R and preview the data. 
+
+```{r, echo=TRUE, eval=FALSE}
+ecr <- read.csv("ecr_data.csv", header = TRUE)
+
+head(ecr)
+```
+
+```{r, echo=FALSE, eval=TRUE}
+ecr <- read.csv("ecr_data.csv", header = TRUE)
+
+paged_table(ecr, options = list(cols.print = 12))
+```
+
+Next, we will review inter-item correlations for each subscale to confirm that the items within each subscale are in the same direction. The odd-numbered items belong to the Avoidance subscale, while the even-numbered items belong to the Anxiety subscale.
+
+```{r, echo=TRUE, eval=TRUE}
+library("DataExplorer")
+
+# Avoidance subscale
+plot_correlation(ecr[, seq(1, 35, by = 2)])
+
+# Anxiety subscale
+plot_correlation(ecr[, seq(2, 36, by = 2)])
+```
 
 ### Genetic Algorithm 
 
