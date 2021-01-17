@@ -20,19 +20,18 @@
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -52,7 +51,7 @@ pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-le
 div.sourceCode
   {   }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ad0000; } /* Alert */
 code span.an { color: #5e5e5e; } /* Annotation */
@@ -87,76 +86,91 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
   <!--radix_placeholder_meta_tags-->
   <title>How to Shorten a Measurement Instrument Automatically (Part II)</title>
-  
-  <meta property="description" itemprop="description" content="Reducing the number of items in an existing measurement instrument (e.g., tests, surveys,&#10;questionnaires) is almost as tedious as creating a new instrument. Going through all of &#10;the items one by one and choosing the appropriate ones based on personal judgment could be highly &#10;laborious and inefficient. In this two-part series, I will demonstrate how to shorten a&#10;measurement instrument automatically in R. The first part focuses on the use of automated test&#10;assembly and recursive feature elimination for the automatic selection of items.&#10;&#10;(1 min read)"/>
-  
-  
+
+  <meta property="description" itemprop="description" content="Do you think there are too many questions on your survey? Are you worried that participants &#10;may get tired of responding to the questions in the middle of the survey? In this two-part series, I &#10;demonstrate how to shorten measurement instruments such as surveys automatically in R. The second part &#10;focuses on the use of two optimization algorithms (genetic algorithm and ant colony optimization) for&#10;reducing the number of questions in surveys and similar instruments.&#10;&#10;(4 min read)"/>
+
+
   <!--  https://schema.org/Article -->
-  <meta property="article:published" itemprop="datePublished" content="2021-01-13"/>
-  <meta property="article:created" itemprop="dateCreated" content="2021-01-13"/>
+  <meta property="article:published" itemprop="datePublished" content="2021-01-21"/>
+  <meta property="article:created" itemprop="dateCreated" content="2021-01-21"/>
   <meta name="article:author" content="Okan Bulut"/>
-  
+  <meta name="article:author" content="Hatice Cigdem Bulut"/>
+
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
   <meta property="og:title" content="How to Shorten a Measurement Instrument Automatically (Part II)"/>
   <meta property="og:type" content="article"/>
-  <meta property="og:description" content="Reducing the number of items in an existing measurement instrument (e.g., tests, surveys,&#10;questionnaires) is almost as tedious as creating a new instrument. Going through all of &#10;the items one by one and choosing the appropriate ones based on personal judgment could be highly &#10;laborious and inefficient. In this two-part series, I will demonstrate how to shorten a&#10;measurement instrument automatically in R. The first part focuses on the use of automated test&#10;assembly and recursive feature elimination for the automatic selection of items.&#10;&#10;(1 min read)"/>
+  <meta property="og:description" content="Do you think there are too many questions on your survey? Are you worried that participants &#10;may get tired of responding to the questions in the middle of the survey? In this two-part series, I &#10;demonstrate how to shorten measurement instruments such as surveys automatically in R. The second part &#10;focuses on the use of two optimization algorithms (genetic algorithm and ant colony optimization) for&#10;reducing the number of questions in surveys and similar instruments.&#10;&#10;(4 min read)"/>
   <meta property="og:locale" content="en_US"/>
-  
+
   <!--  https://dev.twitter.com/cards/types/summary -->
   <meta property="twitter:card" content="summary"/>
   <meta property="twitter:title" content="How to Shorten a Measurement Instrument Automatically (Part II)"/>
-  <meta property="twitter:description" content="Reducing the number of items in an existing measurement instrument (e.g., tests, surveys,&#10;questionnaires) is almost as tedious as creating a new instrument. Going through all of &#10;the items one by one and choosing the appropriate ones based on personal judgment could be highly &#10;laborious and inefficient. In this two-part series, I will demonstrate how to shorten a&#10;measurement instrument automatically in R. The first part focuses on the use of automated test&#10;assembly and recursive feature elimination for the automatic selection of items.&#10;&#10;(1 min read)"/>
-  
+  <meta property="twitter:description" content="Do you think there are too many questions on your survey? Are you worried that participants &#10;may get tired of responding to the questions in the middle of the survey? In this two-part series, I &#10;demonstrate how to shorten measurement instruments such as surveys automatically in R. The second part &#10;focuses on the use of two optimization algorithms (genetic algorithm and ant colony optimization) for&#10;reducing the number of questions in surveys and similar instruments.&#10;&#10;(4 min read)"/>
+
   <!--/radix_placeholder_meta_tags-->
   
+  <meta name="citation_reference" content="citation_title=Self-report measures of adult romantic attachment;citation_publication_date=1998;citation_author=Kelly A Brennan;citation_author=Catherine L Clark;citation_author=P Shaver"/>
+  <meta name="citation_reference" content="citation_title=How to conduct surveys: A step-by-step guide;citation_publication_date=2015;citation_publisher=Sage Publications;citation_author=Arlene Fink"/>
+  <meta name="citation_reference" content="citation_title=An introduction to genetic algorithms;citation_publication_date=1998;citation_publisher=MIT press;citation_author=Melanie Mitchell"/>
+  <meta name="citation_reference" content="citation_title=The abbreviation of personality, or how to measure 200 personality scales with 200 items;citation_publication_date=2010;citation_publisher=Elsevier;citation_volume=44;citation_author=Tal Yarkoni"/>
+  <meta name="citation_reference" content="citation_title=Using genetic algorithms in a large nationally representative american sample to abbreviate the multidimensional experiential avoidance questionnaire;citation_publication_date=2016;citation_volume=7;citation_doi=10.3389/fpsyg.2016.00189;citation_author=Baljinder K. Sahdra;citation_author=Joseph Ciarrochi;citation_author=Philip Parker;citation_author=Luca Scrucca"/>
+  <meta name="citation_reference" content="citation_title=Using a genetic algorithm to abbreviate the psychopathic personality inventoryâ€“revised (PPI-r).;citation_publication_date=2015;citation_publisher=American Psychological Association;citation_volume=27;citation_author=Hedwig Eisenbarth;citation_author=Scott O Lilienfeld;citation_author=Tal Yarkoni"/>
+  <meta name="citation_reference" content="citation_title=Developing brief versions of the moral foundations vignettes using a genetic algorithm-based approach;citation_publication_date=2020;citation_publisher=Springer;citation_author=Damien L Crone;citation_author=Joshua J Rhee;citation_author=Simon M Laham"/>
+  <meta name="citation_reference" content="citation_title=Self-organized shortcuts in the argentine ant;citation_publication_date=1989;citation_publisher=Springer-Verlag;citation_volume=76;citation_author=Simon Goss;citation_author=Serge Aron;citation_author=Jean-Louis Deneubourg;citation_author=Jacques Marie Pasteels"/>
+  <meta name="citation_reference" content="citation_title=Ant system: Optimization by a colony of cooperating agents;citation_publication_date=1996;citation_publisher=IEEE;citation_volume=26;citation_author=Marco Dorigo;citation_author=Vittorio Maniezzo;citation_author=Alberto Colorni"/>
+  <meta name="citation_reference" content="citation_title=Model specification searches using ant colony optimization algorithms;citation_publication_date=2003;citation_publisher=Taylor &amp; Francis;citation_volume=10;citation_author=George A Marcoulides;citation_author=Zvi Drezner"/>
+  <meta name="citation_reference" content="citation_title=Model specification searches in structural equation modeling with r;citation_publication_date=2018;citation_publisher=Routledge;citation_volume=25;citation_doi=10.1080/10705511.2017.1409074;citation_author=Katerina M Marcoulides;citation_author=Carl F Falk"/>
+  <meta name="citation_reference" content="citation_title=Item selection for the development of short forms of scales using an ant colony optimization algorithm;citation_publication_date=2008;citation_publisher=Taylor &amp; Francis;citation_volume=43;citation_author=Walter L Leite;citation_author=I-Chan Huang;citation_author=George A Marcoulides"/>
+  <meta name="citation_reference" content="citation_title=ShortForm: Automatic short form creation;citation_publication_date=2020;citation_author=Anthony Raborn;citation_author=Walter Leite"/>
+  <meta name="citation_reference" content="citation_title=GAabbreviate: Abbreviating items measures using genetic algorithms;citation_publication_date=2016;citation_author=Luca Scrucca;citation_author=Baljinder K. Sahdra"/>
   <!--radix_placeholder_rmarkdown_metadata-->
-  
+
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","author","date","categories","bibliography","preview","output","draft"]}},"value":[{"type":"character","attributes":{},"value":["How to Shorten a Measurement Instrument Automatically (Part II)"]},{"type":"character","attributes":{},"value":["Reducing the number of items in an existing measurement instrument (e.g., tests, surveys,\nquestionnaires) is almost as tedious as creating a new instrument. Going through all of \nthe items one by one and choosing the appropriate ones based on personal judgment could be highly \nlaborious and inefficient. In this two-part series, I will demonstrate how to shorten a\nmeasurement instrument automatically in R. The first part focuses on the use of automated test\nassembly and recursive feature elimination for the automatic selection of items.\n\n(1 min read)\n"]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","url","affiliation","affiliation_url","orcid_id"]}},"value":[{"type":"character","attributes":{},"value":["Okan Bulut"]},{"type":"character","attributes":{},"value":["http://www.okanbulut.com/"]},{"type":"character","attributes":{},"value":["University of Alberta"]},{"type":"character","attributes":{},"value":["https://www.ualberta.ca"]},{"type":"character","attributes":{},"value":["0000-0001-5853-1267"]}]}]},{"type":"character","attributes":{},"value":["01-13-2021"]},{"type":"character","attributes":{},"value":["psychometrics","machine learning","optimization"]},{"type":"character","attributes":{},"value":["reducingitems2.bib"]},{"type":"character","attributes":{},"value":["pexels-poranimm.jpg"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["distill::distill_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["self_contained","toc"]}},"value":[{"type":"logical","attributes":{},"value":[false]},{"type":"logical","attributes":{},"value":[true]}]}]},{"type":"logical","attributes":{},"value":[true]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","author","date","categories","bibliography","preview","output","draft"]}},"value":[{"type":"character","attributes":{},"value":["How to Shorten a Measurement Instrument Automatically (Part II)"]},{"type":"character","attributes":{},"value":["Do you think there are too many questions on your survey? Are you worried that participants \nmay get tired of responding to the questions in the middle of the survey? In this two-part series, I \ndemonstrate how to shorten measurement instruments such as surveys automatically in R. The second part \nfocuses on the use of two optimization algorithms (genetic algorithm and ant colony optimization) for\nreducing the number of questions in surveys and similar instruments.\n\n(4 min read)\n"]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","url","affiliation","affiliation_url","orcid_id"]}},"value":[{"type":"character","attributes":{},"value":["Okan Bulut"]},{"type":"character","attributes":{},"value":["http://www.okanbulut.com/"]},{"type":"character","attributes":{},"value":["University of Alberta"]},{"type":"character","attributes":{},"value":["https://www.ualberta.ca"]},{"type":"character","attributes":{},"value":["0000-0001-5853-1267"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","affiliation","affiliation_url","orcid_id"]}},"value":[{"type":"character","attributes":{},"value":["Hatice Cigdem Bulut"]},{"type":"character","attributes":{},"value":["Cukurova University"]},{"type":"character","attributes":{},"value":["https://www.cu.edu.tr"]},{"type":"character","attributes":{},"value":["0000-0003-2585-3686"]}]}]},{"type":"character","attributes":{},"value":["01-21-2021"]},{"type":"character","attributes":{},"value":["psychometrics","machine learning","optimization"]},{"type":"character","attributes":{},"value":["reducingitems2.bib"]},{"type":"character","attributes":{},"value":["pexels-poranimm.jpg"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["distill::distill_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["self_contained","toc"]}},"value":[{"type":"logical","attributes":{},"value":[false]},{"type":"logical","attributes":{},"value":[true]}]}]},{"type":"logical","attributes":{},"value":[true]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["pexels-poranimm.jpg","reducingitems2.bib"]}
+  {"type":"character","attributes":{},"value":["aco.png","acs-ec97.pdf","ecr_data.csv","Experiences in Close Relationships Scale_0.pdf","how-to-shorten-a-measurement-instrument-automatically-part-ii_files/anchor-4.2.2/anchor.min.js","how-to-shorten-a-measurement-instrument-automatically-part-ii_files/bowser-1.9.3/bowser.min.js","how-to-shorten-a-measurement-instrument-automatically-part-ii_files/distill-2.2.21/template.v2.js","how-to-shorten-a-measurement-instrument-automatically-part-ii_files/header-attrs-2.5/header-attrs.js","how-to-shorten-a-measurement-instrument-automatically-part-ii_files/jquery-1.11.3/jquery.min.js","how-to-shorten-a-measurement-instrument-automatically-part-ii_files/webcomponents-2.0.0/webcomponents.js","Model Specification Searches in Structural Equation Modeling with R.pdf","pexels-poranimm.jpg","reducingitems2.bib"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
   <!--/radix_placeholder_navigation_in_header-->
   <!--radix_placeholder_distill-->
-  
+
   <style type="text/css">
-  
+
   body {
     background-color: white;
   }
-  
+
   .pandoc-table {
     width: 100%;
   }
-  
+
   .pandoc-table>caption {
     margin-bottom: 10px;
   }
-  
+
   .pandoc-table th:not([align]) {
     text-align: left;
   }
-  
+
   .pagedtable-footer {
     font-size: 15px;
   }
-  
+
   d-byline .byline {
     grid-template-columns: 2fr 2fr;
   }
-  
+
   d-byline .byline h3 {
     margin-block-start: 1.5em;
   }
-  
+
   d-byline .byline .authors-affiliations h3 {
     margin-block-start: 0.5em;
   }
-  
+
   .authors-affiliations .orcid-id {
     width: 16px;
     height:16px;
@@ -165,12 +179,12 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     vertical-align: middle;
     padding-bottom: 2px;
   }
-  
+
   d-title .dt-tags {
     margin-top: 1em;
     grid-column: text;
   }
-  
+
   .dt-tags .dt-tag {
     text-decoration: none;
     display: inline-block;
@@ -184,24 +198,24 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     text-transform: uppercase;
     font-weight: 500;
   }
-  
+
   d-article table.gt_table td,
   d-article table.gt_table th {
     border-bottom: none;
   }
-  
+
   .html-widget {
     margin-bottom: 2.0em;
   }
-  
+
   .l-screen-inset {
     padding-right: 16px;
   }
-  
+
   .l-screen .caption {
     margin-left: 10px;
   }
-  
+
   .shaded {
     background: rgb(247, 247, 247);
     padding-top: 20px;
@@ -209,75 +223,75 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   }
-  
+
   .shaded .html-widget {
     margin-bottom: 0;
     border: 1px solid rgba(0, 0, 0, 0.1);
   }
-  
+
   .shaded .shaded-content {
     background: white;
   }
-  
+
   .text-output {
     margin-top: 0;
     line-height: 1.5em;
   }
-  
+
   .hidden {
     display: none !important;
   }
-  
+
   d-article {
     padding-top: 2.5rem;
     padding-bottom: 30px;
   }
-  
+
   d-appendix {
     padding-top: 30px;
   }
-  
+
   d-article>p>img {
     width: 100%;
   }
-  
+
   d-article h2 {
     margin: 1rem 0 1.5rem 0;
   }
-  
+
   d-article h3 {
     margin-top: 1.5rem;
   }
-  
+
   d-article iframe {
     border: 1px solid rgba(0, 0, 0, 0.1);
     margin-bottom: 2.0em;
     width: 100%;
   }
-  
+
   /* Tweak code blocks */
-  
+
   d-article div.sourceCode code,
   d-article pre code {
     font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
   }
-  
+
   d-article pre,
   d-article div.sourceCode,
   d-article div.sourceCode pre {
     overflow: auto;
   }
-  
+
   d-article div.sourceCode {
     background-color: white;
   }
-  
+
   d-article div.sourceCode pre {
     padding-left: 10px;
     font-size: 12px;
     border-left: 2px solid rgba(0,0,0,0.1);
   }
-  
+
   d-article pre {
     font-size: 12px;
     color: black;
@@ -289,45 +303,45 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     word-break: normal;
     word-wrap: normal;
     line-height: 1.5;
-  
+
     -moz-tab-size: 4;
     -o-tab-size: 4;
     tab-size: 4;
-  
+
     -webkit-hyphens: none;
     -moz-hyphens: none;
     -ms-hyphens: none;
     hyphens: none;
   }
-  
+
   d-article pre a {
     border-bottom: none;
   }
-  
+
   d-article pre a:hover {
     border-bottom: none;
     text-decoration: underline;
   }
-  
+
   @media(min-width: 768px) {
-  
+
   d-article pre,
   d-article div.sourceCode,
   d-article div.sourceCode pre {
     overflow: visible !important;
   }
-  
+
   d-article div.sourceCode pre {
     padding-left: 18px;
     font-size: 14px;
   }
-  
+
   d-article pre {
     font-size: 14px;
   }
-  
+
   }
-  
+
   figure img.external {
     background: white;
     border: 1px solid rgba(0, 0, 0, 0.1);
@@ -335,9 +349,9 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     padding: 18px;
     box-sizing: border-box;
   }
-  
+
   /* CSS for d-contents */
-  
+
   .d-contents {
     grid-column: text;
     color: rgba(0,0,0,0.8);
@@ -349,7 +363,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     padding-left: 0.25em;
     justify-self: start;
   }
-  
+
   @media(min-width: 1000px) {
     .d-contents.d-contents-float {
       height: 0;
@@ -360,82 +374,82 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       padding-left: 2em;
     }
   }
-  
+
   .d-contents nav h3 {
     font-size: 18px;
     margin-top: 0;
     margin-bottom: 1em;
   }
-  
+
   .d-contents li {
     list-style-type: none
   }
-  
+
   .d-contents nav > ul {
     padding-left: 0;
   }
-  
+
   .d-contents ul {
     padding-left: 1em
   }
-  
+
   .d-contents nav ul li {
     margin-top: 0.6em;
     margin-bottom: 0.2em;
   }
-  
+
   .d-contents nav a {
     font-size: 13px;
     border-bottom: none;
     text-decoration: none
     color: rgba(0, 0, 0, 0.8);
   }
-  
+
   .d-contents nav a:hover {
     text-decoration: underline solid rgba(0, 0, 0, 0.6)
   }
-  
+
   .d-contents nav > ul > li > a {
     font-weight: 600;
   }
-  
+
   .d-contents nav > ul > li > ul {
     font-weight: inherit;
   }
-  
+
   .d-contents nav > ul > li > ul > li {
     margin-top: 0.2em;
   }
-  
-  
+
+
   .d-contents nav ul {
     margin-top: 0;
     margin-bottom: 0.25em;
   }
-  
+
   .d-article-with-toc h2:nth-child(2) {
     margin-top: 0;
   }
-  
-  
+
+
   /* Figure */
-  
+
   .figure {
     position: relative;
     margin-bottom: 2.5em;
     margin-top: 1.5em;
   }
-  
+
   .figure img {
     width: 100%;
   }
-  
+
   .figure .caption {
     color: rgba(0, 0, 0, 0.6);
     font-size: 12px;
     line-height: 1.5em;
   }
-  
+
   .figure img.external {
     background: white;
     border: 1px solid rgba(0, 0, 0, 0.1);
@@ -443,31 +457,31 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     padding: 18px;
     box-sizing: border-box;
   }
-  
+
   .figure .caption a {
     color: rgba(0, 0, 0, 0.6);
   }
-  
+
   .figure .caption b,
   .figure .caption strong, {
     font-weight: 600;
     color: rgba(0, 0, 0, 1.0);
   }
-  
+
   /* Citations */
-  
+
   d-article .citation {
     color: inherit;
     cursor: inherit;
   }
-  
+
   div.hanging-indent{
     margin-left: 1em; text-indent: -1em;
   }
-  
-  
+
+
   /* Tweak 1000px media break to show more text */
-  
+
   @media(min-width: 1000px) {
     .base-grid,
     distill-header,
@@ -483,11 +497,11 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       grid-template-columns: [screen-start] 1fr [page-start kicker-start] 80px [middle-start] 50px [text-start kicker-end] 65px 65px 65px 65px 65px 65px 65px 65px [text-end gutter-start] 65px [middle-end] 65px [page-end gutter-end] 1fr [screen-end];
       grid-column-gap: 16px;
     }
-  
+
     .grid {
       grid-column-gap: 16px;
     }
-  
+
     d-article {
       font-size: 1.06rem;
       line-height: 1.7em;
@@ -496,7 +510,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       font-size: 13px;
     }
   }
-  
+
   @media(min-width: 1180px) {
     .base-grid,
     distill-header,
@@ -512,16 +526,16 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       grid-template-columns: [screen-start] 1fr [page-start kicker-start] 60px [middle-start] 60px [text-start kicker-end] 60px 60px 60px 60px 60px 60px 60px 60px [text-end gutter-start] 60px [middle-end] 60px [page-end gutter-end] 1fr [screen-end];
       grid-column-gap: 32px;
     }
-  
+
     .grid {
       grid-column-gap: 32px;
     }
   }
-  
-  
+
+
   /* Get the citation styles for the appendix (not auto-injected on render since
      we do our own rendering of the citation appendix) */
-  
+
   d-appendix .citation-appendix,
   .d-appendix .citation-appendix {
     font-size: 11px;
@@ -538,9 +552,9 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     white-space: pre-wrap;
     word-wrap: break-word;
   }
-  
+
   /* Include appendix styles here so they can be overridden */
-  
+
   d-appendix {
     contain: layout style;
     font-size: 0.8em;
@@ -552,7 +566,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     padding-top: 60px;
     padding-bottom: 48px;
   }
-  
+
   d-appendix h3 {
     grid-column: page-start / text-start;
     font-size: 15px;
@@ -561,59 +575,59 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     margin-bottom: 0;
     color: rgba(0,0,0,0.65);
   }
-  
+
   d-appendix h3 + * {
     margin-top: 1em;
   }
-  
+
   d-appendix ol {
     padding: 0 0 0 15px;
   }
-  
+
   @media (min-width: 768px) {
     d-appendix ol {
       padding: 0 0 0 30px;
       margin-left: -30px;
     }
   }
-  
+
   d-appendix li {
     margin-bottom: 1em;
   }
-  
+
   d-appendix a {
     color: rgba(0, 0, 0, 0.6);
   }
-  
+
   d-appendix > * {
     grid-column: text;
   }
-  
+
   d-appendix > d-footnote-list,
   d-appendix > d-citation-list,
   d-appendix > distill-appendix {
     grid-column: screen;
   }
-  
+
   /* Include footnote styles here so they can be overridden */
-  
+
   d-footnote-list {
     contain: layout style;
   }
-  
+
   d-footnote-list > * {
     grid-column: text;
   }
-  
+
   d-footnote-list a.footnote-backlink {
     color: rgba(0,0,0,0.3);
     padding-left: 0.5em;
   }
-  
-  
-  
+
+
+
   /* Anchor.js */
-  
+
   .anchorjs-link {
     /*transition: all .25s linear; */
     text-decoration: none;
@@ -624,86 +638,86 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     text-decoration: none;
     border-bottom: none;
   }
-  
+
   /* Social footer */
-  
+
   .social_footer {
     margin-top: 30px;
     margin-bottom: 0;
     color: rgba(0,0,0,0.67);
   }
-  
+
   .disqus-comments {
     margin-right: 30px;
   }
-  
+
   .disqus-comment-count {
     border-bottom: 1px solid rgba(0, 0, 0, 0.4);
     cursor: pointer;
   }
-  
+
   #disqus_thread {
     margin-top: 30px;
   }
-  
+
   .article-sharing a {
     border-bottom: none;
     margin-right: 8px;
   }
-  
+
   .article-sharing a:hover {
     border-bottom: none;
   }
-  
+
   .sidebar-section.subscribe {
     font-size: 12px;
     line-height: 1.6em;
   }
-  
+
   .subscribe p {
     margin-bottom: 0.5em;
   }
-  
-  
+
+
   .article-footer .subscribe {
     font-size: 15px;
     margin-top: 45px;
   }
-  
-  
+
+
   .sidebar-section.custom {
     font-size: 12px;
     line-height: 1.6em;
   }
-  
+
   .custom p {
     margin-bottom: 0.5em;
   }
-  
+
   /* Styles for listing layout (hide title) */
   .layout-listing d-title, .layout-listing .d-title {
     display: none;
   }
-  
+
   /* Styles for posts lists (not auto-injected) */
-  
-  
+
+
   .posts-with-sidebar {
     padding-left: 45px;
     padding-right: 45px;
   }
-  
+
   .posts-list .description h2,
   .posts-list .description p {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
   }
-  
+
   .posts-list .description h2 {
     font-weight: 700;
     border-bottom: none;
     padding-bottom: 0;
   }
-  
+
   .posts-list h2.post-tag {
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
     padding-bottom: 12px;
@@ -712,7 +726,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     margin-top: 60px;
     margin-bottom: 24px;
   }
-  
+
   .posts-list .post-preview {
     text-decoration: none;
     overflow: hidden;
@@ -720,29 +734,29 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     padding: 24px 0;
   }
-  
+
   .post-preview-last {
     border-bottom: none !important;
   }
-  
+
   .posts-list .posts-list-caption {
     grid-column: screen;
     font-weight: 400;
   }
-  
+
   .posts-list .post-preview h2 {
     margin: 0 0 6px 0;
     line-height: 1.2em;
     font-style: normal;
     font-size: 24px;
   }
-  
+
   .posts-list .post-preview p {
     margin: 0 0 12px 0;
     line-height: 1.4em;
     font-size: 16px;
   }
-  
+
   .posts-list .post-preview .thumbnail {
     box-sizing: border-box;
     margin-bottom: 24px;
@@ -753,32 +767,32 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     width: 100%;
     display: block;
   }
-  
+
   .posts-list .metadata {
     font-size: 12px;
     line-height: 1.4em;
     margin-bottom: 18px;
   }
-  
+
   .posts-list .metadata > * {
     display: inline-block;
   }
-  
+
   .posts-list .metadata .publishedDate {
     margin-right: 2em;
   }
-  
+
   .posts-list .metadata .dt-authors {
     display: block;
     margin-top: 0.3em;
     margin-right: 2em;
   }
-  
+
   .posts-list .dt-tags {
     display: block;
     line-height: 1em;
   }
-  
+
   .posts-list .dt-tags .dt-tag {
     display: inline-block;
     color: rgba(0,0,0,0.6);
@@ -791,24 +805,24 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     text-transform: uppercase;
     font-weight: 500;
   }
-  
+
   .posts-list img {
     opacity: 1;
   }
-  
+
   .posts-list img[data-src] {
     opacity: 0;
   }
-  
+
   .posts-more {
     clear: both;
   }
-  
-  
+
+
   .posts-sidebar {
     font-size: 16px;
   }
-  
+
   .posts-sidebar h3 {
     font-size: 16px;
     margin-top: 0;
@@ -816,39 +830,39 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     font-weight: 400;
     text-transform: uppercase;
   }
-  
+
   .sidebar-section {
     margin-bottom: 30px;
   }
-  
+
   .categories ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
   }
-  
+
   .categories li {
     color: rgba(0, 0, 0, 0.8);
     margin-bottom: 0;
   }
-  
+
   .categories li>a {
     border-bottom: none;
   }
-  
+
   .categories li>a:hover {
     border-bottom: 1px solid rgba(0, 0, 0, 0.4);
   }
-  
+
   .categories .active {
     font-weight: 600;
   }
-  
+
   .categories .category-count {
     color: rgba(0, 0, 0, 0.4);
   }
-  
-  
+
+
   @media(min-width: 768px) {
     .posts-list .post-preview h2 {
       font-size: 26px;
@@ -884,55 +898,55 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       padding-bottom: 24px;
     }
   }
-  
-  
+
+
   /* Improve display for browsers without grid (IE/Edge <= 15) */
-  
+
   .downlevel {
     line-height: 1.6em;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
     margin: 0;
   }
-  
+
   .downlevel .d-title {
     padding-top: 6rem;
     padding-bottom: 1.5rem;
   }
-  
+
   .downlevel .d-title h1 {
     font-size: 50px;
     font-weight: 700;
     line-height: 1.1em;
     margin: 0 0 0.5rem;
   }
-  
+
   .downlevel .d-title p {
     font-weight: 300;
     font-size: 1.2rem;
     line-height: 1.55em;
     margin-top: 0;
   }
-  
+
   .downlevel .d-byline {
     padding-top: 0.8em;
     padding-bottom: 0.8em;
     font-size: 0.8rem;
     line-height: 1.8em;
   }
-  
+
   .downlevel .section-separator {
     border: none;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
   }
-  
+
   .downlevel .d-article {
     font-size: 1.06rem;
     line-height: 1.7em;
     padding-top: 1rem;
     padding-bottom: 2rem;
   }
-  
-  
+
+
   .downlevel .d-appendix {
     padding-left: 0;
     padding-right: 0;
@@ -944,11 +958,11 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     padding-top: 40px;
     padding-bottom: 48px;
   }
-  
+
   .downlevel .footnotes ol {
     padding-left: 13px;
   }
-  
+
   .downlevel .base-grid,
   .downlevel .distill-header,
   .downlevel .d-title,
@@ -965,7 +979,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     padding-left: 40px;
     padding-right: 40px;
   }
-  
+
   @media(min-width: 768px) {
     .downlevel .base-grid,
     .downlevel .distill-header,
@@ -985,14 +999,14 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     max-width: 900px;
   }
   }
-  
+
   .downlevel pre code {
     display: block;
     border-left: 2px solid rgba(0, 0, 0, .1);
     padding: 0 0 0 20px;
     font-size: 14px;
   }
-  
+
   .downlevel code, .downlevel pre {
     color: black;
     background: none;
@@ -1003,27 +1017,27 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     word-break: normal;
     word-wrap: normal;
     line-height: 1.5;
-  
+
     -moz-tab-size: 4;
     -o-tab-size: 4;
     tab-size: 4;
-  
+
     -webkit-hyphens: none;
     -moz-hyphens: none;
     -ms-hyphens: none;
     hyphens: none;
   }
-  
+
   .downlevel .posts-list .post-preview {
     color: inherit;
   }
-  
-  
-  
+
+
+
   </style>
-  
+
   <script type="application/javascript">
-  
+
   function is_downlevel_browser() {
     if (bowser.isUnsupportedBrowser({ msie: "12", msedge: "16"},
                                    window.navigator.userAgent)) {
@@ -1032,20 +1046,20 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       return window.load_distill_framework === undefined;
     }
   }
-  
+
   // show body when load is complete
   function on_load_complete() {
-  
+
     // add anchors
     if (window.anchors) {
       window.anchors.options.placement = 'left';
       window.anchors.add('d-article > h2, d-article > h3, d-article > h4, d-article > h5');
     }
-  
-  
+
+
     // set body to visible
     document.body.style.visibility = 'visible';
-  
+
     // force redraw for leaflet widgets
     if (window.HTMLWidgets) {
       var maps = window.HTMLWidgets.findAll(".leaflet");
@@ -1058,39 +1072,39 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
         });
       });
     }
-  
+
     // trigger 'shown' so htmlwidgets resize
     $('d-article').trigger('shown');
   }
-  
+
   function init_distill() {
-  
+
     init_common();
-  
+
     // create front matter
     var front_matter = $('<d-front-matter></d-front-matter>');
     $('#distill-front-matter').wrap(front_matter);
-  
+
     // create d-title
     $('.d-title').changeElementType('d-title');
-  
+
     // create d-byline
     var byline = $('<d-byline></d-byline>');
     $('.d-byline').replaceWith(byline);
-  
+
     // create d-article
     var article = $('<d-article></d-article>');
     $('.d-article').wrap(article).children().unwrap();
-  
+
     // move posts container into article
     $('.posts-container').appendTo($('d-article'));
-  
+
     // create d-appendix
     $('.d-appendix').changeElementType('d-appendix');
-  
+
     // flag indicating that we have appendix items
     var appendix = $('.appendix-bottom').children('h3').length > 0;
-  
+
     // replace footnotes with <d-footnote>
     $('.footnote-ref').each(function(i, val) {
       appendix = true;
@@ -1106,10 +1120,10 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     });
     // remove footnotes
     $('.footnotes').remove();
-  
+
     // move refs into #references-listing
     $('#references-listing').replaceWith($('#refs'));
-  
+
     $('h1.appendix, h2.appendix').each(function(i, val) {
       $(this).changeElementType('h3');
     });
@@ -1119,16 +1133,16 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       appendix = true;
       $(this).nextUntil($('h1, h2, h3')).addBack().appendTo($('d-appendix'));
     });
-  
+
     // show d-appendix if we have appendix content
     $("d-appendix").css('display', appendix ? 'grid' : 'none');
-  
+
     // localize layout chunks to just output
     $('.layout-chunk').each(function(i, val) {
-  
+
       // capture layout
       var layout = $(this).attr('data-layout');
-  
+
       // apply layout to markdown level block elements
       var elements = $(this).children().not('div.sourceCode, pre, script');
       elements.each(function(i, el) {
@@ -1141,40 +1155,40 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
           $(this).wrap(layout_div);
         }
       });
-  
-  
+
+
       // unwrap the layout-chunk div
       $(this).children().unwrap();
     });
-  
+
     // remove code block used to force  highlighting css
     $('.distill-force-highlighting-css').parent().remove();
-  
+
     // remove empty line numbers inserted by pandoc when using a
     // custom syntax highlighting theme
     $('code.sourceCode a:empty').remove();
-  
+
     // load distill framework
     load_distill_framework();
-  
+
     // wait for window.distillRunlevel == 4 to do post processing
     function distill_post_process() {
-  
+
       if (!window.distillRunlevel || window.distillRunlevel < 4)
         return;
-  
+
       // hide author/affiliations entirely if we have no authors
       var front_matter = JSON.parse($("#distill-front-matter").html());
       var have_authors = front_matter.authors && front_matter.authors.length > 0;
       if (!have_authors)
         $('d-byline').addClass('hidden');
-  
+
       // article with toc class
       $('.d-contents').parent().addClass('d-article-with-toc');
-  
+
       // strip links that point to #
       $('.authors-affiliations').find('a[href="#"]').removeAttr('href');
-  
+
       // add orcid ids
       $('.authors-affiliations').find('.author').each(function(i, el) {
         var orcid_id = front_matter.authors[i].orcidID;
@@ -1189,12 +1203,12 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
           $(this).append(a);
         }
       });
-  
+
       // hide elements of author/affiliations grid that have no value
       function hide_byline_column(caption) {
         $('d-byline').find('h3:contains("' + caption + '")').parent().css('visibility', 'hidden');
       }
-  
+
       // affiliations
       var have_affiliations = false;
       for (var i = 0; i<front_matter.authors.length; ++i) {
@@ -1206,11 +1220,11 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       }
       if (!have_affiliations)
         $('d-byline').find('h3:contains("Affiliations")').css('visibility', 'hidden');
-  
+
       // published date
       if (!front_matter.publishedDate)
         hide_byline_column("Published");
-  
+
       // document object identifier
       var doi = $('d-byline').find('h3:contains("DOI")');
       var doi_p = doi.next().empty();
@@ -1230,54 +1244,54 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
            .html(front_matter.doi)
            .appendTo(doi_p);
       }
-  
+
        // change plural form of authors/affiliations
       if (front_matter.authors.length === 1) {
         var grid = $('.authors-affiliations');
         grid.children('h3:contains("Authors")').text('Author');
         grid.children('h3:contains("Affiliations")').text('Affiliation');
       }
-  
+
       // remove d-appendix and d-footnote-list local styles
       $('d-appendix > style:first-child').remove();
       $('d-footnote-list > style:first-child').remove();
-  
+
       // move appendix-bottom entries to the bottom
       $('.appendix-bottom').appendTo('d-appendix').children().unwrap();
       $('.appendix-bottom').remove();
-  
+
       // clear polling timer
       clearInterval(tid);
-  
+
       // show body now that everything is ready
       on_load_complete();
     }
-  
+
     var tid = setInterval(distill_post_process, 50);
     distill_post_process();
-  
+
   }
-  
+
   function init_downlevel() {
-  
+
     init_common();
-  
+
      // insert hr after d-title
     $('.d-title').after($('<hr class="section-separator"/>'));
-  
+
     // check if we have authors
     var front_matter = JSON.parse($("#distill-front-matter").html());
     var have_authors = front_matter.authors && front_matter.authors.length > 0;
-  
+
     // manage byline/border
     if (!have_authors)
       $('.d-byline').remove();
     $('.d-byline').after($('<hr class="section-separator"/>'));
     $('.d-byline a').remove();
-  
+
     // remove toc
     $('.d-contents').remove();
-  
+
     // move appendix elements
     $('h1.appendix, h2.appendix').each(function(i, val) {
       $(this).changeElementType('h3');
@@ -1285,62 +1299,62 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     $('h3.appendix').each(function(i, val) {
       $(this).nextUntil($('h1, h2, h3')).addBack().appendTo($('.d-appendix'));
     });
-  
-  
+
+
     // inject headers into references and footnotes
     var refs_header = $('<h3></h3>');
     refs_header.text('References');
     $('#refs').prepend(refs_header);
-  
+
     var footnotes_header = $('<h3></h3');
     footnotes_header.text('Footnotes');
     $('.footnotes').children('hr').first().replaceWith(footnotes_header);
-  
+
     // move appendix-bottom entries to the bottom
     $('.appendix-bottom').appendTo('.d-appendix').children().unwrap();
     $('.appendix-bottom').remove();
-  
+
     // remove appendix if it's empty
     if ($('.d-appendix').children().length === 0)
       $('.d-appendix').remove();
-  
+
     // prepend separator above appendix
     $('.d-appendix').before($('<hr class="section-separator" style="clear: both"/>'));
-  
+
     // trim code
     $('pre>code').each(function(i, val) {
       $(this).html($.trim($(this).html()));
     });
-  
+
     // move posts-container right before article
     $('.posts-container').insertBefore($('.d-article'));
-  
+
     $('body').addClass('downlevel');
-  
+
     on_load_complete();
   }
-  
-  
+
+
   function init_common() {
-  
+
     // jquery plugin to change element types
     (function($) {
       $.fn.changeElementType = function(newType) {
         var attrs = {};
-  
+
         $.each(this[0].attributes, function(idx, attr) {
           attrs[attr.nodeName] = attr.nodeValue;
         });
-  
+
         this.replaceWith(function() {
           return $("<" + newType + "/>", attrs).append($(this).contents());
         });
       };
     })(jQuery);
-  
+
     // prevent underline for linked images
     $('a > img').parent().css({'border-bottom' : 'none'});
-  
+
     // mark non-body figures created by knitr chunks as 100% width
     $('.layout-chunk').each(function(i, val) {
       var figures = $(this).find('img, .html-widget');
@@ -1352,35 +1366,35 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
           var fig = $(this);
           fig.css('width', fig.attr('width') + 'px');
         });
-  
+
       }
     });
-  
+
     // auto-append index.html to post-preview links in file: protocol
     // and in rstudio ide preview
     $('.post-preview').each(function(i, val) {
       if (window.location.protocol === "file:")
         $(this).attr('href', $(this).attr('href') + "index.html");
     });
-  
+
     // get rid of index.html references in header
     if (window.location.protocol !== "file:") {
       $('.distill-site-header a[href]').each(function(i,val) {
         $(this).attr('href', $(this).attr('href').replace("index.html", "./"));
       });
     }
-  
+
     // add class to pandoc style tables
     $('tr.header').parent('thead').parent('table').addClass('pandoc-table');
     $('.kable-table').children('table').addClass('pandoc-table');
-  
+
     // add figcaption style to table captions
     $('caption').parent('table').addClass("figcaption");
-  
+
     // initialize posts list
     if (window.init_posts_list)
       window.init_posts_list();
-  
+
     // implmement disqus comment link
     $('.disqus-comment-count').click(function() {
       window.headroom_prevent_pin = true;
@@ -1394,17 +1408,18 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       }
     });
   }
-  
+
   document.addEventListener('DOMContentLoaded', function() {
     if (is_downlevel_browser())
       init_downlevel();
     else
       window.addEventListener('WebComponentsReady', init_distill);
   });
-  
+
   </script>
-  
+
   <!--/radix_placeholder_distill-->
+  <script src="how-to-shorten-a-measurement-instrument-automatically-part-ii_files/header-attrs-2.5/header-attrs.js"></script>
   <script src="how-to-shorten-a-measurement-instrument-automatically-part-ii_files/jquery-1.11.3/jquery.min.js"></script>
   <script src="how-to-shorten-a-measurement-instrument-automatically-part-ii_files/anchor-4.2.2/anchor.min.js"></script>
   <script src="how-to-shorten-a-measurement-instrument-automatically-part-ii_files/bowser-1.9.3/bowser.min.js"></script>
@@ -1421,7 +1436,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"How to Shorten a Measurement Instrument Automatically (Part II)","description":"Reducing the number of items in an existing measurement instrument (e.g., tests, surveys,\nquestionnaires) is almost as tedious as creating a new instrument. Going through all of \nthe items one by one and choosing the appropriate ones based on personal judgment could be highly \nlaborious and inefficient. In this two-part series, I will demonstrate how to shorten a\nmeasurement instrument automatically in R. The first part focuses on the use of automated test\nassembly and recursive feature elimination for the automatic selection of items.\n\n(1 min read)","authors":[{"author":"Okan Bulut","authorURL":"http://www.okanbulut.com/","affiliation":"University of Alberta","affiliationURL":"https://www.ualberta.ca","orcidID":"0000-0001-5853-1267"}],"publishedDate":"2021-01-13T00:00:00.000-07:00","citationText":"Bulut, 2021"}
+{"title":"How to Shorten a Measurement Instrument Automatically (Part II)","description":"Do you think there are too many questions on your survey? Are you worried that participants \nmay get tired of responding to the questions in the middle of the survey? In this two-part series, I \ndemonstrate how to shorten measurement instruments such as surveys automatically in R. The second part \nfocuses on the use of two optimization algorithms (genetic algorithm and ant colony optimization) for\nreducing the number of questions in surveys and similar instruments.\n\n(4 min read)","authors":[{"author":"Okan Bulut","authorURL":"http://www.okanbulut.com/","affiliation":"University of Alberta","affiliationURL":"https://www.ualberta.ca","orcidID":"0000-0001-5853-1267"},{"author":"Hatice Cigdem Bulut","authorURL":"#","affiliation":"Cukurova University","affiliationURL":"https://www.cu.edu.tr","orcidID":"0000-0003-2585-3686"}],"publishedDate":"2021-01-21T00:00:00.000-07:00","citationText":"Bulut & Bulut, 2021"}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -1439,14 +1454,16 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <div class="dt=tag">optimization</div>
 </div>
 <!--/radix_placeholder_categories-->
-<p><p>Reducing the number of items in an existing measurement instrument (e.g., tests, surveys, questionnaires) is almost as tedious as creating a new instrument. Going through all of the items one by one and choosing the appropriate ones based on personal judgment could be highly laborious and inefficient. In this two-part series, I will demonstrate how to shorten a measurement instrument automatically in R. The first part focuses on the use of automated test assembly and recursive feature elimination for the automatic selection of items.</p>
-<p>(1 min read)</p></p>
+<p><p>Do you think there are too many questions on your survey? Are you worried that participants may get tired of responding to the questions in the middle of the survey? In this two-part series, I demonstrate how to shorten measurement instruments such as surveys automatically in R. The second part focuses on the use of two optimization algorithms (genetic algorithm and ant colony optimization) for reducing the number of questions in surveys and similar instruments.</p>
+<p>(4 min read)</p></p>
 </div>
 
 <div class="d-byline">
   Okan Bulut <a href="http://www.okanbulut.com/" class="uri">http://www.okanbulut.com/</a> (University of Alberta)<a href="https://www.ualberta.ca" class="uri">https://www.ualberta.ca</a>
   
-<br/>01-13-2021
+,   Hatice Cigdem Bulut  (Cukurova University)<a href="https://www.cu.edu.tr" class="uri">https://www.cu.edu.tr</a>
+  
+<br/>01-21-2021
 </div>
 
 <div class="d-article">
@@ -1454,16 +1471,112 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <nav class="l-text toc figcaption" id="TOC">
 <h3>Contents</h3>
 <ul>
-<li><a href="#introduction">Introduction</a></li>
+<li><a href="#introduction">Introduction</a>
+<ul>
+<li><a href="#optimization-with-ga-and-aco">Optimization with GA and ACO</a></li>
+</ul></li>
+<li><a href="#example">Example</a>
+<ul>
+<li><a href="#genetic-algorithm">Genetic Algorithm</a></li>
+<li><a href="#ant-colony-optimization">Ant Colony Optimization</a></li>
+</ul></li>
+<li><a href="#conclusion">Conclusion</a></li>
 </ul>
 </nav>
 </div>
 <figure>
-<img src="pexels-poranimm.jpg" alt="" /><figcaption>Photo by <a href="https://www.pexels.com/@poranimm-athithawatthee-284222">Poranimm Athithawatthee</a> on <a href="https://www.pexels.com/">Pexels</a></figcaption>
+<img src="pexels-poranimm.jpg" alt="Photo by Poranimm Athithawatthee on Pexels" /><figcaption aria-hidden="true">Photo by <a href="https://www.pexels.com/@poranimm-athithawatthee-284222">Poranimm Athithawatthee</a> on <a href="https://www.pexels.com/">Pexels</a></figcaption>
 </figure>
 <h2 id="introduction">Introduction</h2>
-<p>With the COVID-19 pandemic, many educators around the world have …</p>
+<p>In the social and behavioral sciences, researchers often use surveys, questionnaires, or scales to collect data from a sample of participants. Such instruments provide an efficient and effective way to collect information about a large group of individuals.</p>
+<blockquote>
+<p>Surveys are used to collect information from or about people to describe, compare, or explain their knowledge, feelings, values, and behaviors. <span class="citation" data-cites="fink2015conduct">(<a href="#ref-fink2015conduct" role="doc-biblioref">Fink 2015</a>)</span></p>
+</blockquote>
+<p>Sometimes respondents may get tired of answering the questions during the survey taking process—especially if the survey is very long. This is known as <em>survey taking fatigue</em>. The presence of survey taking fatigue can affect response quality significantly. When respondents get tired, they may skip questions, provide inaccurate responses due to insufficient effort responding, or even abandon the survey completely. To alleviate this issue, it is important to reduce survey length properly.</p>
+<p>In the <a href="https://okan.cloud/posts/2021-01-04-how-to-shorten-a-measurement-instrument-automatically-part-i/">first part of this series</a>, I demonstrated how to use automated test assembly and recursive feature elimination to automatically shorten educational assessments (e.g., multiple-choice exams, tests, and quizzes). In the second part, I will demonstrate how to use the following optimization algorithmsfor creating shorter versions of surveys and similar instruments:</p>
+<ul>
+<li>Genetic algorithm (GA; 🧬)</li>
+<li>Ant colony optimization (ACO; 🐜)</li>
+</ul>
+<h3 id="optimization-with-ga-and-aco">Optimization with GA and ACO</h3>
+<p>In computer science, a genetic algorithm (GA) is essentially a search heuristic that mimics Charles Darwin’s theory of natural evolution. The algorithm reflects the process of natural selection by iteratively selecting and mating high-quality individuals (i.e., solutions) that are more likely to survive and eliminating weak individuals from generating more weak individuals. This process continues until GA finds an optimal or acceptable solution.</p>
+<blockquote>
+<p>Genetic algorithms are commonly used to generate high-quality solutions to optimization and search problems by relying on biologically inspired operators such as mutation, crossover and selection. <span class="citation" data-cites="mitchell1998introduction">(<a href="#ref-mitchell1998introduction" role="doc-biblioref">Mitchell 1998</a>)</span></p>
+</blockquote>
+<p>In the context of survey abbreviation, GA can be used as an optimization tool for finding a subset of questions that maximally captures the variance (i.e., <span class="math inline">\(R^2\)</span>) in the original data. <span class="citation" data-cites="yarkoni2010abbreviation"><a href="#ref-yarkoni2010abbreviation" role="doc-biblioref">Yarkoni</a> (<a href="#ref-yarkoni2010abbreviation" role="doc-biblioref">2010</a>)</span> proposed the following cost function for scale abbreviation:</p>
+<p><span class="math display">\[Cost = Ik + \Sigma^s_i w_i(1-R^2_i)\]</span> where <span class="math inline">\(I\)</span> represents a user-specified fixed item cost, <span class="math inline">\(k\)</span> represents the number of items to be retained by GA, <span class="math inline">\(s\)</span> is the number of subscales in the measure, <span class="math inline">\(w_i\)</span> are the weights associated with each subscale, and <span class="math inline">\(R^2\)</span> is the amount of variance in the <span class="math inline">\(i^{th}\)</span> subscale explained by its items. If the cost of retaining a particular item is larger than the loss in <span class="math inline">\(R^2\)</span>, then the item is dropped from its subscale (i.e., GA returns a shorter subscale). <span class="citation" data-cites="yarkoni2010abbreviation"><a href="#ref-yarkoni2010abbreviation" role="doc-biblioref">Yarkoni</a> (<a href="#ref-yarkoni2010abbreviation" role="doc-biblioref">2010</a>)</span> demonstrated the use of GA in abbreviating lengthy personality scales and thereafter many researchers have used GA to abbreviate psychological scales (e.g., <span class="citation" data-cites="crone2020developing"><a href="#ref-crone2020developing" role="doc-biblioref">Crone, Rhee, and Laham</a> (<a href="#ref-crone2020developing" role="doc-biblioref">2020</a>)</span>, <span class="citation" data-cites="eisenbarth2015using"><a href="#ref-eisenbarth2015using" role="doc-biblioref">Eisenbarth, Lilienfeld, and Yarkoni</a> (<a href="#ref-eisenbarth2015using" role="doc-biblioref">2015</a>)</span>, <span class="citation" data-cites="gaarticle1"><a href="#ref-gaarticle1" role="doc-biblioref">Sahdra et al.</a> (<a href="#ref-gaarticle1" role="doc-biblioref">2016</a>)</span>)<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<p>Like GA, the ant colony optimization (ACO) is also an optimization method. ACO was first inspired by the collective behavior of Argentine ants called <em>iridomyrmex humilis</em> <span class="citation" data-cites="goss1989self">(<a href="#ref-goss1989self" role="doc-biblioref">Goss et al. 1989</a>)</span>. While searching for food, ants deposit pheromone on the ground and follow pheromone previously deposited by other ants. Since the shortest path is more likely to retain pheromone, ants are able to follow this path and find promising food sources more quickly. Figure 1 illustrates this process.</p>
+<figure>
+<img src="aco.png" alt="Figure 1: How real ants find a shortest path. (a) Ants arrive at a decision point. (b) Some ants choose the upper path and some the lower path. The choice is random. (c) Since ants move at approximately a constant speed, the ants which choose the lower, shorter, path reach the opposite decision point faster than those which choose the upper, longer, path. (d) Pheromone accumulates at a higher rate on the shorter path. The number of dashed lines is approximately proportional to the amount of pheromone deposited by ants (Obtained from page 54 in Dorigo, Maniezzo, and Colorni (1996))" /><figcaption aria-hidden="true"><strong>Figure 1:</strong> How real ants find a shortest path. (a) Ants arrive at a decision point. (b) Some ants choose the upper path and some the lower path. The choice is random. (c) Since ants move at approximately a constant speed, the ants which choose the lower, shorter, path reach the opposite decision point faster than those which choose the upper, longer, path. (d) Pheromone accumulates at a higher rate on the shorter path. The number of dashed lines is approximately proportional to the amount of pheromone deposited by ants (Obtained from page 54 in <span class="citation" data-cites="dorigo1996ant"><a href="#ref-dorigo1996ant" role="doc-biblioref">Dorigo, Maniezzo, and Colorni</a> (<a href="#ref-dorigo1996ant" role="doc-biblioref">1996</a>)</span>)</figcaption>
+</figure>
+<p>Engineers decided to use the way Argentine ant colonies function as an analogy to solve the shortest path problem and created the ACO algorithm <span class="citation" data-cites="dorigo1996ant dorigo1997ant">(<a href="#ref-dorigo1996ant" role="doc-biblioref">Dorigo, Maniezzo, and Colorni 1996</a>; <a href="#ref-dorigo1997ant" role="doc-biblioref">Dorigo and Gambardella 1997</a>)</span>. Then, <span class="citation" data-cites="marcoulides2003model"><a href="#ref-marcoulides2003model" role="doc-biblioref">G. A. Marcoulides and Drezner</a> (<a href="#ref-marcoulides2003model" role="doc-biblioref">2003</a>)</span> applied ACO to model specification searches in structural equation modeling (SEM). The goal of this approach is to automate the model fitting process in SEM by starting with a user-specified model and then fitting alternative models to fix missing paths or parameters. This iterative process continues until an optimal model (e.g., a model with good model-fit indices) is identified. <span class="citation" data-cites="leite2008item"><a href="#ref-leite2008item" role="doc-biblioref">Leite, Huang, and Marcoulides</a> (<a href="#ref-leite2008item" role="doc-biblioref">2008</a>)</span> used the ACO algorithm for the development of short forms of scales and found that ACO outperformed traditionally used methods of item selection. In a more recent study, <span class="citation" data-cites="falk"><a href="#ref-falk" role="doc-biblioref">K. M. Marcoulides and Falk</a> (<a href="#ref-falk" role="doc-biblioref">2018</a>)</span> demonstrated how to use ACO for model specification searches in R.</p>
+<h2 id="example">Example</h2>
+<p>In this example, we will use the <a href="http://labs.psychology.illinois.edu/~rcfraley/measures/brennan.html">Experiences in Close Relationships Scale</a> <span class="citation" data-cites="brennan1998self">(<a href="#ref-brennan1998self" role="doc-biblioref">Brennan, Clark, and Shaver 1998</a>)</span>. The <a href="http://openpsychometrics.org/_rawdata/ECR-data-1March2018.zip">original data set</a> is available on the Open-Source Psychometric Project <a href="https://openpsychometrics.org/">website</a>. For demonstration purposes, we will use a subset of the original data set based on the following rules:</p>
+<ul>
+<li>Respondents must participate the survey from the United States, and</li>
+<li>Respondents must be between 18 and 30 years of age.</li>
+</ul>
+<p>In addition, some items have been reverse-coded (items 3, 15, 19, 22, 25, 29, 31, 33, 35) and the participants with missing responses have been eliminated from the data set. The final data set is available <a href="https://raw.githubusercontent.com/okanbulut/tds/main/scale_abbreviation/ecr_data.csv">here</a>.</p>
+<h3 id="genetic-algorithm">Genetic Algorithm</h3>
+<p>We will use the <strong>GAabbreviate</strong> package <span class="citation" data-cites="gaabbreviate">(<a href="#ref-gaabbreviate" role="doc-biblioref">Scrucca and Sahdra 2016</a>)</span> to implement GA for scale abbreviation.</p>
+<h3 id="ant-colony-optimization">Ant Colony Optimization</h3>
+<p>We will use the <strong>ShortForm</strong> package <span class="citation" data-cites="shortform">(<a href="#ref-shortform" role="doc-biblioref">Raborn and Leite 2020</a>)</span> to implement ACO for scale abbreviation.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>xxx</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography">
+<div id="ref-brennan1998self" class="csl-entry" role="doc-biblioentry">
+Brennan, Kelly A, Catherine L Clark, and P Shaver. 1998. <span>“Self-Report Measures of Adult Romantic Attachment.”</span> <em>Attachment Theory and Close Relationships</em>, 46–76.
+</div>
+<div id="ref-crone2020developing" class="csl-entry" role="doc-biblioentry">
+Crone, Damien L, Joshua J Rhee, and Simon M Laham. 2020. <span>“Developing Brief Versions of the Moral Foundations Vignettes Using a Genetic Algorithm-Based Approach.”</span> <em>Behavior Research Methods</em>, 1–9.
+</div>
+<div id="ref-dorigo1997ant" class="csl-entry" role="doc-biblioentry">
+Dorigo, Marco, and Luca Maria Gambardella. 1997. <span>“Ant Colony System: A Cooperative Learning Approach to the Traveling Salesman Problem.”</span> <em>IEEE Transactions on Evolutionary Computation</em> 1 (1): 53–66.
+</div>
+<div id="ref-dorigo1996ant" class="csl-entry" role="doc-biblioentry">
+Dorigo, Marco, Vittorio Maniezzo, and Alberto Colorni. 1996. <span>“Ant System: Optimization by a Colony of Cooperating Agents.”</span> <em>IEEE Transactions on Systems, Man, and Cybernetics, Part B (Cybernetics)</em> 26 (1): 29–41.
+</div>
+<div id="ref-eisenbarth2015using" class="csl-entry" role="doc-biblioentry">
+Eisenbarth, Hedwig, Scott O Lilienfeld, and Tal Yarkoni. 2015. <span>“Using a Genetic Algorithm to Abbreviate the Psychopathic Personality Inventory–Revised (PPI-r).”</span> <em>Psychological Assessment</em> 27 (1): 194.
+</div>
+<div id="ref-fink2015conduct" class="csl-entry" role="doc-biblioentry">
+Fink, Arlene. 2015. <em>How to Conduct Surveys: A Step-by-Step Guide</em>. Sage Publications.
+</div>
+<div id="ref-goss1989self" class="csl-entry" role="doc-biblioentry">
+Goss, Simon, Serge Aron, Jean-Louis Deneubourg, and Jacques Marie Pasteels. 1989. <span>“Self-Organized Shortcuts in the Argentine Ant.”</span> <em>Naturwissenschaften</em> 76 (12): 579–81.
+</div>
+<div id="ref-leite2008item" class="csl-entry" role="doc-biblioentry">
+Leite, Walter L, I-Chan Huang, and George A Marcoulides. 2008. <span>“Item Selection for the Development of Short Forms of Scales Using an Ant Colony Optimization Algorithm.”</span> <em>Multivariate Behavioral Research</em> 43 (3): 411–31.
+</div>
+<div id="ref-marcoulides2003model" class="csl-entry" role="doc-biblioentry">
+Marcoulides, George A, and Zvi Drezner. 2003. <span>“Model Specification Searches Using Ant Colony Optimization Algorithms.”</span> <em>Structural Equation Modeling</em> 10 (1): 154–64.
+</div>
+<div id="ref-falk" class="csl-entry" role="doc-biblioentry">
+Marcoulides, Katerina M, and Carl F Falk. 2018. <span>“Model Specification Searches in Structural Equation Modeling with r.”</span> <em>Structural Equation Modeling: A Multidisciplinary Journal</em> 25 (3): 484–91. <a href="https://doi.org/10.1080/10705511.2017.1409074">https://doi.org/10.1080/10705511.2017.1409074</a>.
+</div>
+<div id="ref-mitchell1998introduction" class="csl-entry" role="doc-biblioentry">
+Mitchell, Melanie. 1998. <em>An Introduction to Genetic Algorithms</em>. MIT press.
+</div>
+<div id="ref-shortform" class="csl-entry" role="doc-biblioentry">
+Raborn, Anthony, and Walter Leite. 2020. <em>ShortForm: Automatic Short Form Creation</em>. <a href="https://CRAN.R-project.org/package=ShortForm">https://CRAN.R-project.org/package=ShortForm</a>.
+</div>
+<div id="ref-gaarticle1" class="csl-entry" role="doc-biblioentry">
+Sahdra, Baljinder K., Joseph Ciarrochi, Philip Parker, and Luca Scrucca. 2016. <span>“Using Genetic Algorithms in a Large Nationally Representative American Sample to Abbreviate the Multidimensional Experiential Avoidance Questionnaire.”</span> <em>Frontiers in Psychology</em> 7: 189. <a href="https://doi.org/10.3389/fpsyg.2016.00189">https://doi.org/10.3389/fpsyg.2016.00189</a>.
+</div>
+<div id="ref-gaabbreviate" class="csl-entry" role="doc-biblioentry">
+Scrucca, Luca, and Baljinder K. Sahdra. 2016. <em>GAabbreviate: Abbreviating Items Measures Using Genetic Algorithms</em>. <a href="https://CRAN.R-project.org/package=GAabbreviate">https://CRAN.R-project.org/package=GAabbreviate</a>.
+</div>
+<div id="ref-yarkoni2010abbreviation" class="csl-entry" role="doc-biblioentry">
+Yarkoni, Tal. 2010. <span>“The Abbreviation of Personality, or How to Measure 200 Personality Scales with 200 Items.”</span> <em>Journal of Research in Personality</em> 44 (2): 180–98.
+</div>
+</div>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>See Yarkoni’s blog post on the use of GA at <a href="https://www.talyarkoni.org/blog/2010/03/31/abbreviating-personality-measures-in-r-a-tutorial/" class="uri">https://www.talyarkoni.org/blog/2010/03/31/abbreviating-personality-measures-in-r-a-tutorial/</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
@@ -1471,6 +1584,15 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <div class="d-appendix">
 </div>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 
 <!--radix_placeholder_site_after_body-->
 <!--/radix_placeholder_site_after_body-->
