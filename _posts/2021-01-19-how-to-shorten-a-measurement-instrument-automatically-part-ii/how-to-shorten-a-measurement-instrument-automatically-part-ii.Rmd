@@ -33,7 +33,6 @@ output:
   distill::distill_article:
     self_contained: false
     toc: true
-draft: true
 ---
 
 ```{r setup, include=FALSE}
@@ -56,9 +55,9 @@ In the social and behavioral sciences, researchers often use surveys, questionna
 > Surveys are used to collect information from or about people to describe, compare, or
 explain their knowledge, feelings, values, and behaviors. [@fink2015conduct]
 
-Sometimes respondents may get tired of answering the questions during the survey taking process---especially if the survey is very long. This is known as *survey taking fatigue*. The presence of survey taking fatigue can affect response quality significantly. When respondents get tired, they may skip questions, provide inaccurate responses due to insufficient effort responding, or even abandon the survey completely. To alleviate this issue, it is important to reduce survey length properly.
+Sometimes respondents may get tired of answering the questions during the survey-taking process---especially if the survey is very long. This is known as *survey taking fatigue*. The presence of survey taking fatigue can affect response quality significantly. When respondents get tired, they may skip questions, provide inaccurate responses due to insufficient effort responding, or even abandon the survey completely. To alleviate this issue, it is important to reduce survey length properly.
 
-In the [first part of this series](https://okan.cloud/posts/2021-01-04-how-to-shorten-a-measurement-instrument-automatically-part-i/), I demonstrated how to use automated test assembly and recursive feature elimination to automatically shorten educational assessments (e.g., multiple-choice exams, tests, and quizzes). In the second part, I will demonstrate how to use the following optimization algorithmsfor creating shorter versions of surveys and similar instruments:
+In the [first part of this series](https://okan.cloud/posts/2021-01-04-how-to-shorten-a-measurement-instrument-automatically-part-i/), I demonstrated how to use automated test assembly and recursive feature elimination to automatically shorten educational assessments (e.g., multiple-choice exams, tests, and quizzes). In the second part, I will demonstrate how to use the following optimization algorithms for creating shorter versions of surveys and similar instruments:
 
 * Genetic algorithm (GA; `r ji("gene")`)
 * Ant colony optimization (ACO; `r ji("ant")`)
@@ -74,12 +73,11 @@ In the context of survey abbreviation, GA can be used as an optimization tool fo
 $$Cost = Ik + \Sigma^s_i w_i(1-R^2_i)$$
 where $I$ represents a user-specified fixed item cost, $k$ represents the number of items to be retained by GA, $s$ is the number of subscales in the measure, $w_i$ are the weights associated with each subscale, and $R^2$ is the amount of variance in the $i^{th}$ subscale explained by its items. If the cost of retaining a particular item is larger than the loss in $R^2$, then the item is dropped from its subscale (i.e., GA returns a shorter subscale). @yarkoni2010abbreviation demonstrated the use of GA in abbreviating lengthy personality scales and thereafter many researchers have used GA to abbreviate psychological scales (e.g., @crone2020developing, @eisenbarth2015using, @gaarticle1)^[See Yarkoni's blog post on the use of GA at https://www.talyarkoni.org/blog/2010/03/31/abbreviating-personality-measures-in-r-a-tutorial/]. 
 
-Like GA, the ant colony optimization (ACO) is also an optimization method. ACO was first inspired by the collective behavior of Argentine ants called *iridomyrmex humilis* [@goss1989self]. While searching for food, these ants drop pheromone on the ground and follow pheromone previously dropped by other ants. Since the shortest path is more likely to retain pheromone, ants are able to follow this path and find promising food sources more quickly. Figure 1 illustrates this process. 
+Like GA, the ant colony optimization (ACO) is also an optimization method. ACO was first inspired by the collective behavior of Argentine ants called *iridomyrmex humilis* [@goss1989self]. While searching for food, these ants drop pheromone on the ground and follow pheromone previously dropped by other ants. Since the shortest path is more likely to retain pheromone, ants can follow this path and find promising food sources more quickly. Figure 1 illustrates this process. 
 
 ![**Figure 1:** How real ants find a shortest path. (a) Ants arrive at a decision point. (b) Some ants choose the upper path and some the lower path. The choice is random. (c) Since ants move at approximately a constant speed, the ants which choose the lower, shorter, path reach the opposite decision point faster than those which choose the upper, longer, path. (d) Pheromone accumulates at a higher rate on the shorter path. The number of dashed lines is approximately proportional to the amount of pheromone deposited by ants (Obtained from @dorigo1996ant, page 54)](aco.png)
 
-Engineers decided to use the way Argentine ant colonies function as an analogy to solve the shortest path problem and created the ACO algorithm [@dorigo1996ant; @dorigo1997ant]. Then, @marcoulides2003model applied ACO to model specification searches in structural equation modeling (SEM). The goal of this approach is to automate the model fitting process in SEM by starting with a user-specified model and then fitting alternative models to fix missing paths or parameters. This iterative process continues until an optimal model (e.g., a model with good model-fit indices) is identified. @leite2008item used the ACO algorithm for the development of short forms of scales and found that ACO outperformed traditionally used methods of item selection. In a more recent study, @falk demonstrated how to use ACO for model specification searches in R. 
-
+Engineers decided to use the way Argentine ant colonies function as an analogy to solve the shortest path problem and created the ACO algorithm [@dorigo1996ant; @dorigo1997ant]. Then, @marcoulides2003model applied ACO to model specification searches in structural equation modeling (SEM). The goal of this approach is to automate the model fitting process in SEM by starting with a user-specified model and then fitting alternative models to fix missing paths or parameters. This iterative process continues until an optimal model (e.g., a model with good model-fit indices) is identified. @leite2008item used the ACO algorithm for the development of short forms of scales and found that ACO outperformed traditionally used methods of item selection. In a more recent study, @falk demonstrated how to use ACO for model specification searches in R.
 
 ## Example
 
@@ -89,7 +87,7 @@ In this example, we will use the [Experiences in Close Relationships (ECR)](http
 
 @wei2007experiences developed a 12-item, short form of the ERC scale using traditional methods (e.g., dropping items with low item-total correlation and keeping items with the highest factor loadings). In our example, we will use the GA and ACO algorithms to automatically select the best items for the two subscales of the ECR scale. The [original data set](http://openpsychometrics.org/_rawdata/ECR-data-1March2018.zip) for the ERC scale is available on the Open-Source Psychometric Project [website](https://openpsychometrics.org/). For demonstration purposes, we will use a subset ($n = 10,798$) of the original data set based on the following rules: 
 
-* Respondents must participate the survey from the United States, and
+* Respondents must participate in the survey from the United States, and
 * Respondents must be between 18 and 30 years of age. 
 
 In the ERC scale, some items are positively phrased and thus indicate lower avoidance (or anxiety) for respondents. Therefore, these items (items 3, 15, 19, 22, 25, 29, 31, 33, 35) have been reverse-coded^[See the full list of questions at <http://labs.psychology.illinois.edu/~rcfraley/measures/brennan.html>.]. Lastly, the respondents with missing responses have been eliminated from the data set. The final data set is available [here](https://raw.githubusercontent.com/okanbulut/tds/main/scale_abbreviation/ecr_data.csv). 
@@ -136,7 +134,7 @@ Now, we will go ahead and shorten the instrument using GA and ACO.
 
 **Goal:** Using both GA and ACO, we aim to select six items for each subscale. That is, we want to create a short version of the ECR scale with 12 items in total. 
 
-**Assumptions:** We will assume that: (1) the items that belong to each subscale measure the same latent trait (i.e., either avoidance or anxiety) and the subscales do not exhibit any psychometric issues (e.g., differential item functioning).
+**Assumptions:** We will assume that: (1) the items that belong to each subscale measure the same latent trait (i.e., either avoidance or anxiety), and the subscales do not exhibit any psychometric issues (e.g., differential item functioning).
 
 **Methodology:** We will use the GA and ACO algorithms to automatically select the items from the ECR subscale. Although these algorithms aim to shorten the subscales, they follow selection mechanisms based on different criteria. These will be explained in the following sections. 
 
@@ -157,7 +155,7 @@ scales = cbind(rowSums(ecr[, seq(1, 35, by = 2)]),
                )
 ```
 
-**Step 2:** We will transform the responses into an integer and then save the response data set as a matrix.
+**Step 2:** We will transform each item response into an integer and then save the response data set as a matrix.
 
 ```{r, echo=TRUE, eval=TRUE}
 ecr <- as.data.frame(sapply(ecr, as.integer))
@@ -210,13 +208,13 @@ Iter = 11 | Mean = 0.3898  | Best = 0.3175
 ```
 
 
-**Step 4:** If the **GAabbreviate** function finds an optimal solution before the maximum number of iterations, it automatically stops; otherwise, it continues until the maximum number of iterations is reached.Then, we can view the results as follows: 
+**Step 4:** If the **GAabbreviate** function finds an optimal solution before the maximum number of iterations, it automatically stops; otherwise, it continues until the maximum number of iterations is reached. Then, we can view the results as follows: 
 
 ```{r, echo=TRUE, eval=TRUE}
 ecr_GA$measure
 ```
 
-The output shows a list of which items have been selected (items) and which of those items belong to each dimension (key). To combine the two pieces together, we can use the following:
+The output above shows a list of which items have been selected (items) and which of those items belong to each dimension (key). To combine the two pieces together, we can use the following:
 
 ```{r, echo=TRUE, eval=TRUE}
 avoidance <- which(ecr_GA$measure$key[,1]==1)
@@ -229,11 +227,19 @@ ecr_GA$measure$items[avoidance]
 ecr_GA$measure$items[anxiety]
 ```
 
-Furthermore, we can see a visual summary of the search process using the **plot** function:
+Based on the selected items, we can see the estimated reliability coefficients (i.e., alpha) for each subscale. For both subscales, reliability levels seem to be acceptable but much lower than those we estimated for the original ECR scale earlier. 
+
+```{r, echo=TRUE, eval=TRUE}
+ecr_GA$measure$alpha
+```
+
+Lastly, we will see a visual summary of the search process using the **plot** function:
 
 ```{r, echo=TRUE, eval=TRUE}
 plot(ecr_GA)
 ```
+
+The diagnostic plots on the left-hand side show how total cost, the length of the ECR scale, and the mean $R^2$ value have changed during the search process. The plot in the middle shows the amount of variance explained (i.e., $R^2$) for the best solution---nearly $R^2=.90$ for each subscale. The plot on the right-hand side shows which items have been selected during the search process. Those at the bottom of the plot (e.g., 2, 7, 10) indicate the set of items included in the optimal solution.  
 
 ### Ant Colony Optimization
 
@@ -243,7 +249,7 @@ We will use the **antcolony.lavaan** function from the **ShortForm** package [@s
 library("ShortForm")
 ```
 
-**Step 1:** We will save the response data set as a data.frame because the **antcolony.lavaan** function requires the data to be in a data frame format. This step is necessary because for the **GAabbreviate** function, we have transformed our data set into a matrix. So, we will need to change the format back to a data frame and rename the columns as before. 
+**Step 1:** We will save the response data set as a data.frame because the **antcolony.lavaan** function requires the data to be in a data frame format. This step is necessary because, for the **GAabbreviate** function, we have transformed our data set into a matrix. So, we will need to change the format back to a data frame and rename the columns as before. 
 
 ```{r, echo=TRUE, eval=TRUE}
 ecr <- as.data.frame(ecr)
@@ -318,7 +324,7 @@ ecr_ACO[[1]]
 # print(ecr_AC) 
 ```
 
-Next, we will check which items have been selected for each dimension. The following will return the lavaan syntax that can be used to estimate the same two-factor model with 12 items:
+Next, we will check which items have been selected for each dimension. The following will return the **lavaan** syntax that can be used to estimate the same two-factor model with 12 items:
 
 ```{r, echo=TRUE, eval=TRUE}
 cat(ecr_ACO$best.syntax)
@@ -344,18 +350,12 @@ psych::alpha(ecr[, c("Q7", "Q17", "Q13", "Q9", "Q5", "Q3")])$total
 psych::alpha(ecr[, c("Q2", "Q10", "Q6", "Q22", "Q8", "Q4")])$total
 ```
 
+For both subscales of the ECR scale, the reliability levels are quite high based on the items recommended by ACO. These reliability estimates are closer to those we have obtained from the original ECR scale.
+
 ## Conclusion
 
-xxx
-
-
-
-
-
-
-
-
-
+In our example, both GA and ACO could recommend a shorter version of the ECR scale with 6 items per subscale. GA is relatively easier to use because we only needed to feed the scale score information and the target number of items per subscale into the **GAabbreviate** function but we did not have to specify which items belong to each subscale. The **GAabbreviate** function runs and finds the solution quickly---though the performance of the function would depend on the number of items in the original instrument (i.e., the one that we want to shorten) and the quality of response data. Also, finding the ideal value for item cost (i.e., **itemCost**) by trial and error might take longer in some cases. In terms of reliability, the short versions of the Avoidance and Anxiety subscales yielded acceptable levels of reliability, although the reliability coefficients seem to be much lower than those we have estimated for the original ECR subscales. 
+Unlike GA, ACO requires multiple user inputs, such as the factor model underlying the data, a list of the items to be used for each dimension in the factor model, and additional **lavaan** settings. However, specifying these parameters correctly enables better control of the search process and thereby yielding more accurate results for the shortened subscales. The **antcolony.lavaan** function finds the optimal solution quickly (a bit slower than **GAabbreviate**). The speed of the search process depends on the number of ants, evaporation rate, model fit indices, and the cut-off values established for these indices. For example, the cut-off values can be modified (e.g., CFI > .90, TLI > .90) to speed up the search process. Finally, the shortened subscales returned from **antcolony.lavaan** yielded high reliability values (and these values are higher than those we have obtained from **GAabbreviate**).
 
 
 

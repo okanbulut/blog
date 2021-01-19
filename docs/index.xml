@@ -13,7 +13,26 @@ psychological data
       <link>https://okan.cloud/</link>
     </image>
     <generator>Distill</generator>
-    <lastBuildDate>Mon, 04 Jan 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 19 Jan 2021 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>How to Shorten a Measurement Instrument Automatically (Part II)</title>
+      <dc:creator>Okan Bulut</dc:creator>
+      <dc:creator>Hatice Cigdem Bulut</dc:creator>
+      <link>https://okan.cloud/posts/2021-01-19-how-to-shorten-a-measurement-instrument-automatically-part-ii</link>
+      <description>Do you think there are too many questions on your survey? Are you worried that participants 
+may get tired of responding to the questions in the middle of the survey? In this two-part series, I 
+demonstrate how to shorten measurement instruments such as surveys automatically in R. The second part 
+focuses on the use of two optimization algorithms (genetic algorithm and ant colony optimization) for
+reducing the number of questions in surveys and similar instruments.
+
+(13 min read)</description>
+      <category>psychometrics</category>
+      <category>machine learning</category>
+      <category>optimization</category>
+      <guid>https://okan.cloud/posts/2021-01-19-how-to-shorten-a-measurement-instrument-automatically-part-ii</guid>
+      <pubDate>Tue, 19 Jan 2021 00:00:00 +0000</pubDate>
+      <media:content url="https://okan.cloud/posts/2021-01-19-how-to-shorten-a-measurement-instrument-automatically-part-ii/pexels-poranimm.jpg" medium="image" type="image/jpeg"/>
+    </item>
     <item>
       <title>How to Shorten a Measurement Instrument Automatically (Part I)</title>
       <dc:creator>Okan Bulut</dc:creator>
