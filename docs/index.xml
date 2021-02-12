@@ -13,7 +13,22 @@ psychological data
       <link>https://okan.cloud/</link>
     </image>
     <generator>Distill</generator>
-    <lastBuildDate>Tue, 19 Jan 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 12 Feb 2021 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>A Polytomous Scoring Approach Based on Item Response Time</title>
+      <dc:creator>Okan Bulut</dc:creator>
+      <dc:creator>Guher Gorgun</dc:creator>
+      <link>https://okan.cloud/posts/2021-02-12-a-polytomous-scoring-approach-based-on-item-response-time</link>
+      <description>In this post, we introduce a polytomous scoring approach based on the optimal use of item response time. This approach provides an easy and practical way to deal with not-reached items in low-stakes assessments. First, we describe how the polytomous scoring approach works and then demonstrate how to implement this approach using R.
+
+(12 min read)</description>
+      <category>psychometrics</category>
+      <category>response time</category>
+      <category>IRT</category>
+      <guid>https://okan.cloud/posts/2021-02-12-a-polytomous-scoring-approach-based-on-item-response-time</guid>
+      <pubDate>Fri, 12 Feb 2021 00:00:00 +0000</pubDate>
+      <media:content url="https://okan.cloud/posts/2021-02-12-a-polytomous-scoring-approach-based-on-item-response-time/clock1.jpg" medium="image" type="image/jpeg"/>
+    </item>
     <item>
       <title>How to Shorten a Measurement Instrument Automatically (Part II)</title>
       <dc:creator>Okan Bulut</dc:creator>
