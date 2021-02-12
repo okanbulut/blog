@@ -1,7 +1,7 @@
 ---
-title: "A Response Time-Based Scoring Approach to Handle Not-Reached Items"
+title: "A Polytomous Scoring Approach Based on Item Response Time"
 description: |
-  In this post, we will introduce and walk you through an easy and practical way to deal with not-reached items in a low-stakes assessment. First, we will introduce a polytomous scoring approach to deal with not-reach items in computerized low-stakes assessments and then demonstrate how to implement the polytomous scoring approach using R. This approach does not make any explicit assumption regarding the association between not-reached items and student ability, but only considers optimal time use, hence engagement and effortful response behavior when dealing with not-reached items.
+  In this post, we introduce an easy and practical way to deal with not-reached items in a low-stakes assessment. First, we introduce a polytomous scoring approach to deal with not-reach items in computerized low-stakes assessments and then demonstrate how to implement the polytomous scoring approach using R. This approach does not make any explicit assumption regarding the association between not-reached items and student ability, but only considers optimal time use, hence engagement and effortful response behavior when dealing with not-reached items.
   ```{r, include=FALSE}
   bytes <- file.size("a-response-time-based-scoring-approach-to-handle-not-reached-items.Rmd")
   words <- bytes/10
@@ -9,15 +9,15 @@ description: |
   ``` 
   (`r round(minutes)` min read)
 author:
-  - name: Guher Gorgun
-    affiliation: University of Alberta
-    affiliation_url: https://www.ualberta.ca
-    orcid_id: 0000-0002-0861-9225
   - name: Okan Bulut
     url: http://www.okanbulut.com/
     affiliation: University of Alberta
     affiliation_url: https://www.ualberta.ca
     orcid_id: 0000-0001-5853-1267
+  - name: Guher Gorgun
+    affiliation: University of Alberta
+    affiliation_url: https://www.ualberta.ca
+    orcid_id: 0000-0002-0861-9225
 date: 02-09-2021
 categories:
   - psychometrics
@@ -47,59 +47,94 @@ suppressWarnings({
 
 ## Introduction
 
-Low-stakes assessments (e.g., formative assessments, screening tests, progress monitoring measures in K-12) usually have no direct consequences for students. Therefore, some students may not show effortful response behavior when attempting the items on such assessments. For example, some students may try to answer all of the items rapidly and complete the assessment in unrealistically short amounts of time. Oppositely, some students may spend unrealistically long amounts of time on each item and may not finish answering all of the items within the allotted time. In both scenarios, students fail to use the assessment duration optimally and fail to show effortful response behavior. Test disengagement, or the lack of test-taking motivation, is often considered the main reason for non-effortful response behavior.
+Low-stakes assessments (e.g., formative assessments and progress monitoring measures in K-12) usually have no direct consequences for students. Therefore, some students may not show effortful response behavior when attempting the items on such assessments and leave
+some items unanswered. These items are typically referred to as *not-reached* items. For example, some students may try to answer all of the items rapidly and complete the assessment in unrealistically short amounts of time. Oppositely, some students may spend unrealistically long amounts of time on each item and may not finish answering all of the items within the allotted time. Furthermore, students may leave items unanswered due to test speededness-the situation where the allotted time does not allow a large number of students to fully consider all items on the assessment [@lu2007].
 
+In practice, not-reached items are often treated as either incorrect or not-administered (i.e., NA) in the estimation of item and person parameters. However, when the proportion of not-reached items is high, these approaches may yield biased parameter estimates and thereby threatening the validity of assessment results. To date, researchers proposed various model-based approaches to deal with not-reached items, such as modeling valid responses and not-reached items jointly in a tree-based item response theory (IRT) model (e.g., @debeer2017) or modeling proficiency and tendency to omit items as distinct latent traits (e.g., @pohl2014). However, these are typically complex models that would not be easy to use in operational settings. 
 
+Response time spent on each item in an assessment is often considered as a strong proxy for students' engagement with the items (e.g., @kuhfeld2020, @pohl2019, @rios2017). To date, several researchers demonstrated the utility of response times in reducing the effects of non-effortful response behavior such as rapid guessing (e.g., @kuhfeld2020, @pohl2019, @wise2005). By identifying and removing responses where rapid guessing occurred, the accuracy of item and person parameter estimates can be improved, without having to apply a complex modeling approach. 
 
-Non-effortful response behavior combined with no consequences for test-takers could bring high rates of non-reached items in a low-stakes assessment. 
+In this post, we will demonstrate an alternative method that considers not only students with rapid guessing behavior but also students who spend too much time on each item and thereby leaving many items unanswered. In the following sections, we will briefly describe how our approach works and then demonstrate the use of this approach in R.
 
-In a given assessment, test-takers are expected to use their time optimally to attempt as many items as possible. Yet, anomalies in response behavior, usually reflected as unrealistically short or unrealistically long time spend for items, might contaminate item and person parameters. In other words, the test-takers' non-effortful response behavior do not reflect what they know or what they can do, thus these responses do not contribute to item and person parameter estimation. 
+## Polytomous Scoring
 
-We introduce a polytomous scoring approach to assign partial credits to test-takers based on their time use, hence based on their level of engagement with each item in the assessment. Response times spent for each item in an assessment have been widely considered as a proxy for student engagement (e.g., @kuhfeld2020, @pohl2019, @rios2017, @wise2005).
+In our recent study [@gorgun2021], we have proposed a new scoring approach that utilizes response times to transform dichotomous responses into polytomous responses. With our scoring approach, students are able to receive a partial credit on their responses depending on how accurately and rapidly they answer the items. This approach combines the speed and accuracy in the scoring process to alleviate the negative impact of not-reached items on the estimation of item and person parameters.
 
-By using response time, we can group test-takers into 3 categories: 
+To conceptualize our scoring approach, we introduce the concept of **optimal time** that refers to spending a reasonable amount of time interval when responding to an item. Optimal time allows us to make a distinction between students who spend optimal time but miss the item and students who spend too much time on the item and yet answer it incorrectly. By using response time, we group students into three categories: 
 
-1. **Rapid guessers** that answered an item in an unrealistically short amount of time, 
-2. **Slow respondents** that attempted the item in an unrealistically long amount of time, and 
-3. **Optimal time users** that answered the item using the the optimal time. 
+1. **Optimal time users** who answer the item using the the optimal time
+2. **Rapid guessers** who answer the item in an unrealistically short amount of time, and
+3. **Slow respondents** who answer the item in an unrealistically long amount of time.
 
-Here, we introduce **optimal time** to conceptualize that there is a reasonable amount of time interval that can be spend for an item given that the assessment is timed.
+If an assessment is timed, students are expected to adjust their speed to attempt as many items as possible within allotted time. Therefore, spending too little time (rapid guessers) or too much time (slow respondents) on a given item can be considered an outcome of disengaged response behavior. Our scoring approach enables assigning partial credit to optimal time users who answer the item incorrectly but spend optimal time when attempting the item. Thus, it allows to do more fine-grained analysis of response behavior. 
 
-Furthermore, our approach allows researchers and practitioners to assign partial credits to the test-takers who answered an item incorrect but spend optimal time when attempting the item. This assumption allows us to make a distinction between test-takers who spend optimal time but missed the item and test-takers who spend unreasonable time for the item and missed the item. Considering that the assessment is timed, test-takers are expected to adjust their speed to attempt as many items as possible within allotted time. What is more, spending unrealistically long or short time for an item is considered as indication of disengaged response behavior, hence assigning partial credits to test takers who missed the item but spend optimal time allow us to do more fine-grained analysis of test-taker behavior. 
+### How Does It Work?
 
-# How it works?
+The polytomous scoring approach can be applied using the following steps:
 
-With the polytomous scoring approach, the response time distributions for correct and incorrect responses are analyzed separately so that different weights can be given to the test-takers who use differential time while attempting the items. We find two median response times for each item: one for correct responses and another for incorrect responses. The median response time is used to avoid the outliers in the response time distribution. We used the normative threshold approach [@wise2012]. to identify the test-takers who demonstrate engaged response behavior. Below, we find 25% and 175% of the median response times to specify the optimal time interval, however one can choose more conservative cut-off points. 
+1. We separate response time for correct and incorrect responses and then find two median response times for each item: one for correct responses and another for incorrect responses. The median response time is used to avoid the outliers in the response time distribution. 
 
-After finding the cut-off points for the response time distributions for each item, one needs to decide on the scoring range and how to deal with not-reached items. You can choose to recode not-reached items as either not-administered (i.e, missing) or incorrect. You can also choose a scoring range either from 0 to 4 or from 0 to 3. When a scoring range from 0 to 4 is chosen, we assign 4 to the fastest respondents, 3 to middle region, aka optimal time users, and 2 to the slowest ones in the correct response time distribution. For the incorrect response time distribution, 0 is assigned to unrealistic time users, and 1 is given to the optimal time users. On the other hand, when a scoring range from 0 to 3 is chosen, the same scoring rule applies for the test-takers with incorrect responses. However, for the correct response time distribution, 2 is given to both rapid guessers and slow respondents and 3 is assigned to optimal time users who are in the middle region of the correct response time distribution.
+2. We use the normative threshold (NT) approach introduced by @wise2005. This process gives us two cut-off values to divide the response time distribution into three regions: optimal time users, rapid guessers, and slow respondents. For example, we can use 25% and 175% of the median response times to specify the optimal time interval^[Smaller percentages can be used for obtaining more conservative thresholds.]. 
 
-Let's go over an example to see how it is implemented!
+3. After finding the cut-off points for the response time distributions for each item, we select a scoring range. Here we can choose a scoring range of 0 to 3 points or 0 to 4 points. 
+
+    * If the scoring range is 0 to 4:
+      + Based on the correct response time distribution, we assign 4 points to the fastest students, 3 points to middle region, a.k.a optimal time users, and 2 points to the slowest students. 
+      + Based on the incorrect response time distribution, we assign 0 points to rapid guessers and slow respondents, and 1 point to the optimal time users. 
+
+    * If the scoring range is 0 to 3, the same scoring rule applies for students with incorrect responses. However, for the correct response time distribution, 2 points are given to both rapid guessers and slow respondents and 3 points are assigned to optimal time users who are in the middle region of the correct response time distribution. 
+
+4. We determine how to deal with not-reached items. We can choose to treat not-reached items as either not-administered (i.e, missing) or incorrect.
+
+Now, let's see how the polytomous scoring approach works in R. 
 
 ## Example
 
-To illustrate an application of polytomous scoring approach, we utilized a low-stakes math exam with 40 items. The sample included 5,000 test-takers. Test-takers' correct responses were scored with 1 whereas test-takers' incorrect responses were scored with 0. Not-reach items were scored with 9 and not-answered items were scored with 8. 
+To illustrate the polytomous scoring approach, we use response data from a sample of 5000 students who participated in a hypothetical assessment with 40 items. In the response data, 
+
+  * correct responses are scored as 1,
+  * incorrect responses are scored as 0,
+  * not-reach items are scored with 9, and 
+  * not-answered items are scored with 8^[These are items that students view but skip without selecting a valid response option.].
+
+The data also include students' response times (in seconds) for each item. 
 
 Let's import the data and see the responses and response times of first 3 test-takers. 
 
-```{r}
+```{r, eval=FALSE}
 data <- read.csv("data.csv", header = TRUE)
 
-head(data[,1:40],3)
-head(data[,41:80],3)
+# Item responses
+head(data[,1:40])
 
+# Response times
+head(data[,41:80])
 ```
+
+```{r, eval=TRUE, echo=TRUE}
+data <- read.csv("data.csv", header = TRUE)
+
+paged_table(data[,1:40], options = list(cols.print = 12))
+
+paged_table(data[,41:80], options = list(cols.print = 12))
+```
+
 
 Next, we will define a function to recode the dichotomous items and not-reached items to create polytomously scored response matrix. 
 
-The **poly_transform** function accepts four arguments: 
+The **poly_transform** function requires the following arguments: 
 
-*  Response: A single vector of test-takers' responses
+*  response: A vector of students' responses to an item
 
-*  Time: A single vector of response times
+*  time: A vector of students' response times on the same item
 
-*  Max.score: Max score for polytomous items (3 for 0-1-2-3 or 4 for 0-1-2-3-4)
+*  max.score: Max score for polytomous items (3 for 0-1-2-3 or 4 for 0-1-2-3-4)
 
-*  Na.handle: Treatment of not-reached items; either IN (Incorrect) or NA (Missing)
+*  na.handle: Treatment of not-reached (i.e., NA) responses. If IN, responses with NA will turn into 0 (i.e., incorrect); if NA, then responses with NA remain as NA (i.e., missing).
+
+* correct: The default cut-off proportions are 0.25 and 1.75 for the bottom 25% and the top 75% of the median response time. 
+
+* incorrect: The default cut-off proportions are 0.25 and 1.75 for the bottom 25% and the top 75% of the median response time. 
 
 In the first half of the function, we specify the cut-off points or time thresholds for identifying rapid guessers, optimal time users, and slow respondents. Notice that we determine the cut-off points for correct and incorrect responses separately so that we can identify and assign partial credits to the test-takers with optimal time use regardless of whether they got the item correct or not. 
 Next, the function recodes test-takers' dichotomous scores into polytomous scores (either 0 to 3 points or 0 to 4 points) based on the response time thresholds identified by the first portion of the function. 
@@ -107,7 +142,8 @@ Finally, the function handles how to deal with not-reached items. Note that not-
 
 
 ```{r}
-poly_transform <- function(response, time, max.score, na.handle, 
+poly_transform <- function(response, time, max.score, na.handle = "NA",
+                           not.reached, not.answered,  
                            correct = c(0.25, 1.75), incorrect = c(0.25, 1.75)) {
   
   # Find response time thresholds
@@ -116,41 +152,44 @@ poly_transform <- function(response, time, max.score, na.handle,
   median.time.incorrect1 <- median(time[which(response==0)], na.rm = TRUE)*incorrect[1]
   median.time.incorrect2 <- median(time[which(response==0)], na.rm = TRUE)*incorrect[2]
   
-  # Recode dichotomous items
+  # Recode dichotomous responses as polytomous
   if(max.score == 3) {
     response <- ifelse(response == 1 & time < median.time.correct1, 2,
-                       ifelse(response == 1 & 
-                                time > median.time.correct2, 2,
+                       ifelse(response == 1 & time > median.time.correct2, 2,
                               ifelse(response == 1 & 
                                        time > median.time.correct1 & 
                                        time < median.time.correct2, 3, response)))  
     response <- ifelse(response == 0 & time < median.time.incorrect1, 0,
-                       ifelse(response == 0 & 
-                                time > median.time.incorrect2, 0, 
+                       ifelse(response == 0 & time > median.time.incorrect2, 0, 
                               ifelse(response == 0 & 
                                        time > median.time.incorrect1 & 
                                        time < median.time.incorrect2, 1, response)))
   } else if (max.score == 4)  {
     response <- ifelse(response == 1 & time < median.time.correct1, 4,
-                       ifelse(response == 1 & 
-                                time > median.time.correct2, 2, 
+                       ifelse(response == 1 & time > median.time.correct2, 2, 
                               ifelse(response == 1 & 
                                        time > median.time.correct1 & 
                                        time < median.time.correct2, 3, response)))
     response <- ifelse(response == 0 & time < median.time.incorrect1, 0,
-                       ifelse(response == 0 & 
-                                time > median.time.incorrect2, 0, 
+                       ifelse(response == 0 & time > median.time.incorrect2, 0, 
                               ifelse(response == 0 & 
                                        time > median.time.incorrect1 & 
                                        time < median.time.incorrect2, 1, response)))
   }
   
-  # Set not reached as NA or incorrect
-  if(na.handle == "IN") {
-    response.recoded <- ifelse(is.na(response.recoded), 0, response.recoded)
+  # Set not-answered responses as incorrect
+  if(!is.null(not.answered)) {
+    response.recoded <- ifelse(response == not.answered, 0, response)
   } else {
-    response.recoded <- ifelse(is.na(response.recoded), NA, response.recoded)
-    }
+    response.recoded <- response
+  }
+  
+  # Set not-reached responses as NA or incorrect
+  if(na.handle == "IN") {
+    response.recoded <- ifelse(response.recoded == not.reached, 0, response.recoded)
+  } else {
+    response.recoded <- ifelse(response.recoded == not.reached, NA, response.recoded)
+  }
   
   return(response.recoded)
 } 
@@ -172,7 +211,8 @@ poly.data <- matrix(NA, nrow = nrow(dich.data), ncol = ncol(dich.data))
 
 for(i in 1:ncol(dich.data)) {
 poly.data[,i] <- poly_transform(dich.data[,i], time.data[,i], max.score = 3, 
-                                na.handle = "IN")
+                                na.handle = "IN", not.reached = 9, not.answered = 8,  
+                                correct = c(0.25, 1.75), incorrect = c(0.25, 1.75))
 } 
 ```
 
@@ -195,6 +235,7 @@ library("latticeExtra")
 
 ```{r message=FALSE}
 model <- 'F = 1-40' 
+
 ### Polytomous: GRM
 results.grm <- mirt(data=poly.data, model=model, itemtype="graded", SE=TRUE, verbose=FALSE)
 
@@ -217,6 +258,8 @@ plot(results.grm, type = 'infoSE', theta_lim = c(-4,4), lwd=2)
 
 ```
 
+## Conclusion
 
+xxx
 
 
