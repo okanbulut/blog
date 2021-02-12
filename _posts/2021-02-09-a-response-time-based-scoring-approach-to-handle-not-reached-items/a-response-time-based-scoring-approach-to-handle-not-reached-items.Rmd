@@ -40,6 +40,8 @@ suppressWarnings({
   library("emo")
   library("mirt")
   library("latticeExtra")
+  library("patchwork")
+  library("ggplot2")
 })
 ```
 
@@ -97,12 +99,12 @@ To illustrate the polytomous scoring approach, we use response data from a sampl
   * not-reach items are scored with 9, and 
   * not-answered items are scored with 8^[These are items that students view but skip without selecting a valid response option.].
 
-The data also include students' response times (in seconds) for each item. 
+The data also includes students' response time (in seconds) for each item. The data as a comma-separated-values file (dichotomous_data.csv) is available [here](https://raw.githubusercontent.com/okanbulut/blog/master/data_and_codes/dichotomous_data.csv). 
 
-Let's import the data and see the responses and response times of first 3 test-takers. 
+Now let's import the data into R and then preview its content. 
 
 ```{r, eval=FALSE}
-data <- read.csv("data.csv", header = TRUE)
+data <- read.csv("dichotomous_data.csv", header = TRUE)
 
 # Item responses
 head(data[,1:40])
@@ -112,39 +114,35 @@ head(data[,41:80])
 ```
 
 ```{r, eval=TRUE, echo=TRUE}
-data <- read.csv("data.csv", header = TRUE)
+data <- read.csv("dichotomous_data.csv", header = TRUE)
 
 paged_table(data[,1:40], options = list(cols.print = 12))
 
 paged_table(data[,41:80], options = list(cols.print = 12))
 ```
 
+Next, we create a scoring function to transform dichotomous responses into polytomous responsed based on the polytomous scoring approach described above. The **polyscore** function requires the following arguments: 
 
-Next, we will define a function to recode the dichotomous items and not-reached items to create polytomously scored response matrix. 
+* response: A vector of students' responses to an item
 
-The **poly_transform** function requires the following arguments: 
+* time: A vector of students' response times on the same item
 
-*  response: A vector of students' responses to an item
+* max.score: Maximum score for polytomous items (3 for 0-1-2-3 or 4 for 0-1-2-3-4)
 
-*  time: A vector of students' response times on the same item
+* not.reached: Response value for not-reached items (in our data, it is "9")
 
-*  max.score: Max score for polytomous items (3 for 0-1-2-3 or 4 for 0-1-2-3-4)
+* not.answered: Response value for not-answered items (in our data, it is "8"). These responses are automatically recoded as 0 (i.e., incorrect).
 
-*  na.handle: Treatment of not-reached (i.e., NA) responses. If IN, responses with NA will turn into 0 (i.e., incorrect); if NA, then responses with NA remain as NA (i.e., missing).
+* na.handle: Treatment of not-reached responses. If "IN", not-reached responses become 0 (i.e., incorrect); if "NA", then not-reached responses become NA (i.e., missing).
 
-* correct: The default cut-off proportions are 0.25 and 1.75 for the bottom 25% and the top 75% of the median response time. 
+* correct: The cut-off proportions to identify rapid guessers and slow respondents who answered the item correctly. The default cut-off proportions are 0.25 and 1.75 for the bottom 25% and the top 75% of the median response time. 
 
-* incorrect: The default cut-off proportions are 0.25 and 1.75 for the bottom 25% and the top 75% of the median response time. 
-
-In the first half of the function, we specify the cut-off points or time thresholds for identifying rapid guessers, optimal time users, and slow respondents. Notice that we determine the cut-off points for correct and incorrect responses separately so that we can identify and assign partial credits to the test-takers with optimal time use regardless of whether they got the item correct or not. 
-Next, the function recodes test-takers' dichotomous scores into polytomous scores (either 0 to 3 points or 0 to 4 points) based on the response time thresholds identified by the first portion of the function. 
-Finally, the function handles how to deal with not-reached items. Note that not-answered items were scored as incorrect, however one can modify the function to recode not-answered items as missing (NA). 
+* incorrect: The cut-off proportions to identify rapid guessers and slow respondents who answered the item incorrectly. The default cut-off proportions are 0.25 and 1.75 for the bottom 25% and the top 75% of the median response time. 
 
 
 ```{r}
-poly_transform <- function(response, time, max.score, na.handle = "NA",
-                           not.reached, not.answered,  
-                           correct = c(0.25, 1.75), incorrect = c(0.25, 1.75)) {
+polyscore <- function(response, time, max.score, na.handle = "NA", not.reached, not.answered,  
+                      correct = c(0.25, 1.75), incorrect = c(0.25, 1.75)) {
   
   # Find response time thresholds
   median.time.correct1 <- median(time[which(response==1)], na.rm = TRUE)*correct[1]
@@ -195,33 +193,132 @@ poly_transform <- function(response, time, max.score, na.handle = "NA",
 } 
 ```
 
-After defining the **poly_transform** function, now we insert our response and response time vectors into the function. 
 
-```{r}
+Before we move to the **polyscore** function, let's see how rapid guessers, slow respondents, and optimal time users are identified using one of the items (item 1).
 
-dich.data <- data[,1:40]
-time.data <- data[, 41:80]
 
+```{r, echo=TRUE, eval=FALSE}
+library("patchwork")
+library("ggplot2")
+
+# Response time distribution for correct
+p1 <- ggplot(data = data[data$item_1==1, ], 
+             aes(x = rt_1)) +
+  geom_histogram(color = "white", 
+                 fill = "steelblue", 
+                 bins = 40) +
+  geom_vline(xintercept = median(data[data$item_1==1, "rt_1"])*0.25, 
+             linetype="dashed", color = "red", size = 1) +
+  geom_vline(xintercept = median(data[data$item_1==1, "rt_1"])*1.75, 
+             linetype="dashed", color = "red", size = 1) +
+  labs(x = "Response Time for Item 1 (Correct)") +
+  theme_bw()
+
+# Response time distribution for incorrect
+p2 <- ggplot(data = data[data$item_1==0, ], 
+             aes(x = rt_1)) +
+  geom_histogram(color = "white", 
+                 fill = "steelblue", 
+                 bins = 40) +
+  geom_vline(xintercept = median(data[data$item_1==0, "rt_1"])*0.25, 
+             linetype="dashed", color = "red", size = 1) +
+  geom_vline(xintercept = median(data[data$item_1==0, "rt_1"])*1.75, 
+             linetype="dashed", color = "red", size = 1) +
+  labs(x = "Response Time for Item 1 (Incorrect)") +
+  theme_bw()
+
+(p1 / p2)
 ```
 
-Here, our polytomous scores are from 0 to 3 and we recoded not-reached items as incorrect.
+
+```{r, echo=FALSE, eval=TRUE}
+# Response time distribution for correct
+p1 <- ggplot(data = data[data$item_1==1, ], 
+             aes(x = rt_1)) +
+  geom_histogram(color = "white", 
+                 fill = "steelblue", 
+                 bins = 40) + ylim(0, 250) + 
+  geom_vline(xintercept = median(data[data$item_1==1, "rt_1"])*0.25, 
+             linetype="dashed", color = "red", size = 1) +
+  geom_vline(xintercept = median(data[data$item_1==1, "rt_1"])*1.75, 
+             linetype="dashed", color = "red", size = 1) +
+  labs(x = "Response time for item 1 (Correct)") + 
+  annotate(geom="text", x = -1, y = 200, label="Rapid\n guessers") + 
+  annotate(geom="text", x = 8, y = 200, label="Optimal\n time users") +
+  annotate(geom="text", x = 15, y = 200, label="Slow\n respondents") +
+  theme_bw()
+
+# Response time distribution for incorrect
+p2 <- ggplot(data = data[data$item_1==0, ], 
+             aes(x = rt_1)) +
+  geom_histogram(color = "white", 
+                 fill = "steelblue", 
+                 bins = 40) + ylim(0, 250) + 
+  geom_vline(xintercept = median(data[data$item_1==0, "rt_1"])*0.25, 
+             linetype="dashed", color = "red", size = 1) +
+  geom_vline(xintercept = median(data[data$item_1==0, "rt_1"])*1.75, 
+             linetype="dashed", color = "red", size = 1) +
+  labs(x = "Response time for item 1 (Incorrect)") +
+  annotate(geom="text", x = -1, y = 200, label="Rapid\n guessers") + 
+  annotate(geom="text", x = 5, y = 200, label="Optimal\n time users") +
+  annotate(geom="text", x = 15, y = 200, label="Slow\n respondents") +
+  theme_bw()
+
+(p1 / p2)
+```
+
+Now we can go ahead and implement polytomous scoring with our data. First, we separate the response and response time portions of the data. 
 
 ```{r}
-poly.data <- matrix(NA, nrow = nrow(dich.data), ncol = ncol(dich.data))
+resp_data <- data[, 1:40]
 
-for(i in 1:ncol(dich.data)) {
-poly.data[,i] <- poly_transform(dich.data[,i], time.data[,i], max.score = 3, 
+time_data <- data[, 41:80]
+```
+
+Next, we apply the polytomous scoring approach using different combinations of max.score and na.handle. We apply the **polyscore** function to each item using a loop. 
+
+* polydata3_NA: Scores of 0-1-2-3 and not-reached items = NA
+* polydata3_IN: Scores of 0-1-2-3 and not-reached items = IN
+* polydata4_NA: Scores of 0-1-2-3-4 and not-reached items = NA
+* polydata4_IN: Scores of 0-1-2-3-4 and not-reached items = IN
+
+```{r}
+polydata3_NA <- matrix(NA, nrow = nrow(resp_data), ncol = ncol(resp_data))
+polydata3_IN <- matrix(NA, nrow = nrow(resp_data), ncol = ncol(resp_data))
+polydata4_NA <- matrix(NA, nrow = nrow(resp_data), ncol = ncol(resp_data))
+polydata4_IN <- matrix(NA, nrow = nrow(resp_data), ncol = ncol(resp_data))
+
+for(i in 1:ncol(resp_data)) {
+  
+  polydata3_NA[,i] <- polyscore(resp_data[,i], time_data[,i], max.score = 3, 
+                                na.handle = "NA", not.reached = 9, not.answered = 8,  
+                                correct = c(0.25, 1.75), incorrect = c(0.25, 1.75))
+  
+  polydata3_IN[,i] <- polyscore(resp_data[,i], time_data[,i], max.score = 3, 
+                                na.handle = "IN", not.reached = 9, not.answered = 8,  
+                                correct = c(0.25, 1.75), incorrect = c(0.25, 1.75))
+  
+  polydata4_NA[,i] <- polyscore(resp_data[,i], time_data[,i], max.score = 4, 
+                                na.handle = "NA", not.reached = 9, not.answered = 8,  
+                                correct = c(0.25, 1.75), incorrect = c(0.25, 1.75))
+  
+  polydata4_IN[,i] <- polyscore(resp_data[,i], time_data[,i], max.score = 4, 
                                 na.handle = "IN", not.reached = 9, not.answered = 8,  
                                 correct = c(0.25, 1.75), incorrect = c(0.25, 1.75))
 } 
 ```
 
-Let's quickly see how our data looks like after recoding the items. 
+Let's quickly see how one of our recoded data looks like after applying polytomous scoring.
 
-```{r}
-poly.data<-as.data.frame(poly.data)
-head(poly.data)
+```{r, eval=FALSE}
+polydata3_NA <- as.data.frame(polydata3_NA)
 
+head(polydata3_NA)
+```
+
+```{r, echo=FALSE}
+polydata3_NA <- as.data.frame(polydata3_NA)
+paged_table(polydata3_NA, options = list(cols.print = 12))
 ```
 
 We will demonstrate how to estimate item and person parameters with item-response theory (IRT) approach. However, note that this scoring approach is flexible enough to be applied with classical test theory (CTT). When applied in the CTT framework, a high score indicates that the student's level of combined ability and engagement was high in the assessment. With this approach, speededness is no longer a nuisance variable but is used in the operationalization of ability [@tijmstra2018].
@@ -237,7 +334,7 @@ library("latticeExtra")
 model <- 'F = 1-40' 
 
 ### Polytomous: GRM
-results.grm <- mirt(data=poly.data, model=model, itemtype="graded", SE=TRUE, verbose=FALSE)
+results.grm <- mirt(data=polydata3_NA, model=model, itemtype="graded", SE=TRUE, verbose=FALSE)
 
 ### Item parameters 
 coef.grm <- coef(results.grm, IRTpars=TRUE, simplify=TRUE)
@@ -245,9 +342,6 @@ items.grm <- as.data.frame(coef.grm$items)
 
 ### Person parameters
 theta.grm <- matrix(fscores(results.grm, method='EAP'))
-
-### Fit indices
-M2(results.grm, na.rm=TRUE)
 ```
 
 Finally, let's examine test information function and standard error of measurement based on the estimated person parameters using the polytomous scoring approach. 
