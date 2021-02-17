@@ -37,6 +37,9 @@ suppressWarnings({
   library("emo")
   library("mirt")
   library("mirtCAT")
+  library("DataExplorer")
+  library("psych")
+  library("ggplot2")
 })
 ```
 
@@ -55,6 +58,50 @@ xxx
 
 In this example, we will use real data from [the Taylor Manifest Anxiety Scale](https://openpsychometrics.org/tests/TMAS/) (TMA) to build a computerized adaptive scale. 
 
+
+```{r, eval=FALSE}
+# Import the TMA data into R
+data <- read.csv("tma_data.csv", header = TRUE)
+
+# Preview the data
+head(data)
+```
+
+```{r, eval=TRUE, echo=FALSE}
+data <- read.csv("tma_data.csv", header = TRUE)
+paged_table(data, options = list(cols.print = 12))
+```
+
+Next, ...
+
+```{r, eval = FALSE}
+library("DataExplorer")
+
+plot_correlation(data)
+```
+
+```{r, eval = TRUE, echo=FALSE}
+plot_correlation(data)
+```
+
+Also, ...
+
+```{r, eval = FALSE}
+library("psych")
+library("ggplot2")
+
+item_summary <- data.frame(items = factor(colnames(data), levels = colnames(data)),
+                           difficulty = alpha(data)$item.stats$mean,
+                           discrimination = alpha(data)$item.stats$r.cor)
+
+ggplot(data = item_summary, 
+       aes(x = items, y = discrimination, colour = discrimination > 0.20)) +
+  geom_point(size = 2) + ylim(0, 1) +
+  geom_hline(yintercept = 0.20, linetype="dashed", colour = "red", size = 1) +
+  labs(x = "Items", "Item-Total Correlation") +
+  coord_flip() +
+  theme_bw()
+```
 
 ## Conclusion
 
