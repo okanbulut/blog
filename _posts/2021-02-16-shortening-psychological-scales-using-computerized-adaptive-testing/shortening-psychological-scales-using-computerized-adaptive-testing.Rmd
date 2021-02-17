@@ -96,7 +96,7 @@ item_summary <- data.frame(items = factor(colnames(data), levels = colnames(data
 
 ggplot(data = item_summary, 
        aes(x = items, y = discrimination, colour = discrimination > 0.20)) +
-  geom_point(size = 2) + ylim(0, 1) +
+  geom_point(size = 3) + ylim(0, 1) +
   geom_hline(yintercept = 0.20, linetype="dashed", colour = "red", size = 1) +
   labs(x = "Items", "Item-Total Correlation") +
   coord_flip() +
