@@ -1,0 +1,61 @@
+---
+title: "Shortening Psychological Scales Using Computerized Adaptive Testing"
+description: |
+  A short description of the post.
+  ```{r, include=FALSE}
+  bytes <- file.size("shortening-psychological-scales-using-computerized-adaptive-testing.Rmd")
+  words <- bytes/10
+  minutes <- words/200
+  ``` 
+  (`r round(minutes)` min read)
+author:
+  - name: Okan Bulut
+    url: http://www.okanbulut.com/
+    affiliation: University of Alberta
+    affiliation_url: https://www.ualberta.ca
+    orcid_id: 0000-0001-5853-1267
+date: 02-16-2021
+categories:
+  - psychometrics
+  - psychological scales
+  - CAT
+preview: computer.jpg
+bibliography: cat.bib
+csl: apa.csl
+output:
+  distill::distill_article:
+    self_contained: false
+    toc: true
+draft: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE)
+suppressWarnings({
+  library("rmarkdown")
+  library("kableExtra")
+  library("emo")
+  library("mirt")
+  library("mirtCAT")
+})
+```
+
+![Photo by [Glenn Carstens-Peters](https://unsplash.com/@glenncarstenspeters) on [Unsplash](https://unsplash.com/)](computer.jpg)
+
+## Introduction
+
+In my previous posts, I demonstrated how to shorten measurement instruments automatically using methods such as [automated test assembly](https://okan.cloud/posts/2021-01-04-how-to-shorten-a-measurement-instrument-automatically-part-i/) and [the ant colony optimization](https://okan.cloud/posts/2021-01-19-how-to-shorten-a-measurement-instrument-automatically-part-ii/). These methods can help researchers and practitioners build a shorter version of a measurement instrument (e.g., tests, psychological scales, or surveys). 
+
+
+## Computerized Adaptive Testing
+
+xxx
+
+## Example
+
+In this example, we will use real data from [the Taylor Manifest Anxiety Scale](https://openpsychometrics.org/tests/TMAS/) (TMA) to build a computerized adaptive scale. 
+
+
+## Conclusion
+
+xx
