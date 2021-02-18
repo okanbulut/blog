@@ -179,43 +179,87 @@ plot(model.2pl, type = 'infoSE', theta_lim=c(-5,5),
 
 Using the item parameters and theta values we have estimated above, we will design a hypothetical CAT scenario. Our goal is to check the feasibility of using the Taylor Manifest Anxiety Scale as a computerized adaptive scale. Therefore, we will run post hoc simulations using real responses in the data. We will let the CAT system select the optimal items from the scale for each person and then compare the final theta estimates from CAT with those from the calibration that involves all 49 items. 
 
-To run post hoc simulations, we will use the simulateRespondents function in the **catR** package [@catr]. In the first simulation, we will use the following rules:
-
-* each person can answer up to 10 items in the scale, and 
-* if a person's theta estimate is precise enough (i.e., SEM < 0.3), CAT should terminate the test, without administering all 10 items. 
-
-We want to use Maximum Fisher Information (MFI) to select the starting item and the remaining items. That is, the CAT system will choose the most informative item given a person's interim theta estimate. Also, we want to use expected a posteriori (EAP) as the method for for estimating interim theta values as well as final theta values. 
-
-To keep our example simple, we will choose a random sample of 750 persons (out of 4474 persons) and test the CAT system with this sample. 
+To run post hoc simulations, we will use the **catR** package [@catr].
 
 ```{r, eval = FALSE}
 library("catR")
-
-set.seed(2021)
-
-persons <- sample.int(750, n = nrow(theta))
-
-sim1 <- simulateRespondents(thetas = theta[persons,],
-                            itemBank = parameters, 
-                            responsesMatrix = data[persons,],
-                            # Starting rules for CAT  
-                            start = list(startSelect="MFI"),
-                            # Test administration rules for CAT
-                            test = list(method="EAP", itemSelect="MFI"),
-                            # Stopping rule for CAT
-                            stop = list(rule = c("precision", "length"), thr = c(0.3, 10)),
-                            # Final ability estimation
-                            final = list(method = "EAP")
-)
 ```
 
-```{r, eval = TRUE, echo=FALSE, warning=FALSE, message=FALSE, results = 'hide'}
+In the simulation, we will try the following rules:
+
+* each person can answer up to 10 items in the scale, and 
+* if a person's theta estimate is precise enough (i.e., SEM < 0.3), CAT should terminate the test before reaching 10 items. 
+
+We will use Maximum Fisher Information (MFI) to select the starting item and the remaining items during the test. With MFI, CAT will choose the most informative item given a person's interim theta estimate. For ability estimation, we will use expected a posteriori (EAP) for estimating both interim theta values and final theta values.
+
+Before starting the simulation with the whole data, we will test our CAT system using a single iteration. We will use the randomCAT function to simulate responses for a hypothetical person who takes the Taylor Manifest Anxiety Scale. We will assume that the person's true theta level is $\theta = 0$.
+
+```{r}
+sim1 <- randomCAT(trueTheta = 0, 
+                  # Item bank
+                  itemBank = parameters,
+                  # Set the seed to ensure reproducibility
+                  genSeed = 2021,
+                  # Starting rules for CAT 
+                  start = list(startSelect="MFI"), 
+                  # Test administration rules for CAT
+                  test = list(method="EAP", itemSelect="MFI"),
+                  # Stopping rule for CAT
+                  stop = list(rule = c("precision", "length"), thr = c(0.3, 10)), 
+                  # Final ability estimation
+                  final = list(method = "EAP"),
+                  # Save all interim theta and SEM values
+                  allTheta = TRUE)
+```
+
+Now we can see how the response process worked for this hypothetical person. The plot_cat function will show how theta estimates and SEM values changed after administering each item^[This function has been inspired by the plot.cat function in the [xxIRT](https://cran.r-project.org/web/packages/xxIRT/index.html) package.]. 
+
+```{r catplot, fig.cap="Interim Theta and SEM Estimates in CAT"}
+plot_cat <- function(model) {
+  require("ggplot2")
+  
+  cat_summary <- data.frame(
+    items = factor(model$testItems, levels = model$testItems),
+    thetas = model$thetaProv,
+    se = model$seProv,
+    theta_lb = model$thetaProv - 1.96 * model$seProv,
+    theta_ub = model$thetaProv + 1.96 * model$seProv,
+    wr = factor(model$pattern, levels=c(0, 1), labels=c("Wrong", "Right")))
+  
+  p <- ggplot(data=cat_summary, aes(x=items, y=thetas, color=wr)) + 
+    geom_point(aes(size=se)) +
+    geom_linerange(aes(ymin=theta_lb, ymax=theta_ub), linetype=3, size = 1) +
+    geom_point(aes(x=tail(items, n = 1), y=tail(thetas, n = 1)), color="black", pch=4, size=4) +
+    geom_hline(aes(yintercept = model$trueTheta), color="#808080", linetype="dashed") +
+    coord_cartesian(ylim=c(-4, 4)) + 
+    scale_size_continuous(range=c(1, 3)) +
+    labs(x = "Items", y = expression(paste("Estimated ", theta)), color = "Response") +
+    guides(size=F, alpha=F) + 
+    theme_bw() + 
+    theme(legend.key=element_blank())
+  
+  return(p)
+}
+
+plot_cat(sim1)
+```
+
+Figure \@ref(fig:catplot) shows that the SEM band around the theta estimate is getting narrower after administering each item, indicating that the theta estimate is becoming more precise. The final ability estimate is shown with "X" on the right-hand side of the figure. After 10 items, the final theta estimate appears to be higher than the true theta value (i.e. horizontal line). So, we may need to consider increasing the maximum number of items from 10 items to a larger value.  
+
+To have a more detailed investigation of our CAT, we will use the simulateRespondents function and create a hypothetical CAT based on real responses in the data.  To keep our example simple, we will choose a random sample of 1000 persons (out of 4474 persons) and test the CAT system with this sample. 
+
+```{r, eval = TRUE, echo=TRUE, warning=FALSE, message=FALSE, results = 'hide'}
+# Set the seed to ensure reproducibility
 set.seed(2021)
 
-persons <- sample.int(750, n = nrow(theta))
+# A random sample of 1000 persons
+persons <- sample.int(1000, n = nrow(theta))
 
-sim1 <- simulateRespondents(thetas = theta[persons,],
+# Post hoc simulation #1
+sim2 <- simulateRespondents(thetas = theta[persons,],
+                            # Item bank
                             itemBank = parameters, 
+                            # Real responses in the data
                             responsesMatrix = data[persons,],
                             # Starting rules for CAT  
                             start = list(startSelect="MFI"),
@@ -232,19 +276,55 @@ Now, let's see the simulation output.
 
 ```{r}
 # Statistical summary of results
-print(sim1)
+print(sim2)
 ```
 
 ```{r, eval=FALSE}
 # Visual summary of results
-plot(sim1)
+plot(sim2)
 ```
 
 ```{r, echo = FALSE, fig.cap="Simulation Results", fig.width=7, fig.height=8}
 # Visual summary of results
-knitr::include_graphics("sim1_plot.png")
+knitr::include_graphics("sim2_plot.png")
 ```
 
+Next, let's keep all the design elements the same but increase the maximum number of items to 15. We will see if administering up to 15 items will reduce bias and RMSE and increase the correlation between true and estimated theta values.
+
+```{r, eval = TRUE, echo=TRUE, warning=FALSE, message=FALSE, results = 'hide'}
+# Post hoc simulation #2
+sim3 <- simulateRespondents(thetas = theta[persons,],
+                            # Item bank
+                            itemBank = parameters, 
+                            # Real responses in the data
+                            responsesMatrix = data[persons,],
+                            # Starting rules for CAT  
+                            start = list(startSelect="MFI"),
+                            # Test administration rules for CAT
+                            test = list(method="EAP", itemSelect="MFI"),
+                            # Stopping rule for CAT
+                            stop = list(rule = c("precision", "length"), thr = c(0.3, 15)),
+                            # Final ability estimation
+                            final = list(method = "EAP")
+)
+```
+
+Now, let's see the simulation output.
+
+```{r}
+# Statistical summary of results
+print(sim3)
+```
+
+```{r, eval=FALSE}
+# Visual summary of results
+plot(sim3)
+```
+
+```{r, echo = FALSE, fig.cap="Simulation Results", fig.width=7, fig.height=8}
+# Visual summary of results
+knitr::include_graphics("sim3_plot.png")
+```
 
 ## Conclusion
 
