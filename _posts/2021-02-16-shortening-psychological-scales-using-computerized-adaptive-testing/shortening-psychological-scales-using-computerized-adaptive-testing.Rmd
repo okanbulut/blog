@@ -39,8 +39,7 @@ suppressWarnings({
   library("ggplot2")
   library("psych")
   library("mirt")
-  library("mirtCAT")
-  library("parallel")
+  library("catR")
 })
 ```
 
@@ -130,22 +129,38 @@ We can see that removing item 15 does not decrease the internal consistency of t
 data <- data[,-c(15)]
 ```
 
-Since CAT requires IRT-based item parameters, we will calibrate the items using a particular IRT model. The Taylor Manifest Anxiety Scale is not an achievement test and thus guessing would not be a concern. Thus, we will choose the 2-parameter logistic (2PL) model to calibrate the items and then save the theta (i.e., anxiety) scores.
+Since CAT requires IRT-based item parameters, we will calibrate the items using a particular IRT model. The Taylor Manifest Anxiety Scale is not an achievement test and thus guessing would not be a concern. Thus, we will choose the 2-parameter logistic (2PL) model to calibrate the items and then save the estimated parameters as well as the theta (i.e., anxiety) scores.
 
 ```{r, eval = FALSE}
 library("mirt")
 
+# Model estimation
 mod <- 'F = 1-49' 
-
 model.2pl <- mirt(data=data, model=mod, itemtype="2PL", SE=TRUE)
 
+# Saving item parameters as a matrix
+parameters <- coef(model.2pl, IRTpars = TRUE, simplify=TRUE)$items
+parameters <- as.matrix(parameters)
+colnames(parameters) <- c("a","b","c","d")
+
+# Saving theta values as a matrix
 theta <- fscores(model.2pl, method = "EAP")
+theta <- as.matrix(theta)
 ```
 
 ```{r, eval = TRUE, echo=FALSE}
+# Model estimation
 mod <- 'F = 1-49' 
 model.2pl <- mirt(data=data, model=mod, itemtype="2PL", SE=TRUE, verbose=FALSE)
+
+# Saving item parameters as a matrix
+parameters <- coef(model.2pl, IRTpars = TRUE, simplify=TRUE)$items
+parameters <- as.matrix(parameters)
+colnames(parameters) <- c("a","b","c","d")
+
+# Saving theta values as a matrix
 theta <- fscores(model.2pl, method = "EAP")
+theta <- as.matrix(theta)
 ```
 
 Now we can check out the test information function for the scale. Figure \@ref(fig:tifplot) indicates that the scale is mostly informative between $\theta = -3$ and $\theta = -2$. 
@@ -164,49 +179,72 @@ plot(model.2pl, type = 'infoSE', theta_lim=c(-5,5),
 
 Using the item parameters and theta values we have estimated above, we will design a hypothetical CAT scenario. Our goal is to check the feasibility of using the Taylor Manifest Anxiety Scale as a computerized adaptive scale. Therefore, we will run post hoc simulations using real responses in the data. We will let the CAT system select the optimal items from the scale for each person and then compare the final theta estimates from CAT with those from the calibration that involves all 49 items. 
 
-To run the simulation, we will use the mirtCAT package [@mirtcat]. First, we will determine some design elements for our hypothetical CAT. 
+To run post hoc simulations, we will use the simulateRespondents function in the **catR** package [@catr]. In the first simulation, we will use the following rules:
+
+* each person can answer up to 10 items in the scale, and 
+* if a person's theta estimate is precise enough (i.e., SEM < 0.3), CAT should terminate the test, without administering all 10 items. 
+
+We want to use Maximum Fisher Information (MFI) to select the starting item and the remaining items. That is, the CAT system will choose the most informative item given a person's interim theta estimate. Also, we want to use expected a posteriori (EAP) as the method for for estimating interim theta values as well as final theta values. 
+
+To keep our example simple, we will choose a random sample of 750 persons (out of 4474 persons) and test the CAT system with this sample. 
 
 ```{r, eval = FALSE}
-library("mirtCAT")
+library("catR")
 
-design <- list(min_SEM = .30,    # Minimum SEM to be reached for theta
-               max_items = 15,   # Maximum number of items per person
-               thetas.start = 0) # Starting theta value for all persons
+set.seed(2021)
 
-responses <- as.matrix(data)
+persons <- sample.int(750, n = nrow(theta))
 
-sim_results <- mirtCAT(mo = model.2pl, # IRT models with the parameters
-                       local_pattern = responses, # Original responses
-                       start_item = 'MI', # Starting item based on MFI
-                       method = 'EAP', # Ability estimation method
-                       criteria = 'MI', # Item selection based on MFI
-                       design = design, # Design elements
-                       progress = TRUE) # See progress bar for the simulation
+sim1 <- simulateRespondents(thetas = theta[persons,],
+                            itemBank = parameters, 
+                            responsesMatrix = data[persons,],
+                            # Starting rules for CAT  
+                            start = list(startSelect="MFI"),
+                            # Test administration rules for CAT
+                            test = list(method="EAP", itemSelect="MFI"),
+                            # Stopping rule for CAT
+                            stop = list(rule = c("precision", "length"), thr = c(0.3, 10)),
+                            # Final ability estimation
+                            final = list(method = "EAP")
+)
 ```
 
-```{r, eval = TRUE, echo=FALSE}
-cl <- makeCluster(detectCores())
+```{r, eval = TRUE, echo=FALSE, warning=FALSE, message=FALSE, results = 'hide'}
+set.seed(2021)
 
-design <- list(min_SEM = .30,    # Minimum SEM to be reached for theta
-               max_items = 15,   # Maximum number of items per person
-               thetas.start = 0) # Starting theta value for all persons
+persons <- sample.int(750, n = nrow(theta))
 
-responses <- as.matrix(data)
-
-sim_results <- mirtCAT(mo = model.2pl, 
-                       local_pattern = responses,
-                       start_item = 'MI', 
-                       method = 'EAP',
-                       criteria = 'MI', 
-                       design = design,
-                       cl = cl)
+sim1 <- simulateRespondents(thetas = theta[persons,],
+                            itemBank = parameters, 
+                            responsesMatrix = data[persons,],
+                            # Starting rules for CAT  
+                            start = list(startSelect="MFI"),
+                            # Test administration rules for CAT
+                            test = list(method="EAP", itemSelect="MFI"),
+                            # Stopping rule for CAT
+                            stop = list(rule = c("precision", "length"), thr = c(0.3, 10)),
+                            # Final ability estimation
+                            final = list(method = "EAP")
+)
 ```
 
-Now we can check out the results for a random person in the data.
+Now, let's see the simulation output.
 
-```{r, eval = TRUE}
-plot(simCAT_results[[1277]]) # Person 1277
+```{r}
+# Statistical summary of results
+print(sim1)
 ```
+
+```{r, eval=FALSE}
+# Visual summary of results
+plot(sim1)
+```
+
+```{r, echo = FALSE, fig.cap="Simulation Results", fig.width=7, fig.height=8}
+# Visual summary of results
+knitr::include_graphics("sim1_plot.png")
+```
+
 
 ## Conclusion
 
