@@ -37,6 +37,7 @@ suppressWarnings({
   library("emo")
   library("DataExplorer")
   library("ggplot2")
+  library("gganimate")
   library("psych")
   library("mirt")
   library("catR")
@@ -199,7 +200,7 @@ sim1 <- randomCAT(trueTheta = 0,
                   # Item bank
                   itemBank = parameters,
                   # Set the seed to ensure reproducibility
-                  genSeed = 2021,
+                  genSeed = 666,
                   # Starting rules for CAT 
                   start = list(startSelect="MFI"), 
                   # Test administration rules for CAT
@@ -214,39 +215,81 @@ sim1 <- randomCAT(trueTheta = 0,
 
 Now we can see how the response process worked for this hypothetical person. The plot_cat function will show how theta estimates and SEM values changed after administering each item^[This function has been inspired by the plot.cat function in the [xxIRT](https://cran.r-project.org/web/packages/xxIRT/index.html) package.]. 
 
-```{r catplot, fig.cap="Interim Theta and SEM Estimates in CAT"}
+```{r, eval=FALSE, echo=FALSE}
+# plot_cat <- function(model) {
+#   require("ggplot2")
+#   
+#   cat_summary <- data.frame(
+#     items = factor(model$testItems, levels = model$testItems),
+#     thetas = model$thetaProv,
+#     se = model$seProv,
+#     theta_lb = model$thetaProv - 1.96 * model$seProv,
+#     theta_ub = model$thetaProv + 1.96 * model$seProv,
+#     wr = factor(model$pattern, levels=c(0, 1), labels=c("Wrong", "Right")))
+#   
+#   p <- ggplot(data=cat_summary, aes(x=items, y=thetas, color=wr)) + 
+#     geom_point(aes(size=se)) +
+#     geom_linerange(aes(ymin=theta_lb, ymax=theta_ub), linetype=3, size = 1) +
+#     geom_point(aes(x=tail(items, n = 1), y=tail(thetas, n = 1)), color="black", pch=4, size=4) +
+#     geom_hline(aes(yintercept = model$trueTheta), color="#808080", linetype="dashed") +
+#     coord_cartesian(ylim=c(-4, 4)) + 
+#     scale_size_continuous(range=c(1, 3)) +
+#     labs(x = "Items", y = expression(paste("Estimated ", theta)), color = "Response") +
+#     guides(size=F, alpha=F) + 
+#     theme_bw() + 
+#     theme(legend.key=element_blank())
+#   
+#   return(p)
+# }
+# 
+# plot_cat(sim1)
+```
+
+```{r catplot, fig.width=9, fig.height=6, fig.cap="Interim Theta and SEM Estimates in CAT"}
 plot_cat <- function(model) {
   require("ggplot2")
+  require("gganimate")
   
   cat_summary <- data.frame(
     items = factor(model$testItems, levels = model$testItems),
     thetas = model$thetaProv,
-    se = model$seProv,
     theta_lb = model$thetaProv - 1.96 * model$seProv,
     theta_ub = model$thetaProv + 1.96 * model$seProv,
     wr = factor(model$pattern, levels=c(0, 1), labels=c("Wrong", "Right")))
   
-  p <- ggplot(data=cat_summary, aes(x=items, y=thetas, color=wr)) + 
-    geom_point(aes(size=se)) +
-    geom_linerange(aes(ymin=theta_lb, ymax=theta_ub), linetype=3, size = 1) +
-    geom_point(aes(x=tail(items, n = 1), y=tail(thetas, n = 1)), color="black", pch=4, size=4) +
-    geom_hline(aes(yintercept = model$trueTheta), color="#808080", linetype="dashed") +
+  p1 <- ggplot(data=cat_summary, aes(x=items, y=thetas, color=wr)) + 
+    geom_point(aes(group = seq_along(items)), size = 5) +
+    geom_linerange(aes(ymin=theta_lb, ymax=theta_ub), size = 1.5, alpha = 0.4) +
+    geom_point(aes(x=tail(items, n = 1), y=tail(thetas, n = 1)), color="black", pch=4, size=5) +
+    geom_hline(aes(yintercept = model$trueTheta), 
+               color="#808080", linetype="dotted", size = 1.5, alpha = 0.7) +
+    transition_states(items)+
     coord_cartesian(ylim=c(-4, 4)) + 
     scale_size_continuous(range=c(1, 3)) +
-    labs(x = "Items", y = expression(paste("Estimated ", theta)), color = "Response") +
+    labs(x = "Items", y = expression(paste("Estimated ", theta)), color = "Response",
+         caption = "Note: The dotted horizontal line represents the true theta level.") +
     guides(size=F, alpha=F) + 
-    theme_bw() + 
-    theme(legend.key=element_blank())
+    theme_bw(base_size = 19) + 
+    theme(legend.key=element_blank(),
+          plot.caption = element_text(hjust = 0))
   
-  return(p)
+  p2 <- animate(p1, 
+                nframes = 250,
+                fps = 25, 
+                width = 900, 
+                height = 600)
+  
+  return(p2)
 }
+
 
 plot_cat(sim1)
 ```
 
-Figure \@ref(fig:catplot) shows that the SEM band around the theta estimate is getting narrower after administering each item, indicating that the theta estimate is becoming more precise. The final ability estimate is shown with "X" on the right-hand side of the figure. After 10 items, the final theta estimate appears to be higher than the true theta value (i.e. horizontal line). So, we may need to consider increasing the maximum number of items from 10 items to a larger value.  
 
-To have a more detailed investigation of our CAT, we will use the simulateRespondents function and create a hypothetical CAT based on real responses in the data.  To keep our example simple, we will choose a random sample of 1000 persons (out of 4474 persons) and test the CAT system with this sample. 
+Figure \@ref(fig:catplot) shows that the 95% SEM band around the theta estimate is getting narrower after administering each item, indicating that the theta estimate is becoming more precise. The final theta estimate is shown with "X" on the right-hand side of the figure. After 10 items, the final theta estimate appears to be very close to the true theta value (i.e. dotted horizontal line).  
+
+To run a post hoc CAT simulation with real responses in the data, we will use the simulateRespondents function in the **catR** package. To keep our example simple, we will choose a random sample of 1000 persons (out of 4474 persons) and test the CAT system with this sample. 
 
 ```{r, eval = TRUE, echo=TRUE, warning=FALSE, message=FALSE, results = 'hide'}
 # Set the seed to ensure reproducibility
@@ -291,7 +334,7 @@ knitr::include_graphics("sim2_plot.png")
 
 Next, let's keep all the design elements the same but increase the maximum number of items to 15. We will see if administering up to 15 items will reduce bias and RMSE and increase the correlation between true and estimated theta values.
 
-```{r, eval = TRUE, echo=TRUE, warning=FALSE, message=FALSE, results = 'hide'}
+```{r, eval = FALSE, echo=TRUE, warning=FALSE, message=FALSE, results = 'hide'}
 # Post hoc simulation #2
 sim3 <- simulateRespondents(thetas = theta[persons,],
                             # Item bank
@@ -311,12 +354,12 @@ sim3 <- simulateRespondents(thetas = theta[persons,],
 
 Now, let's see the simulation output.
 
-```{r}
+```{r, eval=FALSE}
 # Statistical summary of results
 print(sim3)
 ```
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, fig.width=7, fig.height=8}
 # Visual summary of results
 plot(sim3)
 ```
