@@ -2751,7 +2751,7 @@ Figure 4: Interim Theta and SEM Estimates in CAT
 <pre><code>
  ** Post-hoc simulation of multiple examinees ** 
  
-Simulation time: 54.31 seconds 
+Simulation time: 57.25 seconds 
  
 Number of simulees: 1000 
 Item bank size: 49 items 
@@ -2796,7 +2796,7 @@ Conditional results
 These results can be saved by setting &#39;save.output&#39; to TRUE 
   in the &#39;simulateRespondents&#39; function </code></pre>
 </div>
-<p>The simulateRespondents function returns a detailed output of the simulation results. The correlation between the true (i.e., theta based on all 49 items) and estimated theta values is <span class="math inline">\(0.912\)</span>. This is is a good result because even with 10 items, individuals’ estimated theta levels are highly correlated with their true theta levels. We can also see that RMSE is 0.386 and bias is 0.009. We are not going to focus on the item exposure results since we did not apply any method to control item exposure given the small size of our item bank.</p>
+<p>The simulateRespondents function returns a detailed output of the simulation results. The correlation between the true (i.e., theta based on all 49 items) and estimated theta values is <span class="math inline">\(r = 0.912\)</span>. This is is a good result because even with 10 items, individuals’ estimated theta levels are highly correlated with their true theta levels. We can also see that RMSE is 0.386 and bias is 0.009. We are not going to focus on the item exposure results since we did not apply any method to control item exposure given the small size of our item bank.</p>
 <p>Next, we will review the “Condition Results” section. The output is split by the latent trait groups (i.e., D1 to D10). This allows us to evaluate the performance of the CAT system across different latent trait levels. We can see that both RMSE and bias are quite high for D1 and D10 (i.e., very low anxiety and very high anxiety groups). This is not a surprising finding given the small size of the item bank. Mean test length indicates that all individuals finished the scale with 10 items. That is, SEM could not be minimized below 0.3 and thus there was no early termination. The row of “Mean standard error” also confirms that the average SEM was higher than 0.3 for all latent trait groups.</p>
 <p>We can also take a look at the visual summary of the results using the plot function.</p>
 <div class="layout-chunk" data-layout="l-body">
@@ -2846,7 +2846,7 @@ Figure 5: Simulation Results
 <pre><code>
  ** Post-hoc simulation of multiple examinees ** 
  
-Simulation time: 1.311 minutes 
+Simulation time: 1.391 minutes 
  
 Number of simulees: 1000 
 Item bank size: 49 items 

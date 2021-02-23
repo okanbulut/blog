@@ -57,7 +57,7 @@ head(data)&lt;/code&gt;&lt;/pre&gt;
 
 plot_correlation(data)&lt;/code&gt;&lt;/pre&gt;
 &lt;div class="figure"&gt;
-&lt;img src="file52e4772ad42_files/figure-html/corplot-1.png" alt="Inter-item Correlations in the Taylor Manifest Anxiety Scale" width="576" /&gt;
+&lt;img src="file2e0820424463_files/figure-html/corplot-1.png" alt="Inter-item Correlations in the Taylor Manifest Anxiety Scale" width="576" /&gt;
 &lt;p class="caption"&gt;
 (#fig:corplot)Inter-item Correlations in the Taylor Manifest Anxiety Scale
 &lt;/p&gt;
@@ -77,7 +77,7 @@ ggplot(data = item_summary,
   coord_flip() +
   theme_bw()&lt;/code&gt;&lt;/pre&gt;
 &lt;div class="figure"&gt;
-&lt;img src="file52e4772ad42_files/figure-html/discplot-1.png" alt="Item Discrimination Values in the Taylor Manifest Anxiety Scale" width="672" /&gt;
+&lt;img src="file2e0820424463_files/figure-html/discplot-1.png" alt="Item Discrimination Values in the Taylor Manifest Anxiety Scale" width="672" /&gt;
 &lt;p class="caption"&gt;
 (#fig:discplot)Item Discrimination Values in the Taylor Manifest Anxiety Scale
 &lt;/p&gt;
@@ -115,7 +115,7 @@ theta &amp;lt;- as.matrix(theta)&lt;/code&gt;&lt;/pre&gt;
            auto.key = list(points=TRUE, lines=TRUE, columns=2, space = &amp;quot;top&amp;quot;),
            par.settings = list(superpose.line = list(col = &amp;quot;black&amp;quot;, lty = 1:2, lwd = 2)))&lt;/code&gt;&lt;/pre&gt;
 &lt;div class="figure"&gt;
-&lt;img src="file52e4772ad42_files/figure-html/tifplot-1.png" alt="Test Information Function and Standard Error of Measurement" width="672" /&gt;
+&lt;img src="file2e0820424463_files/figure-html/tifplot-1.png" alt="Test Information Function and Standard Error of Measurement" width="672" /&gt;
 &lt;p class="caption"&gt;
 (#fig:tifplot)Test Information Function and Standard Error of Measurement
 &lt;/p&gt;
@@ -190,7 +190,7 @@ theta &amp;lt;- as.matrix(theta)&lt;/code&gt;&lt;/pre&gt;
 
 plot_cat(sim1)&lt;/code&gt;&lt;/pre&gt;
 &lt;div class="figure"&gt;
-&lt;img src="file52e4772ad42_files/figure-html/catplot-1.gif" alt="Interim Theta and SEM Estimates in CAT"  /&gt;
+&lt;img src="file2e0820424463_files/figure-html/catplot-1.gif" alt="Interim Theta and SEM Estimates in CAT"  /&gt;
 &lt;p class="caption"&gt;
 (#fig:catplot)Interim Theta and SEM Estimates in CAT
 &lt;/p&gt;
@@ -224,7 +224,7 @@ print(sim2)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;
  ** Post-hoc simulation of multiple examinees ** 
  
-Simulation time: 56.51 seconds 
+Simulation time: 58.99 seconds 
  
 Number of simulees: 1000 
 Item bank size: 49 items 
@@ -268,7 +268,7 @@ Conditional results
 
 These results can be saved by setting &amp;#39;save.output&amp;#39; to TRUE 
   in the &amp;#39;simulateRespondents&amp;#39; function &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;The simulateRespondents function returns a detailed output of the simulation results. The correlation between the true (i.e., theta based on all 49 items) and estimated theta values is &lt;span class="math inline"&gt;\(0.912\)&lt;/span&gt;. This is is a good result because even with 10 items, individuals’ estimated theta levels are highly correlated with their true theta levels. We can also see that RMSE is 0.386 and bias is 0.009. We are not going to focus on the item exposure results since we did not apply any method to control item exposure given the small size of our item bank.&lt;/p&gt;
+&lt;p&gt;The simulateRespondents function returns a detailed output of the simulation results. The correlation between the true (i.e., theta based on all 49 items) and estimated theta values is &lt;span class="math inline"&gt;\(r = 0.912\)&lt;/span&gt;. This is is a good result because even with 10 items, individuals’ estimated theta levels are highly correlated with their true theta levels. We can also see that RMSE is 0.386 and bias is 0.009. We are not going to focus on the item exposure results since we did not apply any method to control item exposure given the small size of our item bank.&lt;/p&gt;
 &lt;p&gt;Next, we will review the “Condition Results” section. The output is split by the latent trait groups (i.e., D1 to D10). This allows us to evaluate the performance of the CAT system across different latent trait levels. We can see that both RMSE and bias are quite high for D1 and D10 (i.e., very low anxiety and very high anxiety groups). This is not a surprising finding given the small size of the item bank. Mean test length indicates that all individuals finished the scale with 10 items. That is, SEM could not be minimized below 0.3 and thus there was no early termination. The row of “Mean standard error” also confirms that the average SEM was higher than 0.3 for all latent trait groups.&lt;/p&gt;
 &lt;p&gt;We can also take a look at the visual summary of the results using the plot function.&lt;/p&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Visual summary of results
@@ -302,7 +302,7 @@ print(sim3)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;
  ** Post-hoc simulation of multiple examinees ** 
  
-Simulation time: 1.462 minutes 
+Simulation time: 1.495 minutes 
  
 Number of simulees: 1000 
 Item bank size: 49 items 
