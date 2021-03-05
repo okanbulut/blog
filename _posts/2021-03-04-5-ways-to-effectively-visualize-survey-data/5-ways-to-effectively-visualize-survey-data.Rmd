@@ -36,16 +36,41 @@ suppressWarnings({
   library("kableExtra")
   library("emo")
   library("DataExplorer")
-  #library("psych")
   library("ggplot2")
-  library("gganimate")
-  library("mirt")
-  library("catR")
 })
 ```
 
-![Photo by [200degrees](https://pixabay.com/users/200degrees-2051452/) on [pixabay](https://pixabay.com/)](survey.png)
+
+![Photo by [janjf93](https://pixabay.com/users/janjf93-3084263/) on [pixabay](https://pixabay.com/)](gui.png)
 
 ## Introduction
 
 In CSSE 2019, I gave a half-day training on how to visualize assessment and survey items effectively (the training slides are available on [my GitHub page](https://github.com/okanbulut/dataviz/raw/master/CSSE_Workshop.pdf))^[The other training materials are available at <https://github.com/okanbulut/dataviz>.].
+
+
+```{r dataviz, echo = FALSE, fig.cap="Types of data visualization (Source: https://extremepresentation.com/)", out.extra="class=external", fig.width=6, fig.height=4, layout="l-body-outset"}
+# Visual summary of results
+knitr::include_graphics("dataviz.png")
+```
+
+
+```{r nakeddata, echo = FALSE, fig.cap="Types of data visualization (Source: https://www.darkhorseanalytics.com/blog/data-looks-better-naked)", out.extra="class=external", fig.width=8, fig.height=6}
+# Visual summary of results
+knitr::include_graphics("data-ink.gif")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
