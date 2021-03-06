@@ -37,8 +37,9 @@ suppressWarnings({
   library("emo")
   library("dplyr")
   library("ggplot2")
-  library("ggcorplot")
+  library("corrplot")
   library("naniar")
+  library("reshape2")
   library("ggalluvial")
 })
 ```
@@ -68,25 +69,23 @@ xxx
 
 To what extent do you disagree or agree about yourself?
 
-ST082Q01NA I prefer working as part of a team to working alone.
-ST082Q02NA I am a good listener.
-ST082Q03NA I enjoy seeing my classmates be successful.
-ST082Q08NA I take into account what others are interested in.
-ST082Q09NA I find that teams make better decisions than individuals.
-ST082Q12NA I enjoy considering different perspectives.
-ST082Q13NA I find that teamwork raises my own efficiency.
-ST082Q14NA I enjoy cooperating with peers.
-ST034Q02TA I make friends easily at school.
-ST034Q05TA Other students seem to like me.
+```{r ch0, echo=FALSE}
+quest <- read.csv("questions.csv", header = TRUE, na.strings = 999)
+colnames(quest) <- c("Question ID", "Question Statement")
 
-1 = Strongly disagree
-2 = Disagree
-3 = Agree
-4 = Strongly Agree
+kbl(quest) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                full_width = TRUE, position = "left")
+```
 
+Response options are:
 
+* 1 = Strongly disagree
+* 2 = Disagree
+* 3 = Agree
+* 4 = Strongly Agree
 
-```{r ch0, eval=FALSE}
+```{r ch1, eval=FALSE}
 # Read the data in R
 data <- read.csv("PISA_Alberta.csv", header = TRUE, na.strings = 999)
 
@@ -94,16 +93,44 @@ data <- read.csv("PISA_Alberta.csv", header = TRUE, na.strings = 999)
 head(data)
 ```
 
-
-```{r ch1, echo=FALSE}
+```{r ch4, echo=FALSE}
 # Read the data in R
 data <- read.csv("PISA_Alberta.csv", header = TRUE, na.strings = 999)
 paged_table(data, options = list(cols.print = 12))
 ```
 
 
+### Correlation Matrix Plot
 
 ```{r ch2, eval=FALSE}
+# Activate the package
+library("corrplot")
+
+# Correlation matrix of items
+cormat <- data %>%
+  select(starts_with("ST0")) %>%
+  cor(., use = "pairwise.complete.obs")
+
+# Correlation matrix plot
+corrplot(cormat, order = "hclust", addrect = 2)
+```
+
+
+```{r ch3, echo=FALSE, fig.width=5, fig.height=5, fig.cap="Correlation matrix plot of the PISA survey items"}
+# Correlation matrix of items
+cormat <- data %>%
+  select(starts_with("ST0")) %>%
+  cor(., use = "pairwise.complete.obs")
+
+# Correlation matrix plot
+corrplot(cormat, order = "hclust", addrect = 4)
+```
+
+
+### UpSet Plot
+
+
+```{r ch5, eval=FALSE}
 library("dplyr") 
 
 data <- mutate(data,
@@ -111,12 +138,14 @@ data <- mutate(data,
                immigration = ifelse(is.na(IMMIG), NA, ifelse(IMMIG == 1, "Native", 
                                            ifelse(IMMIG == 2, "Second-Generation", 
                                                   "First-Generation")))) %>%
-  rename(grade = ST001D01T)
+  rename(grade = ST001D01T,
+         student = CNTSTUID,
+         age = AGE) %>%
+  select(-ST004D01T, -IMMIG)
 ```
 
 
-
-```{r ch3,eval=FALSE}
+```{r ch6,eval=FALSE}
 library("naniar")
 
 # Select only the survey items
@@ -124,26 +153,52 @@ gg_miss_upset(data[, 6:15], nsets = 10)
 ```
 
 
-```{r ch4,echo=FALSE, fig.width=6, fig.height=5, layout="l-body-outset", fig.cap="An UpSet plot showing missing data patterns in the PISA dataset"}
+```{r ch7,echo=FALSE, fig.width=6, fig.height=5, layout="l-body-outset", fig.cap="An UpSet plot showing missing data patterns in the PISA dataset"}
 gg_miss_upset(data[, 6:15], nsets = 10)
 ```
 
 The **UpSetR** package also offers [a Shiny app](https://gehlenborglab.shinyapps.io/upsetr/) to generate UpSet plots without any coding in R. 
 
+### Alluvial Plot
 
-```{r ch5, eval=FALSE}
-ggplot(vaccinations,
-       aes(x = survey, stratum = response, alluvium = subject,
-           y = freq,
-           fill = response, label = response)) +
-  scale_x_discrete(expand = c(.1, .1)) +
-  geom_flow() +
-  geom_stratum(alpha = .5) +
-  geom_text(stat = "stratum", size = 3) +
-  theme(legend.position = "none") +
-  ggtitle("vaccination survey responses at three points in time")
+```{r ch8, eval=FALSE}
+library("reshape2")
+library("ggplot2")
+library("ggalluvial")
+
+data_long <- data %>%
+  # Melt data to long format
+  melt(data = .,
+       id.vars = c("student", "grade", "age", "gender", "immigration"),
+       variable.name = "question",
+       value.name = "response") %>%
+  # Recode numerical responses to character strings
+  mutate(response2 = (ifelse(is.na(response), "Missing",
+                             ifelse(response == 1, "Strongly disagree",
+                                    ifelse(response == 2, "Disagree",
+                                           ifelse(response == 3, "Agree", "Strongly agree"))))),
+         
+         response3 = factor(response2, levels = c("Missing", "Strongly disagree", "Disagree", 
+                                                  "Agree", "Strongly agree"))
+         
+  ) %>%
+  # Summarize the data
+  group_by(gender, question, response3) %>%
+  summarise(Freq = n())
+  
+
+ggplot(data_long,
+       aes(y = Freq, axis1 = question, axis2 = gender, axis3 = response3)) +
+  geom_alluvium(aes(fill = gender), width = 1/12) +
+  geom_stratum(width = 1/12, fill = "black", color = "grey") +
+  geom_label(stat = "stratum", aes(label = after_stat(stratum))) +
+  scale_x_discrete(limits = c("Gender", "Dept"), expand = c(.05, .05)) +
+  scale_fill_brewer(type = "qual", palette = "Set1") +
+  ggtitle("UC Berkeley admissions and rejections, by sex and department")
 ```
 
 
+## Conclusion
 
+xxx
 
