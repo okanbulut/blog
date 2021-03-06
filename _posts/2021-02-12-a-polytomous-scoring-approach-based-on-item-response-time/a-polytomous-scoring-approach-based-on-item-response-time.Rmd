@@ -400,10 +400,6 @@ p4 <- ggplot(data = theta_estimates) +
 (p1 | p2)/(p3 | p4)
 ```
 
-```{r, echo=FALSE}
-#knitr::include_graphics("ability_hist.png")
-```
-
 
 We can also examine test information function (TIF) based on the estimated person parameters using the polytomous scoring approach. The figure shows that GRM3-NA and GRM4-NA are more informative than the other two models where not-reached items were scored as incorrect. Furthermore, compared with GRM3-IN and GRM4-IN, GRM3-NA and GRM4-NA cover a wider range of ability (i.e., theta). 
 
