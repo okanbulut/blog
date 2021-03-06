@@ -23,21 +23,26 @@ categories:
   - IRT
   - eirm
 bibliography: eirm.bib
+csl: apa.csl
 output:
   distill::distill_article:
     self_contained: false
+    toc: true
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Introduction
 
 Explanatory item response modeling (shortly EIRM) was first proposed by @deboeck as an alternative to traditional item response model. This framework allows us to turn traditional item response theory (IRT) models into explanatory models with additional predictors. Explanatory IRT models aim to explain how item properties (e.g., content, cognitive complexity, and presence of visual elements) and person characteristics (e.g., gender, race, and English language learner (ELL) status) affect the persons' responses to items. For a brief introduction to EIRM, you can check out Wilson, De Boeck, and Carstensen's chapter [here](https://bearcenter.berkeley.edu/sites/default/files/Wilson20.pdf). 
 
 In @deboeck's book, the authors describe how to estimate explanatory IRT models using the SAS statistical software program. Given the growing popularity of R in the psychometric/measurement community, @de2011estimation published a nice article that describes how to estimate the same models using the `lme4` package [@lme4] in R. Since then, I have been using the `lme4` package to estimate explanatory IRT models for my research projects. For example, we evaluated measurement invariance of two developmental assets, Support and Positive Identity, across grade levels and ELL subgroups of Latino students in 6th through 12th grade [@bulut2015]. Also, we investigated whether the linguistic complexity of items leads to gender differential item functioning (DIF) in mathematics assessments [@bulut2014].
 
 One problem that we often had to deal with when using `lme4` was the format of item responses. The `lme4` package assumes a binomial distribution for item responses, which means responses must be dichotomous (i.e., 0 and 1). Although this is not a problem for dichotomous data based on multiple-choice items, it is a major drawback for polytomous data based on rating scale items (e.g., Likert scales). Therefore, we had to develop a new way to transform polytomous responses into dichotomous responses without losing the original response structure [@stanke2019explanatory]. Recently, I decided to share this method in a new package that would faciliate the estimation of explanatory IRT models for both dichotomous and polytomous response data. Therefore, I created the `eirm` package [@bulut2020], which is essentially a wrapper for the `lme4` package [@lme4]. The `eirm` function in the package allows users to define an explanatory IRT model based on item-level and person-level predictors.
+
+## Example
 
 In this post, I will show how to use the `eirm` package to estimate explanatory IRT models with polytomous response data. For more examples, you can check out the `eirm` website: <https://okanbulut.github.io/eirm/>. The `eirm` package is currently available on CRAN. It can be downloaded and installed using **install.packages("eirm")**. 
 
@@ -107,6 +112,7 @@ mod2 <- eirm(formula = "polyresponse ~ -1 + btype + situ + mode +
              polycategory + polycategory:btype + (1|id)", data = VerbAgg2)
 ```
 
+## Conclusion
 
 Before I conclude this post, I want to mention a few caveats with the `eirm` package. First, the `eirm` package is using a different optimizer to speed up the estimation process. However, as the size of response data (i.e., items and persons) increases, the estimation duration may increase significantly. Second, it is possible to use dichotomous and polytomous items within the same model. In that case, a single difficulty is estimated for dichotomous items (i.e., Rasch model) and multiple thresholds for polytomous items (i.e., either Partial Credit model or Rating Scale model). Lastly, the `eirm` package is not capable of estimating a discrimination parameter for the items (just like `lme4` can't). Structural equation modeling could be a good alternative for those who want to estimate both discrimination and difficulty parameters for the items.   
 

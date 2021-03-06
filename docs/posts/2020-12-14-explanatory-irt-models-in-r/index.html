@@ -20,19 +20,18 @@
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -52,7 +51,7 @@ pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-le
 div.sourceCode
   {   }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ad0000; } /* Alert */
 code span.an { color: #5e5e5e; } /* Annotation */
@@ -132,22 +131,22 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <!--/radix_placeholder_meta_tags-->
   
   <meta name="citation_reference" content="citation_title=Explanatory item response models: A generalized linear and nonlinear approach;citation_publication_date=2004;citation_publisher=Springer Science &amp; Business Media;citation_author=Paul De Boeck;citation_author=Mark Wilson"/>
-  <meta name="citation_reference" content="citation_title=Eirm: Explanatory item response modeling for dichotomous and polytomous items;citation_publication_date=2020;citation_author=Okan Bulut"/>
-  <meta name="citation_reference" content="citation_title=Fitting linear mixed-effects models using &lt;span class=&quot;nocase&quot;&gt;lme4&lt;/span&gt;;citation_publication_date=2015;citation_volume=67;citation_doi=10.18637/jss.v067.i01;citation_author=Douglas Bates;citation_author=Martin MÃ¤chler;citation_author=Ben Bolker;citation_author=Steve Walker"/>
+  <meta name="citation_reference" content="citation_title=eirm: Explanatory item response modeling for dichotomous and polytomous item responses;citation_publication_date=2021;citation_doi=10.5281/zenodo.4556285;citation_author=Okan Bulut"/>
+  <meta name="citation_reference" content="citation_title=Fitting linear mixed-effects models using lme4;citation_publication_date=2015;citation_volume=67;citation_doi=10.18637/jss.v067.i01;citation_author=Douglas Bates;citation_author=Martin MÃ¤chler;citation_author=Ben Bolker;citation_author=Steve Walker"/>
   <meta name="citation_reference" content="citation_title=The estimation of item response models with the lmer function from the lme4 package in r;citation_publication_date=2011;citation_volume=39;citation_author=Paul De Boeck;citation_author=Marjan Bakker;citation_author=Robert Zwitser;citation_author=Michel Nivard;citation_author=Abe Hofman;citation_author=Francis Tuerlinckx;citation_author=Ivailo Partchev;citation_author=The estimation of item response models with the lmer function from the lme4 package in r"/>
   <meta name="citation_reference" content="citation_title=Evaluating measurement invariance in the measurement of developmental assets in latino english language groups across developmental stages;citation_publication_date=2015;citation_volume=5;citation_doi=10.1177/2158244015586238;citation_author=Okan Bulut;citation_author=Jose Palma;citation_author=Michael C. Rodriguez;citation_author=Luke Stanke"/>
-  <meta name="citation_reference" content="citation_title=Examining the relationship between gender dif and language complexity in mathematics assessments;citation_publication_date=2014;citation_publisher=Routledge;citation_volume=14;citation_doi=10.1080/15305058.2013.877911;citation_author=Adnan Kan;citation_author=Okan Bulut"/>
+  <meta name="citation_reference" content="citation_title=Examining the relationship between gender DIF and language complexity in mathematics assessments;citation_publication_date=2014;citation_publisher=Routledge;citation_volume=14;citation_doi=10.1080/15305058.2013.877911;citation_author=Adnan Kan;citation_author=Okan Bulut"/>
   <meta name="citation_reference" content="citation_title=Explanatory item response models for polytomous item responses.;citation_publication_date=2019;citation_publisher=ERIC;citation_volume=6;citation_author=Luke Stanke;citation_author=Okan Bulut"/>
-  <meta name="citation_reference" content="citation_title=&lt;span class=&quot;nocase&quot;&gt;eRm: Extended Rasch Modeling&lt;/span&gt;;citation_publication_date=2020;citation_author=Patrick Mair;citation_author=Reinhold Hatzinger;citation_author=Marco Johannes Maier"/>
+  <meta name="citation_reference" content="citation_title=eRm: Extended Rasch Modeling;citation_publication_date=2020;citation_author=Patrick Mair;citation_author=Reinhold Hatzinger;citation_author=Marco Johannes Maier"/>
   <!--radix_placeholder_rmarkdown_metadata-->
 
 <script type="text/json" id="radix-rmarkdown-metadata">
-{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["creative_commons","title","description","author","date","categories","bibliography","output","citation_url","canonical_url"]}},"value":[{"type":"character","attributes":{},"value":["CC BY"]},{"type":"character","attributes":{},"value":["Explanatory IRT Models in R"]},{"type":"character","attributes":{},"value":["Explanatory item response modeling (EIRM) is a flexible framework that \nallows researchers to model both person and item characteristics as predictors together. \nIn this post, I demonstrate how to use the `eirm` package to estimate explanatory IRT \nmodels in R. \n\n(4 min read)"]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","url","affiliation","affiliation_url","orcid_id"]}},"value":[{"type":"character","attributes":{},"value":["Okan Bulut"]},{"type":"character","attributes":{},"value":["http://www.okanbulut.com/"]},{"type":"character","attributes":{},"value":["University of Alberta"]},{"type":"character","attributes":{},"value":["https://www.ualberta.ca"]},{"type":"character","attributes":{},"value":["0000-0001-5853-1267"]}]}]},{"type":"character","attributes":{},"value":["12-14-2020"]},{"type":"character","attributes":{},"value":["psychometrics","IRT","eirm"]},{"type":"character","attributes":{},"value":["eirm.bib"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["distill::distill_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["self_contained"]}},"value":[{"type":"logical","attributes":{},"value":[false]}]}]},{"type":"character","attributes":{},"value":["https://okan.cloud/posts/2020-12-14-explanatory-irt-models-in-r/"]},{"type":"character","attributes":{},"value":["https://okan.cloud/posts/2020-12-14-explanatory-irt-models-in-r/"]}]}
+{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["creative_commons","title","description","author","date","categories","bibliography","csl","output","citation_url","canonical_url"]}},"value":[{"type":"character","attributes":{},"value":["CC BY"]},{"type":"character","attributes":{},"value":["Explanatory IRT Models in R"]},{"type":"character","attributes":{},"value":["Explanatory item response modeling (EIRM) is a flexible framework that \nallows researchers to model both person and item characteristics as predictors together. \nIn this post, I demonstrate how to use the `eirm` package to estimate explanatory IRT \nmodels in R. \n\n(4 min read)"]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","url","affiliation","affiliation_url","orcid_id"]}},"value":[{"type":"character","attributes":{},"value":["Okan Bulut"]},{"type":"character","attributes":{},"value":["http://www.okanbulut.com/"]},{"type":"character","attributes":{},"value":["University of Alberta"]},{"type":"character","attributes":{},"value":["https://www.ualberta.ca"]},{"type":"character","attributes":{},"value":["0000-0001-5853-1267"]}]}]},{"type":"character","attributes":{},"value":["12-14-2020"]},{"type":"character","attributes":{},"value":["psychometrics","IRT","eirm"]},{"type":"character","attributes":{},"value":["eirm.bib"]},{"type":"character","attributes":{},"value":["apa.csl"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["distill::distill_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["self_contained","toc"]}},"value":[{"type":"logical","attributes":{},"value":[false]},{"type":"logical","attributes":{},"value":[true]}]}]},{"type":"character","attributes":{},"value":["https://okan.cloud/posts/2020-12-14-explanatory-irt-models-in-r/"]},{"type":"character","attributes":{},"value":["https://okan.cloud/posts/2020-12-14-explanatory-irt-models-in-r/"]}]}
 </script>
 <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["eirm.bib","explanatory-irt-models-in-r_files/anchor-4.2.2/anchor.min.js","explanatory-irt-models-in-r_files/bowser-1.9.3/bowser.min.js","explanatory-irt-models-in-r_files/distill-2.2.21/template.v2.js","explanatory-irt-models-in-r_files/figure-html5/unnamed-chunk-4-1.png","explanatory-irt-models-in-r_files/figure-html5/unnamed-chunk-6-1.png","explanatory-irt-models-in-r_files/figure-html5/unnamed-chunk-7-1.png","explanatory-irt-models-in-r_files/jquery-1.11.3/jquery.min.js","explanatory-irt-models-in-r_files/webcomponents-2.0.0/webcomponents.js"]}
+  {"type":"character","attributes":{},"value":["apa.csl","eirm.bib","explanatory-irt-models-in-r_files/anchor-4.2.2/anchor.min.js","explanatory-irt-models-in-r_files/bowser-1.9.3/bowser.min.js","explanatory-irt-models-in-r_files/distill-2.2.21/template.v2.js","explanatory-irt-models-in-r_files/figure-html5/unnamed-chunk-4-1.png","explanatory-irt-models-in-r_files/figure-html5/unnamed-chunk-6-1.png","explanatory-irt-models-in-r_files/figure-html5/unnamed-chunk-7-1.png","explanatory-irt-models-in-r_files/header-attrs-2.7/header-attrs.js","explanatory-irt-models-in-r_files/jquery-1.11.3/jquery.min.js","explanatory-irt-models-in-r_files/popper-2.6.0/popper.min.js","explanatory-irt-models-in-r_files/tippy-6.2.7/tippy-bundle.umd.min.js","explanatory-irt-models-in-r_files/tippy-6.2.7/tippy-light-border.css","explanatory-irt-models-in-r_files/tippy-6.2.7/tippy.css","explanatory-irt-models-in-r_files/tippy-6.2.7/tippy.umd.min.js","explanatory-irt-models-in-r_files/webcomponents-2.0.0/webcomponents.js"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
 <meta name="distill:offset" content="../.."/>
@@ -2389,7 +2388,12 @@ d-appendix d-footnote-list a.footnote-backlink {
   color: var(--hover-color, white);
 }</style>
 <!--/radix_placeholder_distill-->
+  <script src="../../site_libs/header-attrs-2.7/header-attrs.js"></script>
   <script src="../../site_libs/jquery-1.11.3/jquery.min.js"></script>
+  <script src="../../site_libs/popper-2.6.0/popper.min.js"></script>
+  <link href="../../site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
+  <link href="../../site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
+  <script src="../../site_libs/tippy-6.2.7/tippy.umd.min.js"></script>
   <script src="../../site_libs/anchor-4.2.2/anchor.min.js"></script>
   <script src="../../site_libs/bowser-1.9.3/bowser.min.js"></script>
   <script src="../../site_libs/webcomponents-2.0.0/webcomponents.js"></script>
@@ -2466,14 +2470,26 @@ gtag('config', 'G-Y6J65ER1LP');
 </div>
 
 <div class="d-article">
-<p>Explanatory item response modeling (shortly EIRM) was first proposed by <span class="citation" data-cites="deboeck">De Boeck and Wilson (<a href="#ref-deboeck" role="doc-biblioref">2004</a>)</span> as an alternative to traditional item response model. This framework allows us to turn traditional item response theory (IRT) models into explanatory models with additional predictors. Explanatory IRT models aim to explain how item properties (e.g., content, cognitive complexity, and presence of visual elements) and person characteristics (e.g., gender, race, and English language learner (ELL) status) affect the persons’ responses to items. For a brief introduction to EIRM, you can check out Wilson, De Boeck, and Carstensen’s chapter <a href="https://bearcenter.berkeley.edu/sites/default/files/Wilson20.pdf">here</a>.</p>
-<p>In <span class="citation" data-cites="deboeck">De Boeck and Wilson (<a href="#ref-deboeck" role="doc-biblioref">2004</a>)</span>’s book, the authors describe how to estimate explanatory IRT models using the SAS statistical software program. Given the growing popularity of R in the psychometric/measurement community, <span class="citation" data-cites="de2011estimation">De Boeck et al. (<a href="#ref-de2011estimation" role="doc-biblioref">2011</a>)</span> published a nice article that describes how to estimate the same models using the <code>lme4</code> package <span class="citation" data-cites="lme4">(Bates et al. <a href="#ref-lme4" role="doc-biblioref">2015</a>)</span> in R. Since then, I have been using the <code>lme4</code> package to estimate explanatory IRT models for my research projects. For example, we evaluated measurement invariance of two developmental assets, Support and Positive Identity, across grade levels and ELL subgroups of Latino students in 6th through 12th grade <span class="citation" data-cites="bulut2015">(Bulut et al. <a href="#ref-bulut2015" role="doc-biblioref">2015</a>)</span>. Also, we investigated whether the linguistic complexity of items leads to gender differential item functioning (DIF) in mathematics assessments <span class="citation" data-cites="bulut2014">(Kan and Bulut <a href="#ref-bulut2014" role="doc-biblioref">2014</a>)</span>.</p>
-<p>One problem that we often had to deal with when using <code>lme4</code> was the format of item responses. The <code>lme4</code> package assumes a binomial distribution for item responses, which means responses must be dichotomous (i.e., 0 and 1). Although this is not a problem for dichotomous data based on multiple-choice items, it is a major drawback for polytomous data based on rating scale items (e.g., Likert scales). Therefore, we had to develop a new way to transform polytomous responses into dichotomous responses without losing the original response structure <span class="citation" data-cites="stanke2019explanatory">(Stanke and Bulut <a href="#ref-stanke2019explanatory" role="doc-biblioref">2019</a>)</span>. Recently, I decided to share this method in a new package that would faciliate the estimation of explanatory IRT models for both dichotomous and polytomous response data. Therefore, I created the <code>eirm</code> package <span class="citation" data-cites="bulut2020">(Bulut <a href="#ref-bulut2020" role="doc-biblioref">2020</a>)</span>, which is essentially a wrapper for the <code>lme4</code> package <span class="citation" data-cites="lme4">(Bates et al. <a href="#ref-lme4" role="doc-biblioref">2015</a>)</span>. The <code>eirm</code> function in the package allows users to define an explanatory IRT model based on item-level and person-level predictors.</p>
+<div class="d-contents d-contents-float">
+<nav class="l-text toc figcaption" id="TOC">
+<h3>Contents</h3>
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#example">Example</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ul>
+</nav>
+</div>
+<h2 id="introduction">Introduction</h2>
+<p>Explanatory item response modeling (shortly EIRM) was first proposed by <span class="citation" data-cites="deboeck"><a href="#ref-deboeck" role="doc-biblioref">De Boeck &amp; Wilson</a> (<a href="#ref-deboeck" role="doc-biblioref">2004</a>)</span> as an alternative to traditional item response model. This framework allows us to turn traditional item response theory (IRT) models into explanatory models with additional predictors. Explanatory IRT models aim to explain how item properties (e.g., content, cognitive complexity, and presence of visual elements) and person characteristics (e.g., gender, race, and English language learner (ELL) status) affect the persons’ responses to items. For a brief introduction to EIRM, you can check out Wilson, De Boeck, and Carstensen’s chapter <a href="https://bearcenter.berkeley.edu/sites/default/files/Wilson20.pdf">here</a>.</p>
+<p>In <span class="citation" data-cites="deboeck"><a href="#ref-deboeck" role="doc-biblioref">De Boeck &amp; Wilson</a> (<a href="#ref-deboeck" role="doc-biblioref">2004</a>)</span>’s book, the authors describe how to estimate explanatory IRT models using the SAS statistical software program. Given the growing popularity of R in the psychometric/measurement community, <span class="citation" data-cites="de2011estimation"><a href="#ref-de2011estimation" role="doc-biblioref">De Boeck et al.</a> (<a href="#ref-de2011estimation" role="doc-biblioref">2011</a>)</span> published a nice article that describes how to estimate the same models using the <code>lme4</code> package <span class="citation" data-cites="lme4">(<a href="#ref-lme4" role="doc-biblioref">Bates et al., 2015</a>)</span> in R. Since then, I have been using the <code>lme4</code> package to estimate explanatory IRT models for my research projects. For example, we evaluated measurement invariance of two developmental assets, Support and Positive Identity, across grade levels and ELL subgroups of Latino students in 6th through 12th grade <span class="citation" data-cites="bulut2015">(<a href="#ref-bulut2015" role="doc-biblioref">Bulut et al., 2015</a>)</span>. Also, we investigated whether the linguistic complexity of items leads to gender differential item functioning (DIF) in mathematics assessments <span class="citation" data-cites="bulut2014">(<a href="#ref-bulut2014" role="doc-biblioref">Kan &amp; Bulut, 2014</a>)</span>.</p>
+<p>One problem that we often had to deal with when using <code>lme4</code> was the format of item responses. The <code>lme4</code> package assumes a binomial distribution for item responses, which means responses must be dichotomous (i.e., 0 and 1). Although this is not a problem for dichotomous data based on multiple-choice items, it is a major drawback for polytomous data based on rating scale items (e.g., Likert scales). Therefore, we had to develop a new way to transform polytomous responses into dichotomous responses without losing the original response structure <span class="citation" data-cites="stanke2019explanatory">(<a href="#ref-stanke2019explanatory" role="doc-biblioref">Stanke &amp; Bulut, 2019</a>)</span>. Recently, I decided to share this method in a new package that would faciliate the estimation of explanatory IRT models for both dichotomous and polytomous response data. Therefore, I created the <code>eirm</code> package <span class="citation" data-cites="bulut2020">(<a href="#ref-bulut2020" role="doc-biblioref">Bulut, 2021</a>)</span>, which is essentially a wrapper for the <code>lme4</code> package <span class="citation" data-cites="lme4">(<a href="#ref-lme4" role="doc-biblioref">Bates et al., 2015</a>)</span>. The <code>eirm</code> function in the package allows users to define an explanatory IRT model based on item-level and person-level predictors.</p>
+<h2 id="example">Example</h2>
 <p>In this post, I will show how to use the <code>eirm</code> package to estimate explanatory IRT models with polytomous response data. For more examples, you can check out the <code>eirm</code> website: <a href="https://okanbulut.github.io/eirm/" class="uri">https://okanbulut.github.io/eirm/</a>. The <code>eirm</code> package is currently available on CRAN. It can be downloaded and installed using <strong>install.packages(“eirm”)</strong>.</p>
 <p>I will use the verbal aggression dataset in the <code>lme4</code> package to demonstrate the estimation process. The dataset includes responses to a questionnaire on verbal aggression and additional variables related to items and persons. A preview of the data set is shown below:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre><code><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='st'><a href='https://github.com/okanbulut/eirm'>"eirm"</a></span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='st'><a href='https://github.com/okanbulut/eirm'>"eirm"</a></span><span class='op'>)</span>
 
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"VerbAgg"</span><span class='op'>)</span>
 
@@ -2491,7 +2507,7 @@ gtag('config', 'G-Y6J65ER1LP');
 <p>In the dataset, the variable resp represents each person’s response to the items on the questionnaire. There are three values for resp: yes, perhaps, and no. Therefore, we need to transform these poytomous responses into dichotomous responses. To reformat the data, we will use the polyreformat function in the <code>eirm</code> package. The following example demonstrates how polytomous responses in the verbal aggression dataset can be reformatted into a dichotomous form:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre><code><span class='va'>VerbAgg2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/eirm/man/polyreformat.html'>polyreformat</a></span><span class='op'>(</span>data<span class='op'>=</span><span class='va'>VerbAgg</span>, id.var <span class='op'>=</span> <span class='st'>"id"</span>, var.name <span class='op'>=</span> <span class='st'>"item"</span>, val.name <span class='op'>=</span> <span class='st'>"resp"</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>VerbAgg2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/eirm/man/polyreformat.html'>polyreformat</a></span><span class='op'>(</span>data<span class='op'>=</span><span class='va'>VerbAgg</span>, id.var <span class='op'>=</span> <span class='st'>"id"</span>, var.name <span class='op'>=</span> <span class='st'>"item"</span>, val.name <span class='op'>=</span> <span class='st'>"resp"</span><span class='op'>)</span>
 
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>VerbAgg2</span><span class='op'>)</span>
 </code></pre>
@@ -2513,20 +2529,20 @@ gtag('config', 'G-Y6J65ER1LP');
 </div>
 <p>In the reformatted data, polyresponse is the new response variable (i.e., pseudo-dichotomous version of the original response variable resp) and polycategory represents the response categories. Based on the reformatted data, each item has two rows based on the following rules:</p>
 <ul>
-<li>If polycategory = “cat_perhaps” and resp = “no”, then polyresponse = 0</li>
-<li>If polycategory = “cat_perhaps” and resp = “perhaps”, then polyresponse = 1</li>
-<li>If polycategory = “cat_perhaps” and resp = “yes”, then polyresponse = NA</li>
+<li>If polycategory = “cat_perhaps” and resp = “no,” then polyresponse = 0</li>
+<li>If polycategory = “cat_perhaps” and resp = “perhaps,” then polyresponse = 1</li>
+<li>If polycategory = “cat_perhaps” and resp = “yes,” then polyresponse = NA</li>
 </ul>
 <p>and</p>
 <ul>
-<li>If polycategory = “cat_yes” and resp = “no”, then polyresponse = NA</li>
-<li>If polycategory = “cat_yes” and resp = “perhaps”, then polyresponse = 0</li>
-<li>If polycategory = “cat_yes” and resp = “yes”, then polyresponse = 1</li>
+<li>If polycategory = “cat_yes” and resp = “no,” then polyresponse = NA</li>
+<li>If polycategory = “cat_yes” and resp = “perhaps,” then polyresponse = 0</li>
+<li>If polycategory = “cat_yes” and resp = “yes,” then polyresponse = 1</li>
 </ul>
 <p>Now we can estimate an explanatory IRT model using the reformatted data. The following model explains only the first threshold (i.e., threshold from no to perhaps) based on three predictors:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre><code><span class='va'>mod1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/eirm/man/eirm.html'>eirm</a></span><span class='op'>(</span>formula <span class='op'>=</span> <span class='st'>"polyresponse ~ -1 + situ + btype + mode + (1|id)"</span>, 
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>mod1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/eirm/man/eirm.html'>eirm</a></span><span class='op'>(</span>formula <span class='op'>=</span> <span class='st'>"polyresponse ~ -1 + situ + btype + mode + (1|id)"</span>, 
              data <span class='op'>=</span> <span class='va'>VerbAgg2</span><span class='op'>)</span>
 </code></pre>
 </div>
@@ -2534,7 +2550,7 @@ gtag('config', 'G-Y6J65ER1LP');
 <p>The regression-like formula <strong>polyresponse ~ -1 + situ + btype + mode + (1|id)</strong> describes the dependent variable (polyresponse) and predictors (situ, btype, and mode). Also, (1|id) refers to the random effects for persons represented by the id column in the data set. Using the print function or simply typing mod1 in the R console, we can print out the estimated coefficients for the predictors:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre><code><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>mod1</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>mod1</span><span class='op'>)</span>
 </code></pre>
 </div>
 <pre><code>EIRM formula: &quot;polyresponse ~ -1 + situ + btype + mode + (1|id)&quot; 
@@ -2557,18 +2573,18 @@ modedo      -0.4264 0.04576  -9.319  1.179e-20
 Note: The estimated parameters above represent &#39;easiness&#39;.
 Use difficulty = TRUE to get difficulty parameters.</code></pre>
 </div>
-<p>The mod1 object is essentially a glmerMod-class object from the <code>lme4</code> package <span class="citation" data-cites="lme4">(Bates et al. <a href="#ref-lme4" role="doc-biblioref">2015</a>)</span>. All glmerMod results for the estimated model can seen with <strong>mod1$model</strong>. For example, estimated random effects for persons (i.e., theta estimates) can be obtained using:</p>
+<p>The mod1 object is essentially a glmerMod-class object from the <code>lme4</code> package <span class="citation" data-cites="lme4">(<a href="#ref-lme4" role="doc-biblioref">Bates et al., 2015</a>)</span>. All glmerMod results for the estimated model can seen with <strong>mod1$model</strong>. For example, estimated random effects for persons (i.e., theta estimates) can be obtained using:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre><code><span class='va'>theta</span> <span class='op'>&lt;-</span> <span class='fu'>ranef</span><span class='op'>(</span><span class='va'>mod1</span><span class='op'>$</span><span class='va'>model</span><span class='op'>)</span><span class='op'>$</span><span class='va'>id</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>theta</span> <span class='op'>&lt;-</span> <span class='fu'>ranef</span><span class='op'>(</span><span class='va'>mod1</span><span class='op'>$</span><span class='va'>model</span><span class='op'>)</span><span class='op'>$</span><span class='va'>id</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>theta</span><span class='op'>)</span>
 </code></pre>
 </div>
 </div>
-<p>It is possible to visualize the parameters using an item-person map. Note that this plot is a modified version of the plotPImap function from the <code>eRm</code> package <span class="citation" data-cites="erm">(Mair, Hatzinger, and Maier <a href="#ref-erm" role="doc-biblioref">2020</a>)</span>. Aesthetic elements such as axis labels and plot title can be added to the plot. Please run <strong>?plot.eirm</strong> for further details on the plot option.</p>
+<p>It is possible to visualize the parameters using an item-person map. Note that this plot is a modified version of the plotPImap function from the <code>eRm</code> package <span class="citation" data-cites="erm">(<a href="#ref-erm" role="doc-biblioref">Mair et al., 2020</a>)</span>. Aesthetic elements such as axis labels and plot title can be added to the plot. Please run <strong>?plot.eirm</strong> for further details on the plot option.</p>
 <div class="layout-chunk" data-layout="l-body-outset">
 <div class="sourceCode">
-<pre><code><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>mod1</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>mod1</span><span class='op'>)</span>
 </code></pre>
 </div>
 <p><img src="explanatory-irt-models-in-r_files/figure-html5/unnamed-chunk-7-1.png" width="624" data-distill-preview=1 /></p>
@@ -2576,37 +2592,38 @@ Use difficulty = TRUE to get difficulty parameters.</code></pre>
 <p>The previous model could be modified to explain the first threshold (i.e., threshold from no to perhaps) and second threshold (perhaps to yes) based on explanatory variables using the following codes:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre><code><span class='va'>mod2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/eirm/man/eirm.html'>eirm</a></span><span class='op'>(</span>formula <span class='op'>=</span> <span class='st'>"polyresponse ~ -1 + btype + situ + mode + 
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>mod2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/eirm/man/eirm.html'>eirm</a></span><span class='op'>(</span>formula <span class='op'>=</span> <span class='st'>"polyresponse ~ -1 + btype + situ + mode + 
              polycategory + polycategory:btype + (1|id)"</span>, data <span class='op'>=</span> <span class='va'>VerbAgg2</span><span class='op'>)</span>
 </code></pre>
 </div>
 </div>
+<h2 id="conclusion">Conclusion</h2>
 <p>Before I conclude this post, I want to mention a few caveats with the <code>eirm</code> package. First, the <code>eirm</code> package is using a different optimizer to speed up the estimation process. However, as the size of response data (i.e., items and persons) increases, the estimation duration may increase significantly. Second, it is possible to use dichotomous and polytomous items within the same model. In that case, a single difficulty is estimated for dichotomous items (i.e., Rasch model) and multiple thresholds for polytomous items (i.e., either Partial Credit model or Rating Scale model). Lastly, the <code>eirm</code> package is not capable of estimating a discrimination parameter for the items (just like <code>lme4</code> can’t). Structural equation modeling could be a good alternative for those who want to estimate both discrimination and difficulty parameters for the items.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
-<div id="refs" class="references" role="doc-bibliography">
-<div id="ref-lme4">
-<p>Bates, Douglas, Martin Mächler, Ben Bolker, and Steve Walker. 2015. “Fitting Linear Mixed-Effects Models Using lme4.” <em>Journal of Statistical Software</em> 67 (1): 1–48. <a href="https://doi.org/10.18637/jss.v067.i01">https://doi.org/10.18637/jss.v067.i01</a>.</p>
+<div id="refs" class="references csl-bib-body hanging-indent" data-line-spacing="2" role="doc-bibliography">
+<div id="ref-lme4" class="csl-entry" role="doc-biblioentry">
+Bates, D., Mächler, M., Bolker, B., &amp; Walker, S. (2015). Fitting linear mixed-effects models using <span class="nocase">lme4</span>. <em>Journal of Statistical Software</em>, <em>67</em>(1), 1–48. <a href="https://doi.org/10.18637/jss.v067.i01">https://doi.org/10.18637/jss.v067.i01</a>
 </div>
-<div id="ref-bulut2020">
-<p>Bulut, Okan. 2020. <em>Eirm: Explanatory Item Response Modeling for Dichotomous and Polytomous Items</em>. <a href="https://CRAN.R-project.org/package=eirm">https://CRAN.R-project.org/package=eirm</a>.</p>
+<div id="ref-bulut2020" class="csl-entry" role="doc-biblioentry">
+Bulut, O. (2021). <em><span class="nocase">eirm</span>: Explanatory item response modeling for dichotomous and polytomous item responses</em>. <a href="https://doi.org/10.5281/zenodo.4556285">https://doi.org/10.5281/zenodo.4556285</a>
 </div>
-<div id="ref-bulut2015">
-<p>Bulut, Okan, Jose Palma, Michael C. Rodriguez, and Luke Stanke. 2015. “Evaluating Measurement Invariance in the Measurement of Developmental Assets in Latino English Language Groups Across Developmental Stages.” <em>SAGE Open</em> 5 (2): 2158244015586238. <a href="https://doi.org/10.1177/2158244015586238">https://doi.org/10.1177/2158244015586238</a>.</p>
+<div id="ref-bulut2015" class="csl-entry" role="doc-biblioentry">
+Bulut, O., Palma, J., Rodriguez, M. C., &amp; Stanke, L. (2015). Evaluating measurement invariance in the measurement of developmental assets in latino english language groups across developmental stages. <em>SAGE Open</em>, <em>5</em>(2), 2158244015586238. <a href="https://doi.org/10.1177/2158244015586238">https://doi.org/10.1177/2158244015586238</a>
 </div>
-<div id="ref-de2011estimation">
-<p>De Boeck, Paul, Marjan Bakker, Robert Zwitser, Michel Nivard, Abe Hofman, Francis Tuerlinckx, Ivailo Partchev, and others. 2011. “The Estimation of Item Response Models with the Lmer Function from the Lme4 Package in R.” <em>Journal of Statistical Software</em> 39 (12): 1–28.</p>
+<div id="ref-de2011estimation" class="csl-entry" role="doc-biblioentry">
+De Boeck, P., Bakker, M., Zwitser, R., Nivard, M., Hofman, A., Tuerlinckx, F., Partchev, I., &amp; others. (2011). The estimation of item response models with the lmer function from the lme4 package in r. <em>Journal of Statistical Software</em>, <em>39</em>(12), 1–28.
 </div>
-<div id="ref-deboeck">
-<p>De Boeck, Paul, and Mark Wilson. 2004. <em>Explanatory Item Response Models: A Generalized Linear and Nonlinear Approach</em>. Springer Science &amp; Business Media.</p>
+<div id="ref-deboeck" class="csl-entry" role="doc-biblioentry">
+De Boeck, P., &amp; Wilson, M. (2004). <em>Explanatory item response models: A generalized linear and nonlinear approach</em>. Springer Science &amp; Business Media.
 </div>
-<div id="ref-bulut2014">
-<p>Kan, Adnan, and Okan Bulut. 2014. “Examining the Relationship Between Gender Dif and Language Complexity in Mathematics Assessments.” <em>International Journal of Testing</em> 14 (3): 245–64. <a href="https://doi.org/10.1080/15305058.2013.877911">https://doi.org/10.1080/15305058.2013.877911</a>.</p>
+<div id="ref-bulut2014" class="csl-entry" role="doc-biblioentry">
+Kan, A., &amp; Bulut, O. (2014). Examining the relationship between gender DIF and language complexity in mathematics assessments. <em>International Journal of Testing</em>, <em>14</em>(3), 245–264. <a href="https://doi.org/10.1080/15305058.2013.877911">https://doi.org/10.1080/15305058.2013.877911</a>
 </div>
-<div id="ref-erm">
-<p>Mair, Patrick, Reinhold Hatzinger, and Marco Johannes Maier. 2020. <em>eRm: Extended Rasch Modeling</em>. <a href="https://cran.r-project.org/package=eRm">https://cran.r-project.org/package=eRm</a>.</p>
+<div id="ref-erm" class="csl-entry" role="doc-biblioentry">
+Mair, P., Hatzinger, R., &amp; Maier, M. J. (2020). <em><span class="nocase">eRm: Extended Rasch Modeling</span></em>. <a href="https://cran.r-project.org/package=eRm">https://cran.r-project.org/package=eRm</a>
 </div>
-<div id="ref-stanke2019explanatory">
-<p>Stanke, Luke, and Okan Bulut. 2019. “Explanatory Item Response Models for Polytomous Item Responses.” <em>International Journal of Assessment Tools in Education</em> 6 (2): 259–78.</p>
+<div id="ref-stanke2019explanatory" class="csl-entry" role="doc-biblioentry">
+Stanke, L., &amp; Bulut, O. (2019). Explanatory item response models for polytomous item responses. <em>International Journal of Assessment Tools in Education</em>, <em>6</em>(2), 259–278.
 </div>
 </div>
 <!--radix_placeholder_article_footer-->
