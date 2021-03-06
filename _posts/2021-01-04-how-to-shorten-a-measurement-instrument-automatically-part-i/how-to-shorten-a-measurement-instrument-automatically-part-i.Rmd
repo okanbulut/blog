@@ -25,6 +25,7 @@ categories:
   - machine learning
   - test development
 bibliography: reducingitems1.bib
+csl: apa.csl
 preview: photo_unsplash2.jpg
 output:
   distill::distill_article:

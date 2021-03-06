@@ -20,19 +20,18 @@
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -52,7 +51,7 @@ pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-le
 div.sourceCode
   {   }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ad0000; } /* Alert */
 code span.an { color: #5e5e5e; } /* Annotation */
@@ -130,8 +129,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <meta name="citation_reference" content="citation_title=A checklist for testing measurement invariance;citation_publication_date=2012;citation_publisher=Taylor &amp; Francis;citation_volume=9;citation_author=Rens Van de Schoot;citation_author=Peter Lugtig;citation_author=Joop Hox"/>
   <meta name="citation_reference" content="citation_title=Dplyr: A grammar of data manipulation;citation_publication_date=2020;citation_author=Hadley Wickham;citation_author=Romain FranÃ§ois;citation_author=Lionel Henry;citation_author=Kirill MÃ¼ller"/>
   <meta name="citation_reference" content="citation_title=R package &quot;corrplot&quot;: Visualization of a correlation matrix;citation_publication_date=2017;citation_author=Taiyun Wei;citation_author=Viliam Simko"/>
-  <meta name="citation_reference" content="citation_title=&lt;span class=&quot;nocase&quot;&gt;lavaan&lt;/span&gt;: An R package for structural equation modeling;citation_publication_date=2012;citation_volume=48;citation_author=Yves Rosseel"/>
-  <meta name="citation_reference" content="citation_title=`semTools`: Useful tools for structural equation modeling;citation_publication_date=2020;citation_author=Terrence D. Jorgensen;citation_author=Sunthud Pornprasertmanit;citation_author=Alexander M. Schoemann;citation_author=Yves Rosseel"/>
+  <meta name="citation_reference" content="citation_title=lavaan: An R package for structural equation modeling;citation_publication_date=2012;citation_volume=48;citation_author=Yves Rosseel"/>
+  <meta name="citation_reference" content="citation_title=semTools: Useful tools for structural equation modeling;citation_publication_date=2020;citation_author=Terrence D. Jorgensen;citation_author=Sunthud Pornprasertmanit;citation_author=Alexander M. Schoemann;citation_author=Yves Rosseel"/>
   <meta name="citation_reference" content="citation_title=Assessing measurement invariance in cross-national consumer research;citation_publication_date=1998;citation_volume=25;citation_author=Jan-Benedict EM Steenkamp;citation_author=Hans Baumgartner"/>
   <meta name="citation_reference" content="citation_title=Cutoff criteria for fit indexes in covariance structure analysis: Conventional criteria versus new alternatives;citation_publication_date=1999;citation_publisher=Taylor &amp; Francis;citation_volume=6;citation_author=Li-tze Hu;citation_author=Peter M Bentler"/>
   <meta name="citation_reference" content="citation_title=Change? What change?;citation_publication_date=2012;citation_volume=8;citation_doi=10.1027/1614-2241/a000043;citation_author=Peter Lugtig;citation_author=Hennie R Boeije;citation_author=Gerty JLM Lensvelt-Mulders"/>
@@ -139,12 +138,12 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--radix_placeholder_rmarkdown_metadata-->
 
 <script type="text/json" id="radix-rmarkdown-metadata">
-{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["creative_commons","title","description","author","date","categories","bibliography","preview","output","citation_url","canonical_url"]}},"value":[{"type":"character","attributes":{},"value":["CC BY"]},{"type":"character","attributes":{},"value":["Testing for Measurement Invariance in R"]},{"type":"character","attributes":{},"value":["Researchers conduct measurement invariance analysis to ensure that the interpretations of \nlatent construct(s) being measured with their measurement instruments (e.g., scales, surveys, \nand questionnaires) are valid across subgroups of a target population or multiple time points. \nIn this post, I demonstrate how to test for measurement invariance (i.e., configural, metric, scalar,\nand strict invariance) of an instrument using R.\n\n(11 min read)"]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","url","affiliation","affiliation_url","orcid_id"]}},"value":[{"type":"character","attributes":{},"value":["Okan Bulut"]},{"type":"character","attributes":{},"value":["http://www.okanbulut.com/"]},{"type":"character","attributes":{},"value":["University of Alberta"]},{"type":"character","attributes":{},"value":["https://www.ualberta.ca"]},{"type":"character","attributes":{},"value":["0000-0001-5853-1267"]}]}]},{"type":"character","attributes":{},"value":["12-21-2020"]},{"type":"character","attributes":{},"value":["psychometrics","factor analysis","measurement invariance"]},{"type":"character","attributes":{},"value":["testing-mi-in-r.bib"]},{"type":"character","attributes":{},"value":["mi2.jpg"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["distill::distill_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["self_contained","toc"]}},"value":[{"type":"logical","attributes":{},"value":[false]},{"type":"logical","attributes":{},"value":[true]}]}]},{"type":"character","attributes":{},"value":["https://okan.cloud/posts/2020-12-21-testing-for-measurement-invariance-in-r/"]},{"type":"character","attributes":{},"value":["https://okan.cloud/posts/2020-12-21-testing-for-measurement-invariance-in-r/"]}]}
+{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["creative_commons","title","description","author","date","categories","bibliography","csl","preview","output","citation_url","canonical_url"]}},"value":[{"type":"character","attributes":{},"value":["CC BY"]},{"type":"character","attributes":{},"value":["Testing for Measurement Invariance in R"]},{"type":"character","attributes":{},"value":["Researchers conduct measurement invariance analysis to ensure that the interpretations of \nlatent construct(s) being measured with their measurement instruments (e.g., scales, surveys, \nand questionnaires) are valid across subgroups of a target population or multiple time points. \nIn this post, I demonstrate how to test for measurement invariance (i.e., configural, metric, scalar,\nand strict invariance) of an instrument using R.\n\n(11 min read)"]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","url","affiliation","affiliation_url","orcid_id"]}},"value":[{"type":"character","attributes":{},"value":["Okan Bulut"]},{"type":"character","attributes":{},"value":["http://www.okanbulut.com/"]},{"type":"character","attributes":{},"value":["University of Alberta"]},{"type":"character","attributes":{},"value":["https://www.ualberta.ca"]},{"type":"character","attributes":{},"value":["0000-0001-5853-1267"]}]}]},{"type":"character","attributes":{},"value":["12-21-2020"]},{"type":"character","attributes":{},"value":["psychometrics","factor analysis","measurement invariance"]},{"type":"character","attributes":{},"value":["testing-mi-in-r.bib"]},{"type":"character","attributes":{},"value":["apa.csl"]},{"type":"character","attributes":{},"value":["mi2.jpg"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["distill::distill_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["self_contained","toc"]}},"value":[{"type":"logical","attributes":{},"value":[false]},{"type":"logical","attributes":{},"value":[true]}]}]},{"type":"character","attributes":{},"value":["https://okan.cloud/posts/2020-12-21-testing-for-measurement-invariance-in-r/"]},{"type":"character","attributes":{},"value":["https://okan.cloud/posts/2020-12-21-testing-for-measurement-invariance-in-r/"]}]}
 </script>
 <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["CecklistMeasInv.pdf","finance.csv","mi0.jpg","mi1.jpg","mi2.jpg","testing-for-measurement-invariance-in-r_files/anchor-4.2.2/anchor.min.js","testing-for-measurement-invariance-in-r_files/bowser-1.9.3/bowser.min.js","testing-for-measurement-invariance-in-r_files/distill-2.2.21/template.v2.js","testing-for-measurement-invariance-in-r_files/figure-html5/unnamed-chunk-4-1.png","testing-for-measurement-invariance-in-r_files/figure-html5/unnamed-chunk-5-1.png","testing-for-measurement-invariance-in-r_files/figure-html5/unnamed-chunk-6-1.png","testing-for-measurement-invariance-in-r_files/jquery-1.11.3/jquery.min.js","testing-for-measurement-invariance-in-r_files/kePrint-0.0.1/kePrint.js","testing-for-measurement-invariance-in-r_files/lightable-0.0.1/lightable.css","testing-for-measurement-invariance-in-r_files/pagedtable-1.1/css/pagedtable.css","testing-for-measurement-invariance-in-r_files/pagedtable-1.1/js/pagedtable.js","testing-for-measurement-invariance-in-r_files/webcomponents-2.0.0/webcomponents.js","testing-mi-in-r.bib"]}
+  {"type":"character","attributes":{},"value":["apa.csl","CecklistMeasInv.pdf","finance.csv","mi0.jpg","mi1.jpg","mi2.jpg","testing-for-measurement-invariance-in-r_files/anchor-4.2.2/anchor.min.js","testing-for-measurement-invariance-in-r_files/bowser-1.9.3/bowser.min.js","testing-for-measurement-invariance-in-r_files/distill-2.2.21/template.v2.js","testing-for-measurement-invariance-in-r_files/figure-html5/unnamed-chunk-4-1.png","testing-for-measurement-invariance-in-r_files/figure-html5/unnamed-chunk-5-1.png","testing-for-measurement-invariance-in-r_files/figure-html5/unnamed-chunk-6-1.png","testing-for-measurement-invariance-in-r_files/jquery-1.11.3/jquery.min.js","testing-for-measurement-invariance-in-r_files/kePrint-0.0.1/kePrint.js","testing-for-measurement-invariance-in-r_files/lightable-0.0.1/lightable.css","testing-for-measurement-invariance-in-r_files/pagedtable-1.1/css/pagedtable.css","testing-for-measurement-invariance-in-r_files/pagedtable-1.1/js/pagedtable.js","testing-for-measurement-invariance-in-r_files/webcomponents-2.0.0/webcomponents.js","testing-mi-in-r.bib"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
 <meta name="distill:offset" content="../.."/>
@@ -2386,11 +2385,16 @@ d-appendix d-footnote-list a.footnote-backlink {
   color: var(--hover-color, white);
 }</style>
 <!--/radix_placeholder_distill-->
+  <script src="../../site_libs/header-attrs-2.7/header-attrs.js"></script>
   <link href="../../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
   <script src="../../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
   <script src="../../site_libs/kePrint-0.0.1/kePrint.js"></script>
   <link href="../../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
   <script src="../../site_libs/jquery-1.11.3/jquery.min.js"></script>
+  <script src="../../site_libs/popper-2.6.0/popper.min.js"></script>
+  <link href="../../site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
+  <link href="../../site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
+  <script src="../../site_libs/tippy-6.2.7/tippy.umd.min.js"></script>
   <script src="../../site_libs/anchor-4.2.2/anchor.min.js"></script>
   <script src="../../site_libs/bowser-1.9.3/bowser.min.js"></script>
   <script src="../../site_libs/webcomponents-2.0.0/webcomponents.js"></script>
@@ -2472,7 +2476,8 @@ gtag('config', 'G-Y6J65ER1LP');
 <h3>Contents</h3>
 <ul>
 <li><a href="#measurement-invariance">Measurement Invariance</a></li>
-<li><a href="#example">Example</a><ul>
+<li><a href="#example">Example</a>
+<ul>
 <li><a href="#configural-invariance">Configural Invariance</a></li>
 <li><a href="#metric-invariance">Metric Invariance</a></li>
 <li><a href="#scalar-invariance">Scalar Invariance</a></li>
@@ -2485,19 +2490,19 @@ gtag('config', 'G-Y6J65ER1LP');
 <h2 id="measurement-invariance">Measurement Invariance</h2>
 <p>In the social sciences, researchers often use self-reported measurement instruments (e.g., scales, surveys, and questionnaires) to assess different latent constructs (e.g., emotions, attitudes, and preferences). Data collected through such instruments are typically used for comparing groups at a particular time point or comparing the same individuals across multiple time points. To be able to make valid group comparisons, researchers must ensure that the instrument measures the target latent construct(s) with the same factorial structure across groups. If the measurement instrument can sufficiently maintain its factorial structure across groups, it is called <strong>measurement invariant (MI)</strong>. The lack of measurement invariance (i.e., measurement non-variance) indicates that the latent constructs cannot be measured and interpreted in the same way across groups.</p>
 <p>For example, a researcher could design a new questionnaire to measure attitudes toward spirituality and administer the instrument to a sample of respondents in the target population. Depending on the quality of the items in the questionnaire, individuals from different ethnic and religious groups may perceive and interpret <em>spirituality</em> differently. Thus, individuals from a particular ethnic group might be less (or more) likely to endorse the items on the questionnaire. If this situation significantly affects individuals’ response behaviors, then it is also very likely to influence the factorial structure of the questionnaire. If this is the case, the questionnaire is not measurement invariant and therefore group comparisons based on the results of the questionnaire will not be valid.</p>
-<p>This post has been inspired by <span class="citation" data-cites="van2012checklist">Van de Schoot, Lugtig, and Hox (<a href="#ref-van2012checklist" role="doc-biblioref">2012</a>)</span>’s checklist for testing for measurement invariance. The authors provide a nice description of measurement invariance along with Mplus syntax for all the analyses described in their paper. Similarly, in this post I will briefly describe the steps for testing measurement invariance and then demonstrate how to conduct measurement invariance analyses in R. To test for measurement invariance, we need to estimate and compare increasingly constrained confirmatory factor analysis (CFA) models with each other:</p>
+<p>This post has been inspired by <span class="citation" data-cites="van2012checklist"><a href="#ref-van2012checklist" role="doc-biblioref">Van de Schoot et al.</a> (<a href="#ref-van2012checklist" role="doc-biblioref">2012</a>)</span>’s checklist for testing for measurement invariance. The authors provide a nice description of measurement invariance along with Mplus syntax for all the analyses described in their paper. Similarly, in this post I will briefly describe the steps for testing measurement invariance and then demonstrate how to conduct measurement invariance analyses in R. To test for measurement invariance, we need to estimate and compare increasingly constrained confirmatory factor analysis (CFA) models with each other:</p>
 <ul>
 <li><strong>Configural invariance model:</strong> A multi-group CFA model fitted for each group separately, without any equality constraints. This model allows us to test whether the same factorial structure holds across all groups.</li>
 <li><strong>Metric invariance model:</strong> A constrained version of the configural model where the factor loadings are assumed to be equal across groups but the intercepts are allowed to vary between groups.</li>
 <li><strong>Scalar invariance model:</strong> A constrained version of the metric model where both the factor loadings and intercepts are assumed to be equal across groups.</li>
 <li><strong>Strict invariance model:</strong> A constrained version of the scalar model where the factor loadings, intercepts, and residual variances are fixed across groups.</li>
 </ul>
-<p>To evaluate the configural model for each group, we can use <span class="citation" data-cites="hu1999cutoff">Hu and Bentler (<a href="#ref-hu1999cutoff" role="doc-biblioref">1999</a>)</span>’s guidelines for model fit indices: (1) Comparative fit index (CFI) &gt; .95; Tucker-Lewis index (TLI) &gt; .95; and root mean square error of approximation (RMSEA) &lt; .06. With sufficient model fit for configural invariance, we can proceed to metric invariance.</p>
+<p>To evaluate the configural model for each group, we can use <span class="citation" data-cites="hu1999cutoff"><a href="#ref-hu1999cutoff" role="doc-biblioref">Hu &amp; Bentler</a> (<a href="#ref-hu1999cutoff" role="doc-biblioref">1999</a>)</span>’s guidelines for model fit indices: (1) Comparative fit index (CFI) &gt; .95; Tucker-Lewis index (TLI) &gt; .95; and root mean square error of approximation (RMSEA) &lt; .06. With sufficient model fit for configural invariance, we can proceed to metric invariance.</p>
 <p>To test metric invariance, we need to compare the configural model against the metric model using a chi-square difference (<span class="math inline">\(\Delta\chi^2\)</span>) test. If the test is significant, then there is a lack of metric invariance and thus there is no need to test scalar and strict invariance. If, however, the test is <strong>not</strong> significant, then metric invariance is established and thus we can move to the next step, scalar invariance.</p>
-<p>To assess scalar invariance, we need to follow a similar approach by comparing the scalar model against the metric model. A statistically insignificant result for the <span class="math inline">\(\Delta\chi^2\)</span> test would indicate scalar invariance of the factorial model. <span class="citation" data-cites="van2012checklist">Van de Schoot, Lugtig, and Hox (<a href="#ref-van2012checklist" role="doc-biblioref">2012</a>)</span> suggest that scalar invariance must hold to be able to interpret latent means and correlations across groups. If scalar invariance is not fully satisfied, then partial MI could be established by adjusting factor loadings and/or intercepts <span class="citation" data-cites="steenkamp1998assessing">(Steenkamp and Baumgartner <a href="#ref-steenkamp1998assessing" role="doc-biblioref">1998</a>)</span>.</p>
-<p>Finally, if either partial or full scalar variance holds, then we can test strict invariance by comparing the strict model with the scalar model. <span class="citation" data-cites="van2012checklist">Van de Schoot, Lugtig, and Hox (<a href="#ref-van2012checklist" role="doc-biblioref">2012</a>)</span> note that with the lack of strict invariance, groups can still be compared on the latent construct(s). Figure 1 shows a summary of the steps for testing different types of MI based on the four invariance models summarized above.</p>
+<p>To assess scalar invariance, we need to follow a similar approach by comparing the scalar model against the metric model. A statistically insignificant result for the <span class="math inline">\(\Delta\chi^2\)</span> test would indicate scalar invariance of the factorial model. <span class="citation" data-cites="van2012checklist"><a href="#ref-van2012checklist" role="doc-biblioref">Van de Schoot et al.</a> (<a href="#ref-van2012checklist" role="doc-biblioref">2012</a>)</span> suggest that scalar invariance must hold to be able to interpret latent means and correlations across groups. If scalar invariance is not fully satisfied, then partial MI could be established by adjusting factor loadings and/or intercepts <span class="citation" data-cites="steenkamp1998assessing">(<a href="#ref-steenkamp1998assessing" role="doc-biblioref">Steenkamp &amp; Baumgartner, 1998</a>)</span>.</p>
+<p>Finally, if either partial or full scalar variance holds, then we can test strict invariance by comparing the strict model with the scalar model. <span class="citation" data-cites="van2012checklist"><a href="#ref-van2012checklist" role="doc-biblioref">Van de Schoot et al.</a> (<a href="#ref-van2012checklist" role="doc-biblioref">2012</a>)</span> note that with the lack of strict invariance, groups can still be compared on the latent construct(s). Figure 1 shows a summary of the steps for testing different types of MI based on the four invariance models summarized above.</p>
 <figure>
-<img src="mi2.jpg" alt="" /><figcaption><strong>Figure 1:</strong> A summary of measurement invariance models</figcaption>
+<img src="mi2.jpg" alt="Figure 1: A summary of measurement invariance models" /><figcaption aria-hidden="true"><strong>Figure 1:</strong> A summary of measurement invariance models</figcaption>
 </figure>
 <h2 id="example">Example</h2>
 <p>To demonstrate the test of measurement invariance, I will be using the <a href="https://www.consumerfinance.gov/">Consumer Financial Protection Bureau (CFPB)</a>’s Financial Well-Being Scale. CFPB defines financial well-being as follows:</p>
@@ -2506,16 +2511,16 @@ gtag('config', 'G-Y6J65ER1LP');
 </blockquote>
 <p>To measure the construct of financial well-being, CFPB created <a href="https://www.consumerfinance.gov/consumer-tools/financial-well-being/">the Financial Well-Being Scale</a> that consists of ten rating scale items. The items cover all four elements of the CFPB’s definition of financial well-being: control over finances, capacity to absorb a financial shock, being on track to meet financial goals, and having the financial freedom to enjoy life, using both positive and negative phrasing. Figure 2 shows a list of the items and their response options.</p>
 <figure>
-<img src="mi0.jpg" alt="" /><figcaption><strong>Figure 2:</strong> Items in the Financial Well-Being Scale (Source: Consumer Financial Protection Bureau)</figcaption>
+<img src="mi0.jpg" alt="Figure 2: Items in the Financial Well-Being Scale (Source: Consumer Financial Protection Bureau)" /><figcaption aria-hidden="true"><strong>Figure 2:</strong> Items in the Financial Well-Being Scale (Source: Consumer Financial Protection Bureau)</figcaption>
 </figure>
 <p>CFPB’s <a href="https://files.consumerfinance.gov/f/documents/201705_cfpb_financial-well-being-scale-technical-report.pdf">technical report</a> on the Financial Well-Being Scale indicates that there are two latent dimensions (i.e., factors) associated with the polarity of the items (i.e., whether the items were phrased negatively or positively). Figure 3 demonstrates the factorial structure of the Financial Well-Being Scale.</p>
 <figure>
-<img src="mi1.jpg" alt="" /><figcaption><strong>Figure 3:</strong> Factorial structure of the Financial Well-Being Scale</figcaption>
+<img src="mi1.jpg" alt="Figure 3: Factorial structure of the Financial Well-Being Scale" /><figcaption aria-hidden="true"><strong>Figure 3:</strong> Factorial structure of the Financial Well-Being Scale</figcaption>
 </figure>
 <p>For this demonstration, I have already cleaned up <a href="https://raw.githubusercontent.com/okanbulut/blog/master/data_and_codes/NFWBS_PUF_2016_data.csv">the original data set</a> and saved it as <strong>finance.csv</strong>. You can see the codes for data cleaning and preparation <a href="https://raw.githubusercontent.com/okanbulut/blog/master/data_and_codes/data_preparation.R">here</a>. Also, the cleaned data set (i.e., finance.csv) is available <a href="https://raw.githubusercontent.com/okanbulut/blog/master/data_and_codes/finance.csv">here</a>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre><code><span class='va'>finance</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='st'>"finance.csv"</span>, header <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>finance</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='st'>"finance.csv"</span>, header <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </code></pre>
 </div>
 </div>
@@ -2527,10 +2532,10 @@ gtag('config', 'G-Y6J65ER1LP');
   </script>
 </div>
 </div>
-<p>Before we begin the measurement invariance analysis, we need to active the R packages that we will utilize in the example. We will use <code>dplyr</code> <span class="citation" data-cites="dplyr">(Wickham et al. <a href="#ref-dplyr" role="doc-biblioref">2020</a>)</span> for organizing data, <code>corrplot</code> <span class="citation" data-cites="corrplot2017">(Wei and Simko <a href="#ref-corrplot2017" role="doc-biblioref">2017</a>)</span> for visualizing the correlation matrix of the items, <code>lavaan</code> <span class="citation" data-cites="lavaan">(Rosseel <a href="#ref-lavaan" role="doc-biblioref">2012</a>)</span> to estimate multi-group CFA models, and <code>semTools</code> <span class="citation" data-cites="semtools">(Jorgensen et al. <a href="#ref-semtools" role="doc-biblioref">2020</a>)</span> to run model comparison tests.</p>
+<p>Before we begin the measurement invariance analysis, we need to active the R packages that we will utilize in the example. We will use <code>dplyr</code> <span class="citation" data-cites="dplyr">(<a href="#ref-dplyr" role="doc-biblioref">Wickham et al., 2020</a>)</span> for organizing data, <code>corrplot</code> <span class="citation" data-cites="corrplot2017">(<a href="#ref-corrplot2017" role="doc-biblioref">Wei &amp; Simko, 2017</a>)</span> for visualizing the correlation matrix of the items, <code>lavaan</code> <span class="citation" data-cites="lavaan">(<a href="#ref-lavaan" role="doc-biblioref">Rosseel, 2012</a>)</span> to estimate multi-group CFA models, and <code>semTools</code> <span class="citation" data-cites="semtools">(<a href="#ref-semtools" role="doc-biblioref">Jorgensen et al., 2020</a>)</span> to run model comparison tests.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre><code><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='st'><a href='https://dplyr.tidyverse.org'>"dplyr"</a></span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='st'><a href='https://dplyr.tidyverse.org'>"dplyr"</a></span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='st'><a href='https://github.com/taiyun/corrplot'>"corrplot"</a></span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='st'><a href='http://lavaan.org'>"lavaan"</a></span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='st'><a href='https://github.com/simsem/semTools/wiki'>"semTools"</a></span><span class='op'>)</span>
@@ -2540,7 +2545,7 @@ gtag('config', 'G-Y6J65ER1LP');
 <p>Now we can go ahead and visualize the correlations among the items using the <strong>corrplot</strong> function. This is a preliminary analysis to check whether the items in the Financial Well-Being Scale are associated with each other. We already know the factorial structure of the scale but this plot will show how strongly the items are associated with each other and whether there are two groups of items (one for positively-worded items and another for negatively-worded items).</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre><code><span class='co'># Correlation matrix of items</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Correlation matrix of items</span>
 <span class='va'>cormat</span> <span class='op'>&lt;-</span> <span class='va'>finance</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='fu'><a href='https://tidyselect.r-lib.org/reference/starts_with.html'>starts_with</a></span><span class='op'>(</span><span class='st'>"item"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://rdrr.io/r/stats/cor.html'>cor</a></span><span class='op'>(</span><span class='op'>)</span>
@@ -2554,7 +2559,7 @@ gtag('config', 'G-Y6J65ER1LP');
 <p>The plot shows that the items are moderately correlated with each other. Due to the polarity of the items, some of the correlations are negative (red), while the others are positive (blue). We can use <em>hierarchical clustering</em> to group the items together in the same plot. The next plot shows that positively-worded items (items 1, 2, 4, and 8) have been grouped together in the upper rectangle, while the remaining six items (i.e., negatively-worded items) have been grouped in the lower rectangle.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre><code><span class='fu'><a href='https://rdrr.io/pkg/corrplot/man/corrplot.html'>corrplot</a></span><span class='op'>(</span><span class='va'>cormat</span>, order <span class='op'>=</span> <span class='st'>"hclust"</span>, addrect <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/pkg/corrplot/man/corrplot.html'>corrplot</a></span><span class='op'>(</span><span class='va'>cormat</span>, order <span class='op'>=</span> <span class='st'>"hclust"</span>, addrect <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
 </code></pre>
 </div>
 <p><img src="testing-for-measurement-invariance-in-r_files/figure-html5/unnamed-chunk-6-1.png" width="624" /></p>
@@ -2562,7 +2567,7 @@ gtag('config', 'G-Y6J65ER1LP');
 <p>Next, using the <code>lavaan</code> package (see <a href="https://lavaan.ugent.be/" class="uri">https://lavaan.ugent.be/</a> for more information on the package), we will estimate a series of multi-group CFA models using gender as a group variable. For all of the models, the baseline model is the same: a two-factor model where the positively-worded items define one dimension and the negatively-worded items define another dimension. Therefore, we define <strong>model</strong> with two factors (positive and negative) and assume that the two factors are correlated with each other: <strong>positive ~~ negative</strong></p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre><code><span class='co'># Two-factor CFA model</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Two-factor CFA model</span>
 <span class='va'>model</span> <span class='op'>&lt;-</span> <span class='st'>'positive =~ item1 + item2 + item4 + item8
           negative =~ item3 + item5 + item6 + item7 + item9 + item10
           positive ~~ negative'</span>
@@ -2573,46 +2578,46 @@ gtag('config', 'G-Y6J65ER1LP');
 <p>Our first invariance model is the configural invariance model. This is a multi-group CFA model separately estimated for male and female respondents in the finance data set. Since the items follow a 5-point rating scale, we will use the WLSMV estimator – which is more suitable for categorical and ordinal data. We will also add <strong>group = “gender”</strong> to estimate the same CFA model for female and male respondents separately.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre><code><span class='co'># Configural model</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Configural model</span>
 <span class='va'>cfa.config</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/lavaan/man/cfa.html'>cfa</a></span><span class='op'>(</span><span class='va'>model</span>, data <span class='op'>=</span> <span class='va'>finance</span>, estimator <span class='op'>=</span> <span class='st'>"WLSMV"</span>, group <span class='op'>=</span> <span class='st'>"gender"</span><span class='op'>)</span>
 
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>cfa.config</span>, fit.measures <span class='op'>=</span> <span class='cn'>TRUE</span>, standardized <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </code></pre>
 </div>
 </div>
-<p>The following (partial) output shows the model fit indices. The results show that the fit indices from the configural model are aligned with <span class="citation" data-cites="hu1999cutoff">Hu and Bentler (<a href="#ref-hu1999cutoff" role="doc-biblioref">1999</a>)</span>’s guidelines for good model fit.</p>
+<p>The following (partial) output shows the model fit indices. The results show that the fit indices from the configural model are aligned with <span class="citation" data-cites="hu1999cutoff"><a href="#ref-hu1999cutoff" role="doc-biblioref">Hu &amp; Bentler</a> (<a href="#ref-hu1999cutoff" role="doc-biblioref">1999</a>)</span>’s guidelines for good model fit.</p>
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
 <div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>User Model versus Baseline Model<span class="op">:</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a></span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="st">  </span>Comparative Fit <span class="kw">Index</span> (CFI)                    <span class="fl">0.997</span>       <span class="fl">0.959</span></span>
-<span id="cb1-4"><a href="#cb1-4"></a>  Tucker<span class="op">-</span>Lewis <span class="kw">Index</span> (TLI)                       <span class="fl">0.996</span>       <span class="fl">0.945</span></span>
-<span id="cb1-5"><a href="#cb1-5"></a>                                                                  </span>
-<span id="cb1-6"><a href="#cb1-6"></a>  Robust Comparative Fit <span class="kw">Index</span> (CFI)                            <span class="ot">NA</span></span>
-<span id="cb1-7"><a href="#cb1-7"></a>  Robust Tucker<span class="op">-</span>Lewis <span class="kw">Index</span> (TLI)                               <span class="ot">NA</span></span>
-<span id="cb1-8"><a href="#cb1-8"></a></span>
-<span id="cb1-9"><a href="#cb1-9"></a>Root Mean Square Error of Approximation<span class="op">:</span></span>
-<span id="cb1-10"><a href="#cb1-10"></a></span>
-<span id="cb1-11"><a href="#cb1-11"></a><span class="st">  </span>RMSEA                                          <span class="fl">0.028</span>       <span class="fl">0.065</span></span>
-<span id="cb1-12"><a href="#cb1-12"></a>  <span class="dv">90</span> Percent confidence interval <span class="op">-</span><span class="st"> </span>lower         <span class="fl">0.023</span>       <span class="fl">0.060</span></span>
-<span id="cb1-13"><a href="#cb1-13"></a>  <span class="dv">90</span> Percent confidence interval <span class="op">-</span><span class="st"> </span>upper         <span class="fl">0.034</span>       <span class="fl">0.070</span></span>
-<span id="cb1-14"><a href="#cb1-14"></a>  P<span class="op">-</span>value RMSEA <span class="op">&lt;=</span><span class="st"> </span><span class="fl">0.05</span>                          <span class="fl">1.000</span>       <span class="fl">0.000</span></span>
-<span id="cb1-15"><a href="#cb1-15"></a>                                                                  </span>
-<span id="cb1-16"><a href="#cb1-16"></a>  Robust RMSEA                                                  <span class="ot">NA</span></span>
-<span id="cb1-17"><a href="#cb1-17"></a>  <span class="dv">90</span> Percent confidence interval <span class="op">-</span><span class="st"> </span>lower                        <span class="ot">NA</span></span>
-<span id="cb1-18"><a href="#cb1-18"></a>  <span class="dv">90</span> Percent confidence interval <span class="op">-</span><span class="st"> </span>upper                        <span class="ot">NA</span></span>
-<span id="cb1-19"><a href="#cb1-19"></a></span>
-<span id="cb1-20"><a href="#cb1-20"></a>Standardized Root Mean Square Residual<span class="op">:</span></span>
-<span id="cb1-21"><a href="#cb1-21"></a></span>
-<span id="cb1-22"><a href="#cb1-22"></a><span class="st">  </span>SRMR                                           <span class="fl">0.029</span>       <span class="fl">0.029</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>User Model versus Baseline Model<span class="sc">:</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  Comparative Fit <span class="fu">Index</span> (CFI)                    <span class="fl">0.997</span>       <span class="fl">0.959</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  Tucker<span class="sc">-</span>Lewis <span class="fu">Index</span> (TLI)                       <span class="fl">0.996</span>       <span class="fl">0.945</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                                                                  </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  Robust Comparative Fit <span class="fu">Index</span> (CFI)                            <span class="cn">NA</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  Robust Tucker<span class="sc">-</span>Lewis <span class="fu">Index</span> (TLI)                               <span class="cn">NA</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>Root Mean Square Error of Approximation<span class="sc">:</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  RMSEA                                          <span class="fl">0.028</span>       <span class="fl">0.065</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="dv">90</span> Percent confidence interval <span class="sc">-</span> lower         <span class="fl">0.023</span>       <span class="fl">0.060</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="dv">90</span> Percent confidence interval <span class="sc">-</span> upper         <span class="fl">0.034</span>       <span class="fl">0.070</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  P<span class="sc">-</span>value RMSEA <span class="sc">&lt;=</span> <span class="fl">0.05</span>                          <span class="fl">1.000</span>       <span class="fl">0.000</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>                                                                  </span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  Robust RMSEA                                                  <span class="cn">NA</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="dv">90</span> Percent confidence interval <span class="sc">-</span> lower                        <span class="cn">NA</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="dv">90</span> Percent confidence interval <span class="sc">-</span> upper                        <span class="cn">NA</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>Standardized Root Mean Square Residual<span class="sc">:</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  SRMR                                           <span class="fl">0.029</span>       <span class="fl">0.029</span></span></code></pre></div>
 </div>
 <h3 id="metric-invariance">Metric Invariance</h3>
 <p>Next, we will create a metric invariance model. The R codes for this model are nearly identical to those from the configural model. However, we add <strong>group.equal = “loadings”</strong> to fix the factor loadings to be the same for the female and male models. After estimating the metric model, we will compare it against the configural model using the <strong>compareFit</strong> function from <code>semTools</code>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre><code><span class='co'># Metric model</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Metric model</span>
 <span class='va'>cfa.metric</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/lavaan/man/cfa.html'>cfa</a></span><span class='op'>(</span><span class='va'>model</span>, data <span class='op'>=</span> <span class='va'>finance</span>, estimator <span class='op'>=</span> <span class='st'>"WLSMV"</span>, group <span class='op'>=</span> <span class='st'>"gender"</span>, 
                   group.equal <span class='op'>=</span> <span class='st'>"loadings"</span><span class='op'>)</span>
 
@@ -2648,10 +2653,10 @@ cfa.metric - cfa.config 0.002</code></pre>
 </div>
 <p>The results above show that the chi-square difference test was not statistically significant; <span class="math inline">\(\Delta \chi^2 = 9.69, df = 8, p = 0.29\)</span>. This finding suggests that after constraining the factor loadings to be equal across groups, the model fit did not change substantially. In other words, the constrained model (i.e., metric model) fits the data equally well. The model fit indices also indicate a good fit for the metric model.</p>
 <h3 id="scalar-invariance">Scalar Invariance</h3>
-<p>Since metric invariance has been established, we can test scalar invariance for the Financial Well-Being Scale. This time, in addition to factor loadings, we also add intercepts to the list of parameters to be constrained equal between female and male participants: <strong>group.equal = c(“loadings”,“intercepts”)</strong></p>
+<p>Since metric invariance has been established, we can test scalar invariance for the Financial Well-Being Scale. This time, in addition to factor loadings, we also add intercepts to the list of parameters to be constrained equal between female and male participants: <strong>group.equal = c(“loadings,”“intercepts”)</strong></p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre><code><span class='co'># Scalar model</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Scalar model</span>
 <span class='va'>cfa.scalar</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/lavaan/man/cfa.html'>cfa</a></span><span class='op'>(</span><span class='va'>model</span>, data <span class='op'>=</span> <span class='va'>finance</span>, estimator <span class='op'>=</span> <span class='st'>"WLSMV"</span>, group <span class='op'>=</span> <span class='st'>"gender"</span>, 
                   group.equal <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"loadings"</span>,<span class='st'>"intercepts"</span><span class='op'>)</span><span class='op'>)</span>
 
@@ -2690,7 +2695,7 @@ cfa.scalar - cfa.metric 0.001</code></pre>
 <p>The chi-square difference test was significant; <span class="math inline">\(\Delta \chi^2 = 41.9, df = 8, p &lt; .001\)</span>. Despite good model-fit indices presented in the rest of the output, the statistically significant result suggests that there is a lack of scalar invariance for the Financial Well-Being Scale. Thus, we will try to establish partial MI. We will use <strong>lavTestScore</strong> to view which fixed (or constrained) parameters in the model should be released to improve the fit for the scalar model.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre><code><span class='fu'><a href='https://rdrr.io/pkg/lavaan/man/lavTestScore.html'>lavTestScore</a></span><span class='op'>(</span><span class='va'>cfa.scalar</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/pkg/lavaan/man/lavTestScore.html'>lavTestScore</a></span><span class='op'>(</span><span class='va'>cfa.scalar</span><span class='op'>)</span>
 </code></pre>
 </div>
 </div>
@@ -2727,7 +2732,7 @@ univariate score tests:
 <p>With the list of potential parameters to adjust, we can make changes in the scalar model. However, we do not know what these parameters refer to in the original scalar model. For example, we know that we want to freely estimate .p24. and .p59. but we do not know what these parameters mean for the model. To better understand these parameters, we will use <strong>parTable</strong> and print out the list of all parameters in the model.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre><code><span class='fu'><a href='https://rdrr.io/pkg/lavaan/man/lavParTable.html'>parTable</a></span><span class='op'>(</span><span class='va'>cfa.scalar</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/pkg/lavaan/man/lavParTable.html'>parTable</a></span><span class='op'>(</span><span class='va'>cfa.scalar</span><span class='op'>)</span>
 </code></pre>
 </div>
 </div>
@@ -2740,7 +2745,7 @@ univariate score tests:
 </div>
 <p>The <strong>plabel</strong> column in the output shows the labels for all parameters estimated for the scalar model. To interpret the output more easily, we can refer to the following table on the <code>lavaan</code> website (<a href="https://lavaan.ugent.be/tutorial/syntax1.html" class="uri">https://lavaan.ugent.be/tutorial/syntax1.html</a>).</p>
 <div class="layout-chunk" data-layout="l-body">
-<table class="table table-striped table-hover" style="">
+<table class="table table-striped table-hover" style>
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -2806,7 +2811,7 @@ intercept
 <p>Ideally, we should make one change at a time and compare the new model against the metric model until partial MI is satisfied. For the sake of brevity, I will make three changes to the scalar model all at once, estimate the adjusted model, and compare it with the metric model. The <strong>group.partial</strong> command is where we specify which parameters should be released in the model (i.e., freely estimated for females and males). In our model, we want to release the constraints on the intercept parameters for items 1, 4, and 7.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre><code><span class='co'># Adjust the model</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Adjust the model</span>
 <span class='va'>cfa.scalar2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/lavaan/man/cfa.html'>cfa</a></span><span class='op'>(</span><span class='va'>model</span>, data <span class='op'>=</span> <span class='va'>finance</span>, estimator <span class='op'>=</span> <span class='st'>"WLSMV"</span>, group <span class='op'>=</span> <span class='st'>"gender"</span>, 
                    group.equal <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"loadings"</span>,<span class='st'>"intercepts"</span><span class='op'>)</span>, 
                    group.partial <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"item1 ~ 1"</span>, <span class='st'>"item4 ~ 1"</span>, <span class='st'>"item7 ~ 1"</span><span class='op'>)</span><span class='op'>)</span>
@@ -2846,7 +2851,7 @@ cfa.scalar2 - cfa.metric    0</code></pre>
 <p>In the last step, we will check strict invariance. Using the adjusted scalar model from the previous analysis, we will build a new model where residuals will be constrained to be equal for female and male participants. So, we add <em>residuals</em> into the list of equality constraints (i.e., group.equal). The output below shows that the chi-square difference test is not significant; <span class="math inline">\(\Delta \chi^2 = 15.9, df = 10, p = 0.1\)</span>. Therefore, we can conclude that the Financial Well-Being Scale indicates strict invariance across the female and male groups.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre><code><span class='co'># Strict model</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Strict model</span>
 <span class='va'>cfa.strict</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/lavaan/man/cfa.html'>cfa</a></span><span class='op'>(</span><span class='va'>model</span>, data <span class='op'>=</span> <span class='va'>finance</span>, estimator <span class='op'>=</span> <span class='st'>"WLSMV"</span>, group <span class='op'>=</span> <span class='st'>"gender"</span>, 
                   group.equal <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"loadings"</span>,<span class='st'>"intercepts"</span>, <span class='st'>"residuals"</span><span class='op'>)</span>,
                   group.partial <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"item1 ~ 1"</span>, <span class='st'>"item4 ~ 1"</span>, <span class='st'>"item7 ~ 1"</span><span class='op'>)</span><span class='op'>)</span>
@@ -2885,37 +2890,37 @@ cfa.strict - cfa.scalar2 0.001</code></pre>
 <ul>
 <li><p>To test for measurement invariance, sample size should be sufficient for both groups. In this example, I used a large data set with similar numbers of respondents for the gender groups. If sample size is quite small for a particular group, it could lead to higher levels of standard error and convergence issues depending on the complexity of the model (e.g., number of factors).</p></li>
 <li><p>Strict invariance is often very difficult to establish in practice. The Financial Well-Being Scale used in the above example is a high-quality instrument that was already pilot-tested and refined by the researchers. Therefore, it is not surprising that strict invariance could be established for the scale. However, especially for new instruments that have not been validated yet, establishing scalar invariance should be the main priority.</p></li>
-<li><p>Measurement invariance analyses demonstrated here can be summarized using a table with model fit indices, chi-square statistics, and so on. Also, important changes in the models (e.g., those that we made to establish partial MI) should be explained in the text. <span class="citation" data-cites="van2012checklist">Van de Schoot, Lugtig, and Hox (<a href="#ref-van2012checklist" role="doc-biblioref">2012</a>)</span> describe how to report the results of measurement invariance analyses.</p></li>
-<li><p>Testing for measurement invariance can help researchers identify which item(s) might be problematic and thus need to be altered in the future <span class="citation" data-cites="lugtig2011change">(Lugtig, Boeije, and Lensvelt-Mulders <a href="#ref-lugtig2011change" role="doc-biblioref">2012</a>)</span>. To identify problematic items within the factor analysis framework, multiple indicators, multiple causes (MIMIC) models can be used <span class="citation" data-cites="mimic">(Bulut and Suh <a href="#ref-mimic" role="doc-biblioref">2017</a>)</span>.</p></li>
+<li><p>Measurement invariance analyses demonstrated here can be summarized using a table with model fit indices, chi-square statistics, and so on. Also, important changes in the models (e.g., those that we made to establish partial MI) should be explained in the text. <span class="citation" data-cites="van2012checklist"><a href="#ref-van2012checklist" role="doc-biblioref">Van de Schoot et al.</a> (<a href="#ref-van2012checklist" role="doc-biblioref">2012</a>)</span> describe how to report the results of measurement invariance analyses.</p></li>
+<li><p>Testing for measurement invariance can help researchers identify which item(s) might be problematic and thus need to be altered in the future <span class="citation" data-cites="lugtig2011change">(<a href="#ref-lugtig2011change" role="doc-biblioref">Lugtig et al., 2012</a>)</span>. To identify problematic items within the factor analysis framework, multiple indicators, multiple causes (MIMIC) models can be used <span class="citation" data-cites="mimic">(<a href="#ref-mimic" role="doc-biblioref">Bulut &amp; Suh, 2017</a>)</span>.</p></li>
 </ul>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
-<div id="refs" class="references" role="doc-bibliography">
-<div id="ref-mimic">
-<p>Bulut, Okan, and Youngsuk Suh. 2017. “Detecting Multidimensional Differential Item Functioning with the Multiple Indicators Multiple Causes Model, the Item Response Theory Likelihood Ratio Test, and Logistic Regression.” <em>Frontiers in Education</em> 2: 51. <a href="https://doi.org/10.3389/feduc.2017.00051">https://doi.org/10.3389/feduc.2017.00051</a>.</p>
+<div id="refs" class="references csl-bib-body hanging-indent" data-line-spacing="2" role="doc-bibliography">
+<div id="ref-mimic" class="csl-entry" role="doc-biblioentry">
+Bulut, O., &amp; Suh, Y. (2017). Detecting multidimensional differential item functioning with the multiple indicators multiple causes model, the item response theory likelihood ratio test, and logistic regression. <em>Frontiers in Education</em>, <em>2</em>, 51. <a href="https://doi.org/10.3389/feduc.2017.00051">https://doi.org/10.3389/feduc.2017.00051</a>
 </div>
-<div id="ref-hu1999cutoff">
-<p>Hu, Li-tze, and Peter M Bentler. 1999. “Cutoff Criteria for Fit Indexes in Covariance Structure Analysis: Conventional Criteria Versus New Alternatives.” <em>Structural Equation Modeling: A Multidisciplinary Journal</em> 6 (1): 1–55.</p>
+<div id="ref-hu1999cutoff" class="csl-entry" role="doc-biblioentry">
+Hu, L., &amp; Bentler, P. M. (1999). Cutoff criteria for fit indexes in covariance structure analysis: Conventional criteria versus new alternatives. <em>Structural Equation Modeling: A Multidisciplinary Journal</em>, <em>6</em>(1), 1–55.
 </div>
-<div id="ref-semtools">
-<p>Jorgensen, Terrence D., Sunthud Pornprasertmanit, Alexander M. Schoemann, and Yves Rosseel. 2020. <em><code>semTools</code>: Useful Tools for Structural Equation Modeling</em>. <a href="https://CRAN.R-project.org/package=semTools">https://CRAN.R-project.org/package=semTools</a>.</p>
+<div id="ref-semtools" class="csl-entry" role="doc-biblioentry">
+Jorgensen, T. D., Pornprasertmanit, S., Schoemann, A. M., &amp; Rosseel, Y. (2020). <em><code>semTools</code>: <span>U</span>seful tools for structural equation modeling</em>. <a href="https://CRAN.R-project.org/package=semTools">https://CRAN.R-project.org/package=semTools</a>
 </div>
-<div id="ref-lugtig2011change">
-<p>Lugtig, Peter, Hennie R Boeije, and Gerty JLM Lensvelt-Mulders. 2012. “Change? What Change?” <em>Methodology</em> 8: 115–23. <a href="https://doi.org/10.1027/1614-2241/a000043">https://doi.org/10.1027/1614-2241/a000043</a>.</p>
+<div id="ref-lugtig2011change" class="csl-entry" role="doc-biblioentry">
+Lugtig, P., Boeije, H. R., &amp; Lensvelt-Mulders, G. J. (2012). Change? What change? <em>Methodology</em>, <em>8</em>, 115–123. <a href="https://doi.org/10.1027/1614-2241/a000043">https://doi.org/10.1027/1614-2241/a000043</a>
 </div>
-<div id="ref-lavaan">
-<p>Rosseel, Yves. 2012. “lavaan: An R Package for Structural Equation Modeling.” <em>Journal of Statistical Software</em> 48 (2): 1–36. <a href="http://www.jstatsoft.org/v48/i02/">http://www.jstatsoft.org/v48/i02/</a>.</p>
+<div id="ref-lavaan" class="csl-entry" role="doc-biblioentry">
+Rosseel, Y. (2012). <span class="nocase">lavaan</span>: An <span>R</span> package for structural equation modeling. <em>Journal of Statistical Software</em>, <em>48</em>(2), 1–36. <a href="http://www.jstatsoft.org/v48/i02/">http://www.jstatsoft.org/v48/i02/</a>
 </div>
-<div id="ref-steenkamp1998assessing">
-<p>Steenkamp, Jan-Benedict EM, and Hans Baumgartner. 1998. “Assessing Measurement Invariance in Cross-National Consumer Research.” <em>Journal of Consumer Research</em> 25 (1): 78–90.</p>
+<div id="ref-steenkamp1998assessing" class="csl-entry" role="doc-biblioentry">
+Steenkamp, J.-B. E., &amp; Baumgartner, H. (1998). Assessing measurement invariance in cross-national consumer research. <em>Journal of Consumer Research</em>, <em>25</em>(1), 78–90.
 </div>
-<div id="ref-van2012checklist">
-<p>Van de Schoot, Rens, Peter Lugtig, and Joop Hox. 2012. “A Checklist for Testing Measurement Invariance.” <em>European Journal of Developmental Psychology</em> 9 (4): 486–92.</p>
+<div id="ref-van2012checklist" class="csl-entry" role="doc-biblioentry">
+Van de Schoot, R., Lugtig, P., &amp; Hox, J. (2012). A checklist for testing measurement invariance. <em>European Journal of Developmental Psychology</em>, <em>9</em>(4), 486–492.
 </div>
-<div id="ref-corrplot2017">
-<p>Wei, Taiyun, and Viliam Simko. 2017. <em>R Package "Corrplot": Visualization of a Correlation Matrix</em>. <a href="https://github.com/taiyun/corrplot">https://github.com/taiyun/corrplot</a>.</p>
+<div id="ref-corrplot2017" class="csl-entry" role="doc-biblioentry">
+Wei, T., &amp; Simko, V. (2017). <em>R package "corrplot": Visualization of a correlation matrix</em>. <a href="https://github.com/taiyun/corrplot">https://github.com/taiyun/corrplot</a>
 </div>
-<div id="ref-dplyr">
-<p>Wickham, Hadley, Romain François, Lionel Henry, and Kirill Müller. 2020. <em>Dplyr: A Grammar of Data Manipulation</em>. <a href="https://CRAN.R-project.org/package=dplyr">https://CRAN.R-project.org/package=dplyr</a>.</p>
+<div id="ref-dplyr" class="csl-entry" role="doc-biblioentry">
+Wickham, H., François, R., Henry, L., &amp; Müller, K. (2020). <em>Dplyr: A grammar of data manipulation</em>. <a href="https://CRAN.R-project.org/package=dplyr">https://CRAN.R-project.org/package=dplyr</a>
 </div>
 </div>
 <!--radix_placeholder_article_footer-->

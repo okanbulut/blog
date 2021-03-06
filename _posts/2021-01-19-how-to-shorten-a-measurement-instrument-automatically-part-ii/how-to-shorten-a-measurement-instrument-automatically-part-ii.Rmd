@@ -28,6 +28,7 @@ categories:
   - machine learning
   - optimization
 bibliography: reducingitems2.bib
+csl: apa.csl
 preview: pexels-poranimm.jpg
 output:
   distill::distill_article:
