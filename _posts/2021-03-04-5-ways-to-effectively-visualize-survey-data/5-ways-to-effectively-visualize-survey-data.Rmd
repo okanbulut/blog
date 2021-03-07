@@ -38,6 +38,8 @@ suppressWarnings({
   library("dplyr")
   library("ggplot2")
   library("corrplot")
+  library("ggcorrplot")
+  library("likert")
   library("naniar")
   library("reshape2")
   library("ggalluvial")
@@ -45,7 +47,7 @@ suppressWarnings({
 ```
 
 
-![Photo by [janjf93](https://pixabay.com/users/janjf93-3084263/) on [pixabay](https://pixabay.com/)](gui.png)
+![Photo by [200degrees](https://pixabay.com/users/200degrees-2051452/) on [pixabay](https://pixabay.com/)](survey.png)
 
 ## Introduction
 
@@ -83,7 +85,7 @@ Response options are:
 * 1 = Strongly disagree
 * 2 = Disagree
 * 3 = Agree
-* 4 = Strongly Agree
+* 4 = Strongly agree
 
 ```{r ch1, eval=FALSE}
 # Read the data in R
@@ -93,7 +95,7 @@ data <- read.csv("PISA_Alberta.csv", header = TRUE, na.strings = 999)
 head(data)
 ```
 
-```{r ch4, echo=FALSE}
+```{r ch2, echo=FALSE}
 # Read the data in R
 data <- read.csv("PISA_Alberta.csv", header = TRUE, na.strings = 999)
 paged_table(data, options = list(cols.print = 12))
@@ -102,13 +104,26 @@ paged_table(data, options = list(cols.print = 12))
 
 ### Correlation Matrix Plot
 
-```{r ch2, eval=FALSE}
+```{r ch3, eval=FALSE}
 # Activate the package
 library("corrplot")
 
 # Correlation matrix of items
 cormat <- data %>%
-  select(starts_with("ST0")) %>%
+  select(starts_with(c("ST082", "ST034"))) %>%
+  cor(., use = "pairwise.complete.obs")
+
+# Correlation matrix plot
+corrplot(cormat, # correlation matrix
+         order = "hclust", # hierarchical clustering of correlations
+         addrect = 2) # number of rectangles to draw around clusters
+```
+
+
+```{r ch4, echo=FALSE, fig.width=8, fig.height=5, fig.cap="Correlation matrix plot of the PISA survey items (using corrplot)", layout="l-body-outset"}
+# Correlation matrix of items
+cormat <- data %>%
+  select(starts_with(c("ST082", "ST034"))) %>%
   cor(., use = "pairwise.complete.obs")
 
 # Correlation matrix plot
@@ -116,21 +131,30 @@ corrplot(cormat, order = "hclust", addrect = 2)
 ```
 
 
-```{r ch3, echo=FALSE, fig.width=5, fig.height=5, fig.cap="Correlation matrix plot of the PISA survey items"}
-# Correlation matrix of items
-cormat <- data %>%
-  select(starts_with("ST0")) %>%
-  cor(., use = "pairwise.complete.obs")
+```{r ch5, eval=FALSE}
+library("ggcorrplot")
 
 # Correlation matrix plot
-corrplot(cormat, order = "hclust", addrect = 4)
+ggcorrplot(cormat, # correlation matrix
+           type = "lower", # print the lower part of the correlation matrix
+           hc.order = TRUE, # hierarchical clustering of correlations
+           lab = TRUE) # add correlation values as labels
 ```
 
 
+```{r ch6, echo=FALSE, fig.width=8, fig.height=6, fig.cap="Correlation matrix plot of the PISA survey items (using ggcorrplot)", layout="l-body-outset"}
+library("ggcorrplot")
+
+# Correlation matrix plot
+ggcorrplot(cormat, # correlation matrix
+           type = "lower", # print the lower part of the correlation matrix
+           hc.order = TRUE, # hierarchical clustering of correlations
+           lab = TRUE) # add correlation values as labels
+```
+
 ### UpSet Plot
 
-
-```{r ch5, eval=FALSE}
+```{r ch7, eval=FALSE}
 library("dplyr") 
 
 data <- mutate(data,
@@ -145,7 +169,7 @@ data <- mutate(data,
 ```
 
 
-```{r ch6,eval=FALSE}
+```{r ch8,eval=FALSE}
 library("naniar")
 
 # Select only the survey items
@@ -153,15 +177,53 @@ gg_miss_upset(data[, 6:15], nsets = 10)
 ```
 
 
-```{r ch7,echo=FALSE, fig.width=6, fig.height=5, layout="l-body-outset", fig.cap="An UpSet plot showing missing data patterns in the PISA dataset"}
+```{r ch9,echo=FALSE, fig.width=6, fig.height=5, layout="l-body-outset", fig.cap="An UpSet plot showing missing data patterns in the PISA dataset"}
 gg_miss_upset(data[, 6:15], nsets = 10)
 ```
 
 The **UpSetR** package also offers [a Shiny app](https://gehlenborglab.shinyapps.io/upsetr/) to generate UpSet plots without any coding in R. 
 
+
+# Likert
+
+```{r ch10, eval=TRUE, fig.width=8, fig.height=5, layout="l-body-outset", fig.cap="A plot of Likert items in the PISA dataset"}
+library("likert")
+
+items <- select(data, starts_with(c("ST082")))
+
+names(items) <- c(
+  ST082Q01="I prefer working as part of a team to working alone.",
+  ST082Q02="I am a good listener.",
+  ST082Q03="I enjoy seeing my classmates be successful.",
+  ST082Q08="I take into account what others are interested in.",
+  ST082Q09="I find that teams make better decisions than individuals.",
+  ST082Q12="I enjoy considering different perspectives.",
+  ST082Q13="I find that teamwork raises my own efficiency.",
+  ST082Q14="I enjoy cooperating with peers.")
+
+likert_recode <- function(x) {
+  y <- ifelse(is.na(x), "Missing",
+              ifelse(x == 1, "Strongly disagree",
+                     ifelse(x == 2, "Disagree",
+                            ifelse(x == 3, "Agree", "Strongly agree"))))
+  
+  y <- factor(y, levels = c("Strongly disagree", "Disagree", "Missing", 
+                            "Agree", "Strongly agree"))
+  
+  return(y)
+}
+
+items_likert <- items %>%
+  mutate_all(likert_recode) %>%
+  likert()
+
+plot(items_likert, ordered=FALSE, group.order=names(items))
+```
+
+
 ### Alluvial Plot
 
-```{r ch8, eval=FALSE}
+```{r ch11, eval=FALSE}
 library("reshape2")
 library("ggplot2")
 library("ggalluvial")
