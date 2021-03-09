@@ -265,14 +265,22 @@ ggplot(data_long,
 ## Item-Person Map
 
 ```{r ch12, eval=TRUE, fig.width=8, fig.height=6, layout="l-body-outset", fig.cap="An item-person map of the items"}
+
+# Save the items as a separate dataset
 items <- select(data, starts_with(c("ST082")))
+
+# Change responses from 1-2-3-4 to 0-1-2-3 by subtracting 1
 items2 <- apply(items, 2, function(x) x-1)
 
 # Apply the Partial Credit Model
 mod <- mirt(items2, 1, itemtype = "Rasch", technical = list(removeEmptyRows=TRUE),
             verbose = FALSE)
 
-# Function for the item-person map
+# Function to draw and item-person map
+# mod is a mirt model returned from the mirt function
+# For meaningful results, Partial Credit Model must be
+# used in estimating item thresholds.
+
 itempersonmap <- function(mod) {
   require("mirt")
   require("dplyr")
@@ -293,15 +301,17 @@ itempersonmap <- function(mod) {
   theta <- as.data.frame(fscores(mod)) %>%
     rename(theta = F1)
   
+  # Histogram of latent trait distribution
   p1 <- ggplot(data = theta,
                aes(x = theta)) +
     geom_histogram(bins = 30, fill = "royalblue2", colour = "lightgray") +
     theme_bw(base_size = 13) +
     theme(axis.text.x = element_text(angle = 45)) +
     labs(x = "Latent Trait", y = "") +
-    xlim(c(-5, 5)) + 
+    scale_x_continuous(limits = c(-5, 5), breaks = seq(-5, 5, by = 1)) +
     coord_flip() + scale_y_reverse()
   
+  # Dot and line plot of item thresholds
   p2 <- ggplot(data = pars, 
                aes(x = item, y = parameter)) +
     geom_line() +
@@ -309,9 +319,10 @@ itempersonmap <- function(mod) {
     theme_bw(base_size = 13) +
     theme(axis.text.x = element_text(angle = 45, hjust = 1),
           legend.position = "none") +
-    labs(x = "", y = "Item Difficulty", shape = "Threshold") +
-    scale_y_continuous(position = "right", limits = c(-5, 5))
+    labs(x = "", y = "Item Thresholds", shape = "Threshold") +
+    scale_y_continuous(position = "right", limits = c(-5, 5), breaks = seq(-5, 5, by = 1))
   
+  # Combine the plots together
   plot_grid(p1, p2, align = "h")
   
 }
