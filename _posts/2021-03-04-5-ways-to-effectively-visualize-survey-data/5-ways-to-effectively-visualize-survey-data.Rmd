@@ -43,6 +43,8 @@ suppressWarnings({
   library("naniar")
   library("reshape2")
   library("ggalluvial")
+  library("mirt")
+  require("cowplot")
 })
 ```
 
@@ -260,6 +262,63 @@ ggplot(data_long,
 ```
 
 
+## Item-Person Map
+
+```{r ch12, eval=TRUE, fig.width=8, fig.height=6, layout="l-body-outset", fig.cap="An item-person map of the items"}
+items <- select(data, starts_with(c("ST082")))
+items2 <- apply(items, 2, function(x) x-1)
+
+# Apply the Partial Credit Model
+mod <- mirt(items2, 1, itemtype = "Rasch", technical = list(removeEmptyRows=TRUE),
+            verbose = FALSE)
+
+# Function for the item-person map
+itempersonmap <- function(mod) {
+  require("mirt")
+  require("dplyr")
+  require("reshape2")
+  require("ggplot2")
+  require("cowplot")
+  
+  pars <- as.data.frame(coef(mod, IRTpars = TRUE, simplify = TRUE)$items)
+  
+  pars <- pars %>%
+    select(-a) %>%
+    mutate(item = row.names(pars)) %>%
+    melt(data = ., 
+         id.vars = "item",
+         variable.name = "threshold",
+         value.name = "parameter")
+  
+  theta <- as.data.frame(fscores(mod)) %>%
+    rename(theta = F1)
+  
+  p1 <- ggplot(data = theta,
+               aes(x = theta)) +
+    geom_histogram(bins = 30, fill = "royalblue2", colour = "lightgray") +
+    theme_bw(base_size = 13) +
+    theme(axis.text.x = element_text(angle = 45)) +
+    labs(x = "Latent Trait", y = "") +
+    xlim(c(-5, 5)) + 
+    coord_flip() + scale_y_reverse()
+  
+  p2 <- ggplot(data = pars, 
+               aes(x = item, y = parameter)) +
+    geom_line() +
+    geom_point(aes(shape = threshold), size = 3, colour = "indianred1") +
+    theme_bw(base_size = 13) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1),
+          legend.position = "none") +
+    labs(x = "", y = "Item Difficulty", shape = "Threshold") +
+    scale_y_continuous(position = "right", limits = c(-5, 5))
+  
+  plot_grid(p1, p2, align = "h")
+  
+}
+
+# Create the item-person map
+itempersonmap(mod)
+```
 ## Conclusion
 
 xxx
