@@ -35,6 +35,7 @@ suppressWarnings({
   library("rmarkdown")
   library("kableExtra")
   library("emo")
+  library("plyr")
   library("dplyr")
   library("ggplot2")
   library("corrplot")
@@ -63,6 +64,8 @@ knitr::include_graphics("dataviz.png")
 ```
 
 In this post, I will use real data from a questionnaire included in OECD's [Programme for International Student Assessment (PISA)](http://www.oecd.org/pisa/). PISA is an international, large-scale assessment administered to 15-year-old students across many countries and economies around the world. In 2015, nearly 540,000 students from 72 countries participated in PISA. After finishing reading, math, and science assessments, students also complete a questionnaire with several items focusing on their learning in school, their attitudes towards different aspects of learning, and non-cognitive/metacognitive constructs. Using students' responses in the questionnaire, I will demonstrate five alternative tools to visualize survey data. 
+
+Let's get started `r emo::ji("metrics")`.
 
 
 ## Example
@@ -103,7 +106,7 @@ data <- read.csv("PISA_Alberta.csv", header = TRUE, na.strings = 999)
 paged_table(data, options = list(cols.print = 12))
 ```
 
-In the following sections, I will demonstrate how to visualize the items in the PISA data set. The visualizations focus on either individual items or the relationship among the items. 
+In the following sections, I will demonstrate how to visualize the items in the PISA data set. The visualizations focus on either individual items or the relationship among the items.
 
 
 ### Correlation Matrix Plot
@@ -174,41 +177,98 @@ ggcorrplot(cormat, # correlation matrix
            lab = TRUE) # add correlation values as labels
 ```
 
+Both correlation matrix plots confirm our initial suspicion that the last two items (i.e., ST034Q02 and ST034Q05) are not correlated with the rest of the survey items. If we are building a scale focusing on "teamwork", we can exclude these two items since they would not contribute to the scale sufficiently. 
+
+
 ### UpSet Plot
 
-```{r ch7, eval=FALSE}
-data <- mutate(data,
-               gender = ifelse(ST004D01T == 1, "Female", "Male"),
-               immigration = ifelse(is.na(IMMIG), NA, ifelse(IMMIG == 1, "Native", 
-                                           ifelse(IMMIG == 2, "Second-Generation", 
-                                                  "First-Generation")))) %>%
-  rename(grade = ST001D01T,
-         student = CNTSTUID,
-         age = AGE) %>%
-  select(-ST004D01T, -IMMIG)
-```
+The next visualization tools that we will try is called "UpSet plot". UpSet plots can show the intersections of multiple sets of data. These plots allow users to visualize complex set of relationships among variables from different data sets. This visualization method enables users to combine different plots (e.g., venn diagrams, bar charts, etc.) based on the intersections in the data. You can watch [this nice video](https://youtu.be/-IfF2wGw7Qk) to better understand the design and use of UpSet plots^[See Johannes Kepler University's [Visual Data Science Lab](https://jku-vds-lab.at/tools/upset/#:~:text=UpSet%20plots%20the%20intersections%20of,as%20indicated%20in%20the%20figure.&text=This%20figure%20shows%20a%20Simpsons,in%20a%20corresponding%20Venn%20diagram.) for further information.]. In R, the **UpSetR** package [@upsetr] can be used to generate UpSet plots. The creators of the package also have a [Shiny](https://gehlenborglab.shinyapps.io/upsetr/) app and a web version (<https://vcg.github.io/upset/>) that help users generate UpSet plots without any coding in R. 
+
+In our example, we will use the **naniar** package [@naniar] to create an UpSet plot for visualizing missing data. The **naniar** package offers several tools for visualizing missing data, including UpSet plots^[Check out the package's GitHub page: <https://github.com/njtierney/naniar>]. Using this package, we will create an UpSet package that will show us missing response patterns in our survey data. First, we will select the survey items in the data and then send the items to the gg_miss_upset function to create an UpSet plot. In the function, nsets = 10 refers to the number of item sets that we want to visualize. So, we use 10 to visualize all of the ten items in the data. In addition, we can use nintersects argument (e.g., nintersects = 10) to change the number of intersections to be shown in the plot. 
 
 
 ```{r ch8,eval=FALSE}
 library("naniar")
 
-# Select only the survey items
-gg_miss_upset(data[, 6:15], nsets = 10)
+data %>%
+  # Select the survey items
+  select(starts_with(c("ST082", "ST034"))) %>%
+  # Create an UpSet plot
+  gg_miss_upset(., nsets = 10)
 ```
 
 
-```{r ch9,echo=FALSE, fig.width=6, fig.height=5, layout="l-body-outset", fig.cap="An UpSet plot showing missing data patterns in the PISA dataset"}
-gg_miss_upset(data[, 6:15], nsets = 10)
+```{r ch9,echo=FALSE, fig.width=6, fig.height=5, layout="l-body-outset", fig.cap="An UpSet plot showing missing data patterns among the PISA survey items"}
+data %>%
+  # Select only the relevant survey items
+  select(starts_with(c("ST082", "ST034"))) %>%
+  # Create an UpSet plot
+  gg_miss_upset(., nsets = 10)
 ```
 
-The **UpSetR** package also offers [a Shiny app](https://gehlenborglab.shinyapps.io/upsetr/) to generate UpSet plots without any coding in R. 
-
+We can use Figure \@ref(fig:ch9) to understand the number of missing responses per item. For example, if we look at the first row (ST082Q01), we can see that there are 83 missing responses based on the sum of the three frequencies marked for this item (i.e., 79 + 3 + 1). In addition, we can use the plot to identify missing response patterns. For example, the plot shows that 79 students skipped all of the survey items without selecting an answer (see the first vertical bar), while 13 students skipped either ST034Q05 or ST082Q14 (see the second and third vertical bars). Each column represents a different combination of items with missing responses (i.e., those with black marks). The UpSet plot can help researchers identify problematic item groups in terms of missingness. 
 
 ### Stacked Bar Chart
 
-```{r ch10, eval=TRUE, fig.width=8, fig.height=5, layout="l-body-outset", fig.cap="A plot of Likert items in the PISA dataset"}
-library("likert")
+The next visualization tool is the stacked bar chart. Stacked bar charts are not necessarily very exciting forms of data visualization but they are widely used in survey research to visually present Likert-type items. The **likert** package [@likert] offers a relatively straightforward way to create stacked bar charts for survey items. Without diving into all the options to customize these charts, I will demonstrate how to create a simple stacked bar chart using the first eight items focusing on teamwork. Since the **likert** package relies on the **plyr** package, we will have to activate both packages before running the codes. 
 
+
+```{r ch10, eval=FALSE}
+
+library("likert")
+library("plyr")
+
+# Select only the first 8 items in the survey
+items <- select(data, starts_with(c("ST082")))
+
+# Rename the items so that the question statement becomes the name
+names(items) <- c(
+  ST082Q01="I prefer working as part of a team to working alone.",
+  ST082Q02="I am a good listener.",
+  ST082Q03="I enjoy seeing my classmates be successful.",
+  ST082Q08="I take into account what others are interested in.",
+  ST082Q09="I find that teams make better decisions than individuals.",
+  ST082Q12="I enjoy considering different perspectives.",
+  ST082Q13="I find that teamwork raises my own efficiency.",
+  ST082Q14="I enjoy cooperating with peers.")
+
+# A custom function to recode numerical responses into ordered factors
+likert_recode <- function(x) {
+  y <- ifelse(is.na(x), NA,
+              ifelse(x == 1, "Strongly disagree",
+                     ifelse(x == 2, "Disagree",
+                            ifelse(x == 3, "Agree", "Strongly agree"))))
+  
+  y <- factor(y, levels = c("Strongly disagree", "Disagree", "Agree", "Strongly agree"))
+  
+  return(y)
+}
+
+# Transform the items into factors and save the data set as a likert object
+items_likert <- items %>%
+  mutate_all(likert_recode) %>%
+  likert()
+
+# Create a stacked bar chart
+plot(items_likert, 
+     # Group the items alphabetically
+     group.order=names(items),
+     # Plot the percentages for each response category
+     plot.percents = TRUE,
+     # Plot the total percentage for negative responses
+     plot.percent.low = FALSE,
+     # Plot the total percentage for positive responses
+     plot.percent.high = FALSE,
+     # Whether response categories should be centered
+     # This is only helpful when there is a middle response
+     # option such as "neutral" or "neither agree nor disagree"
+     centered = FALSE,
+     # Wrap label text for item labels
+     wrap=30)
+```
+
+
+```{r ch11, eval=TRUE, echo = FALSE, fig.width=9, fig.height=6, layout="l-body-outset", fig.cap="A stacked bar chart of the PISA survey items"}
 items <- select(data, starts_with(c("ST082")))
 
 names(items) <- c(
@@ -222,12 +282,12 @@ names(items) <- c(
   ST082Q14="I enjoy cooperating with peers.")
 
 likert_recode <- function(x) {
-  y <- ifelse(is.na(x), "Missing",
+  y <- ifelse(is.na(x), NA,
               ifelse(x == 1, "Strongly disagree",
                      ifelse(x == 2, "Disagree",
                             ifelse(x == 3, "Agree", "Strongly agree"))))
   
-  y <- factor(y, levels = c("Strongly disagree", "Disagree", "Missing", 
+  y <- factor(y, levels = c("Strongly disagree", "Disagree", 
                             "Agree", "Strongly agree"))
   
   return(y)
@@ -237,52 +297,84 @@ items_likert <- items %>%
   mutate_all(likert_recode) %>%
   likert()
 
-plot(items_likert, ordered=FALSE, group.order=names(items))
+plot(items_likert, 
+     group.order=names(items),
+     plot.percents = TRUE,
+     plot.percent.low = FALSE,
+     plot.percent.high = FALSE,
+     centered = FALSE,
+     wrap=30)
 ```
 
 
 ### Alluvial Plot
 
-```{r ch11, eval=FALSE}
+Alluvial plots (or diagrams) are similar to flow diagrams that represent changes over time or between different groups. Using an alluvial plot, we can demonstrate the flow of survey responses between different items or between different groups of respondents. In this example, we will use the **ggalluvial** package [@ggalluvial]. You can check out the package [vignette](https://cran.r-project.org/web/packages/ggalluvial/vignettes/ggalluvial.html) for more examples. We will choose one of the survey items and create an alluvial plot using gender, immigration status, and responses given to the item. 
+
+
+```{r ch12, eval=TRUE, fig.width=9, fig.height=6, layout="l-body-outset"}
 library("reshape2")
 library("ggplot2")
 library("ggalluvial")
 
-data_long <- data %>%
+# Transform the data from wide format to long format
+data_long <- mutate(data,
+                    # Create categorical gender and immigration variables
+                    gender = ifelse(ST004D01T == 1, "Female", "Male"),
+                    immigration = factor(
+                      ifelse(is.na(IMMIG), NA, 
+                                         ifelse(IMMIG == 1, "Native", 
+                                                ifelse(IMMIG == 2, "Second-Generation", 
+                                                       "First-Generation"))),
+                      levels = c("Native", "First-Generation", "Second-Generation")
+                    )) %>%
+  # Drop old variables
+  select(-ST004D01T, -IMMIG) %>%
+  # Make the variable names easier
+  rename(grade = ST001D01T,
+         student = CNTSTUID,
+         age = AGE) %>%
   # Melt data to long format
   melt(data = .,
        id.vars = c("student", "grade", "age", "gender", "immigration"),
        variable.name = "question",
        value.name = "response") %>%
-  # Recode numerical responses to character strings
-  mutate(response2 = (ifelse(is.na(response), "Missing",
-                             ifelse(response == 1, "Strongly disagree",
-                                    ifelse(response == 2, "Disagree",
-                                           ifelse(response == 3, "Agree", "Strongly agree"))))),
-         
-         response3 = factor(response2, levels = c("Missing", "Strongly disagree", "Disagree", 
-                                                  "Agree", "Strongly agree"))
-         
-  ) %>%
-  # Summarize the data
-  group_by(gender, question, response3) %>%
+  mutate(
+    # Recode numerical responses to character strings
+    response2 = (ifelse(is.na(response), "Missing",
+                        ifelse(response == 1, "Strongly disagree",
+                               ifelse(response == 2, "Disagree",
+                                      ifelse(response == 3, "Agree", "Strongly agree"))))),
+    # Reorder factors
+    response3 = factor(response2, levels = c("Missing", "Strongly disagree", "Disagree", 
+                                             "Agree", "Strongly agree"))
+    
+  ) 
+
+
+# Create a frequency table for one of the items
+ST082Q01 <- data_long %>%
+  filter(question == "ST082Q01") %>%
+  group_by(gender, immigration, response3) %>%
   summarise(Freq = n())
   
 
-ggplot(data_long,
-       aes(y = Freq, axis1 = question, axis2 = gender, axis3 = response3)) +
+ggplot(ST082Q01,
+       aes(y = Freq, axis1 = gender, axis2 = immigration, axis3 = response3)) +
   geom_alluvium(aes(fill = gender), width = 1/12) +
   geom_stratum(width = 1/12, fill = "black", color = "grey") +
   geom_label(stat = "stratum", aes(label = after_stat(stratum))) +
-  scale_x_discrete(limits = c("Gender", "Dept"), expand = c(.05, .05)) +
+  scale_x_discrete(limits = c("gender", "immigration", "response3"), expand = c(.1, .1)) +
   scale_fill_brewer(type = "qual", palette = "Set1") +
-  ggtitle("UC Berkeley admissions and rejections, by sex and department")
+  ggtitle("I prefer working as part of a team to working alone.")
 ```
 
 
 ### Item-Person Map
 
-```{r ch12, eval=TRUE, fig.width=8, fig.height=6, layout="l-body-outset", fig.cap="An item-person map of the items"}
+```{r ch13, eval=TRUE, fig.width=8, fig.height=6, layout="l-body-outset", fig.cap="An item-person map of the items"}
+
+#detach("package:plyr", unload=TRUE)
 
 # Save the items as a separate dataset
 items <- select(data, starts_with(c("ST082")))
@@ -294,56 +386,6 @@ items2 <- apply(items, 2, function(x) x-1)
 mod <- mirt(items2, 1, itemtype = "Rasch", technical = list(removeEmptyRows=TRUE),
             verbose = FALSE)
 
-# Function to draw and item-person map
-# mod is a mirt model returned from the mirt function
-# For meaningful results, Partial Credit Model must be
-# used in estimating item thresholds.
-
-itempersonmap <- function(mod) {
-  require("mirt")
-  require("dplyr")
-  require("reshape2")
-  require("ggplot2")
-  require("cowplot")
-  
-  pars <- as.data.frame(coef(mod, IRTpars = TRUE, simplify = TRUE)$items)
-  
-  pars <- pars %>%
-    select(-a) %>%
-    mutate(item = row.names(pars)) %>%
-    melt(data = ., 
-         id.vars = "item",
-         variable.name = "threshold",
-         value.name = "parameter")
-  
-  theta <- as.data.frame(fscores(mod)) %>%
-    rename(theta = F1)
-  
-  # Histogram of latent trait distribution
-  p1 <- ggplot(data = theta,
-               aes(x = theta)) +
-    geom_histogram(bins = 30, fill = "royalblue2", colour = "lightgray") +
-    theme_bw(base_size = 13) +
-    theme(axis.text.x = element_text(angle = 45)) +
-    labs(x = "Latent Trait", y = "") +
-    scale_x_continuous(limits = c(-5, 5), breaks = seq(-5, 5, by = 1)) +
-    coord_flip() + scale_y_reverse()
-  
-  # Dot and line plot of item thresholds
-  p2 <- ggplot(data = pars, 
-               aes(x = item, y = parameter)) +
-    geom_line() +
-    geom_point(aes(shape = threshold), size = 3, colour = "indianred1") +
-    theme_bw(base_size = 13) +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1),
-          legend.position = "none") +
-    labs(x = "", y = "Item Thresholds", shape = "Threshold") +
-    scale_y_continuous(position = "right", limits = c(-5, 5), breaks = seq(-5, 5, by = 1))
-  
-  # Combine the plots together
-  plot_grid(p1, p2, align = "h")
-  
-}
 
 # Create the item-person map
 itempersonmap(mod)
