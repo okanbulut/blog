@@ -1,7 +1,7 @@
 ---
 title: "5 Ways to Effectively Visualize Survey Data"
 description: |
-  Computerized adaptive testing (CAT) is a sophisticated methodology to create measurement instruments that are highly accurate and efficient. In this post, I explain how to evaluate the feasibility of creating a computerized adaptive version of a psychological instrument. 
+  When presented visually, survey results become much more interesting than some numbers squeezed into a boring table. Data visualizations help your audience view and understand key insights in the results. There are many data visualization tools to present survey results visually, including bar charts, pie charts, and line charts. In this post, I demonstrate 5 alternative ways to visualize survey results. 
   ```{r, include=FALSE}
   bytes <- file.size("5-ways-to-effectively-visualize-survey-data.Rmd")
   words <- bytes/10
@@ -44,7 +44,7 @@ suppressWarnings({
   library("reshape2")
   library("ggalluvial")
   library("mirt")
-  require("cowplot")
+  library("cowplot")
 })
 ```
 
@@ -53,19 +53,17 @@ suppressWarnings({
 
 ## Introduction
 
-In CSSE 2019, I gave a half-day training on how to visualize assessment and survey items effectively (the training slides are available on [my GitHub page](https://github.com/okanbulut/dataviz/raw/master/CSSE_Workshop.pdf))^[The other training materials are available at <https://github.com/okanbulut/dataviz>.].
+As a visual learner, I often use data visualization to present the results of surveys and other types of self-report measures (e.g., psychological scales). In the 2019 annual meeting of [the Canadian Society for the Study of Education (CSSE)](https://csse-scee.ca/), I gave a half-day workshop on how to visualize assessment and survey items effectively (the workshop slides are available on [my GitHub page](https://github.com/okanbulut/dataviz/raw/master/CSSE_Workshop.pdf))^[The other training materials are available at <https://github.com/okanbulut/dataviz>.]. My goal was to demonstrate readily-available tools that can be used for creating effective visualizations with survey and assessment data. Since my CSSE workshop in 2019, I have come across several other tools that can be quite useful for presenting survey results visually. So, I have decided to share them with other researchers in social and behavioral sciences through a blog post.   
 
+There are several ways to visualize data, depending on the type of variables as well as the message to be conveyed to the audience. Figure \@ref(fig:dataviz) presents some guidelines regarding which type of visualization to choose depending on the purpose of visualization, type of variables, and the number of variables. Similar guidelines for data visualization are available on the [Venngage](https://venngage.com/blog/how-to-choose-the-best-charts-for-your-infographic/) website. Also, I definitely recommend you to check out Darkhorse Analytics' blog post "[Data Looks Better Naked](https://www.darkhorseanalytics.com/blog/data-looks-better-naked)". They demonstrate how to create effective visualizations by eliminating redundancy in figures and charts. 
 
 ```{r dataviz, echo = FALSE, fig.cap="Types of data visualization (Source: https://extremepresentation.com/)", out.extra="class=external", fig.width=6, fig.height=4, layout="l-body-outset"}
 # Visual summary of results
 knitr::include_graphics("dataviz.png")
 ```
 
+In this post, I will use real data from a questionnaire included in OECD's [Programme for International Student Assessment (PISA)](http://www.oecd.org/pisa/). PISA is an international, large-scale assessment administered to 15-year-old students across many countries and economies around the world. In 2015, nearly 540,000 students from 72 countries participated in PISA. After finishing reading, math, and science assessments, students also complete a questionnaire with several items focusing on their learning in school, their attitudes towards different aspects of learning, and non-cognitive/metacognitive constructs. Using students' responses in the questionnaire, I will demonstrate five alternative tools to visualize survey data. 
 
-```{r nakeddata, echo = FALSE, fig.cap="Types of data visualization (Source: https://www.darkhorseanalytics.com/blog/data-looks-better-naked)", out.extra="class=external", fig.width=8, fig.height=6}
-# Visual summary of results
-knitr::include_graphics("data-ink.gif")
-```
 
 ## Example
 
@@ -186,7 +184,7 @@ gg_miss_upset(data[, 6:15], nsets = 10)
 The **UpSetR** package also offers [a Shiny app](https://gehlenborglab.shinyapps.io/upsetr/) to generate UpSet plots without any coding in R. 
 
 
-# Likert
+### Stacked Bar Chart
 
 ```{r ch10, eval=TRUE, fig.width=8, fig.height=5, layout="l-body-outset", fig.cap="A plot of Likert items in the PISA dataset"}
 library("likert")
@@ -262,7 +260,7 @@ ggplot(data_long,
 ```
 
 
-## Item-Person Map
+### Item-Person Map
 
 ```{r ch12, eval=TRUE, fig.width=8, fig.height=6, layout="l-body-outset", fig.cap="An item-person map of the items"}
 
