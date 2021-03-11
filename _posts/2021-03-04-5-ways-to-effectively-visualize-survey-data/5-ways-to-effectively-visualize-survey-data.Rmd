@@ -67,9 +67,9 @@ In this post, I will use real data from a questionnaire included in OECD's [Prog
 
 ## Example
 
-xxx
+In this example, we will use a subset of the PISA 2015 dataset that includes students' responses to some survey items as well as demographic variables (e.g., age, gender, and immigration status). The sample only consists of students who participated in PISA 2015 from Alberta, Canada ($n = 2,133$). The data set is available in a .csv format [here](https://raw.githubusercontent.com/okanbulut/blog/master/data_and_codes/PISA_Alberta.csv).
 
-To what extent do you disagree or agree about yourself?
+There are 10 Likert-type survey items **potentially** measuring students' attitudes towards teamwork. The first eight items share the question statement: "To what extent do you disagree or agree about yourself?". The last two items are independent. Now let's see all of the items included in the data. 
 
 ```{r ch0, echo=FALSE}
 quest <- read.csv("questions.csv", header = TRUE, na.strings = 999)
@@ -80,12 +80,14 @@ kbl(quest) %>%
                 full_width = TRUE, position = "left")
 ```
 
-Response options are:
+Students can answer the items by selecting one the following response options or skip them without choosing a response option (999 in the data):
 
 * 1 = Strongly disagree
 * 2 = Disagree
 * 3 = Agree
 * 4 = Strongly agree
+
+We will begin the analysis by reading the data in R and previewing the first few rows. 
 
 ```{r ch1, eval=FALSE}
 # Read the data in R
@@ -101,17 +103,36 @@ data <- read.csv("PISA_Alberta.csv", header = TRUE, na.strings = 999)
 paged_table(data, options = list(cols.print = 12))
 ```
 
+In the following sections, I will demonstrate how to visualize the items in the PISA data set. The visualizations focus on either individual items or the relationship among the items. 
+
 
 ### Correlation Matrix Plot
 
-```{r ch3, eval=FALSE}
-# Activate the package
-library("corrplot")
+We will begin the visualization process by creating a correlation matrix plot. This plot takes the correlation matrix of items as an input and transforms it into a colored table similar to a heatmap. Negative and positive correlations are represented by different colors. Also, the darkness (or lightness) of the colors indicate the strength of pairwise correlations. Using this plot, we can:
+
+* understand the direction and strength of the relationships among the items,
+* detect problematic items (i.e., items that are weakly correlated with the rest of the items), and
+* identify the items that may require reverse-coding due to inconsistent phrasing (e.g., negative phrasing in some items).
+
+To create a correlation matrix plot, we can use either **corrplot** [@corrplot] or **ggcorrplot** [@ggcorrplot]. First, we will select the survey items (those starting with ST082 and ST034 in the data). Next, we will save pairwise correlations among the items (i.e., a 10x10 matrix of correlations). Finally, we will create a correlation matrix plot using the two aforementioned packages. For preparing the data for the data visualizations, we will use the **dplyr** package [@dplyr].
+
+
+```{r ch3.1, eval=FALSE}
+# Activate the dplyr package
+library("dplyr")
 
 # Correlation matrix of items
 cormat <- data %>%
   select(starts_with(c("ST082", "ST034"))) %>%
   cor(., use = "pairwise.complete.obs")
+```
+
+Now using "cormat", let's create our correlation matrix plot using **corrplot**. In the corrplot function, order = "hclust" applies hierarchical clustering to group the items together based on their correlations with each other. The other option, addrect = 2, refers to the number of rectangles that we want to draw around the item clusters. In our example, I suspect that there will be two clusters: one for the first 8 items (focusing on teamwork) and another for the last 2 items (focusing on being liked by friends). Item clusters in Figure \@ref(fig:ch4) seem to confirm our suspicion. 
+
+
+```{r ch3.2, eval=FALSE}
+# Activate the corrplot package
+library("corrplot")
 
 # Correlation matrix plot
 corrplot(cormat, # correlation matrix
@@ -130,6 +151,7 @@ cormat <- data %>%
 corrplot(cormat, order = "hclust", addrect = 2)
 ```
 
+Next, we will use **ggcorrplot** to create a correlation matrix plot. The procedure is very similar. By using type = "lower", we will only visualize the lower diagonal part of the correlation matrix. 
 
 ```{r ch5, eval=FALSE}
 library("ggcorrplot")
@@ -155,8 +177,6 @@ ggcorrplot(cormat, # correlation matrix
 ### UpSet Plot
 
 ```{r ch7, eval=FALSE}
-library("dplyr") 
-
 data <- mutate(data,
                gender = ifelse(ST004D01T == 1, "Female", "Male"),
                immigration = ifelse(is.na(IMMIG), NA, ifelse(IMMIG == 1, "Native", 
