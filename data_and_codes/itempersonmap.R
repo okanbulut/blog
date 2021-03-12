@@ -26,6 +26,10 @@ itempersonmap <- function(mod) {
            variable.name = "threshold",
            value.name = "parameter")
     
+    pars_mean <- pars %>%
+      group_by(item) %>%
+      summarise(mean_threshold = mean(parameter))
+    
     theta <- as.data.frame(fscores(mod)) %>%
       rename(theta = F1)
     
@@ -44,6 +48,8 @@ itempersonmap <- function(mod) {
                  aes(x = item, y = parameter)) +
       geom_line() +
       geom_point(aes(shape = threshold), size = 3, colour = "indianred1") +
+      geom_point(data = pars_mean, aes(x = item, y = mean_threshold), size = 3, 
+                 colour = "black", shape = 8) +
       theme_bw(base_size = 13) +
       theme(axis.text.x = element_text(angle = 45, hjust = 1),
             legend.position = "none") +

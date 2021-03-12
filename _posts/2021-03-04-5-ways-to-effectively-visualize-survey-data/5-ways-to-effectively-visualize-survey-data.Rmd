@@ -25,7 +25,6 @@ output:
   distill::distill_article:
     self_contained: false
     toc: true
-draft: true
 ---
 
 
@@ -54,9 +53,9 @@ suppressWarnings({
 
 ## Introduction
 
-As a visual learner, I often use data visualization to present the results of surveys and other types of self-report measures (e.g., psychological scales). In the 2019 annual meeting of [the Canadian Society for the Study of Education (CSSE)](https://csse-scee.ca/), I gave a half-day workshop on how to visualize assessment and survey items effectively (the workshop slides are available on [my GitHub page](https://github.com/okanbulut/dataviz/raw/master/CSSE_Workshop.pdf))^[The other training materials are available at <https://github.com/okanbulut/dataviz>.]. My goal was to demonstrate readily-available tools that can be used for creating effective visualizations with survey and assessment data. Since my CSSE workshop in 2019, I have come across several other tools that can be quite useful for presenting survey results visually. So, I have decided to share them with other researchers in social and behavioral sciences through a blog post.   
+As a visual learner, I often use data visualization to present the results of surveys and other types of self-report measures (e.g., psychological scales). In the 2019 annual meeting of [the Canadian Society for the Study of Education (CSSE)](https://csse-scee.ca/), I gave a half-day workshop on how to visualize assessment and survey results effectively (the workshop slides are available on [my GitHub page](https://github.com/okanbulut/dataviz/raw/master/CSSE_Workshop.pdf))^[The other training materials are available at <https://github.com/okanbulut/dataviz>.]. My goal was to demonstrate readily-available tools that can be used for creating effective visualizations with survey and assessment data. Since my CSSE workshop in 2019, I have come across several other tools that can be quite useful for presenting survey results visually. So, I decided to share them in a blog post.   
 
-There are several ways to visualize data, depending on the type of variables as well as the message to be conveyed to the audience. Figure \@ref(fig:dataviz) presents some guidelines regarding which type of visualization to choose depending on the purpose of visualization, type of variables, and the number of variables. Similar guidelines for data visualization are available on the [Venngage](https://venngage.com/blog/how-to-choose-the-best-charts-for-your-infographic/) website. Also, I definitely recommend you to check out Darkhorse Analytics' blog post "[Data Looks Better Naked](https://www.darkhorseanalytics.com/blog/data-looks-better-naked)". They demonstrate how to create effective visualizations by eliminating redundancy in figures and charts. 
+There are several ways to visualize data, depending on the type of variables as well as the message to be conveyed to the audience. Figure \@ref(fig:dataviz) presents some guidelines regarding which type of visualization to choose depending on the purpose of visualization, the type of variables, and the number of variables. Similar guidelines for data visualization are available on the [Venngage](https://venngage.com/blog/how-to-choose-the-best-charts-for-your-infographic/) website. Also, I definitely recommend you to check out Darkhorse Analytics' blog post "[Data Looks Better Naked](https://www.darkhorseanalytics.com/blog/data-looks-better-naked)". The authors demonstrate how to create effective visualizations by eliminating redundancy in figures and charts. 
 
 ```{r dataviz, echo = FALSE, fig.cap="Types of data visualization (Source: https://extremepresentation.com/)", out.extra="class=external", fig.width=6, fig.height=4, layout="l-body-outset"}
 # Visual summary of results
@@ -70,9 +69,9 @@ Let's get started `r emo::ji("metrics")`.
 
 ## Example
 
-In this example, we will use a subset of the PISA 2015 dataset that includes students' responses to some survey items as well as demographic variables (e.g., age, gender, and immigration status). The sample only consists of students who participated in PISA 2015 from Alberta, Canada ($n = 2,133$). The data set is available in a .csv format [here](https://raw.githubusercontent.com/okanbulut/blog/master/data_and_codes/PISA_Alberta.csv).
+In this example, we will use a subset of the PISA 2015 dataset that includes students' responses to some survey items and some demographic variables (e.g., age, gender, and immigration status). The sample only consists of students who participated in PISA 2015 from Alberta, Canada ($n = 2,133$). The data set is available in a .csv format [here](https://raw.githubusercontent.com/okanbulut/blog/master/data_and_codes/PISA_Alberta.csv).
 
-There are 10 Likert-type survey items **potentially** measuring students' attitudes towards teamwork. The first eight items share the question statement: "To what extent do you disagree or agree about yourself?". The last two items are independent. Now let's see all of the items included in the data. 
+There are 10 Likert-type survey items *potentially* measuring students' attitudes towards teamwork. The first eight items share the same question statement: "To what extent do you disagree or agree about yourself?", while the last two items are independent. Now let's see all of the items included in the data. 
 
 ```{r ch0, echo=FALSE}
 quest <- read.csv("questions.csv", header = TRUE, na.strings = 999)
@@ -83,7 +82,7 @@ kbl(quest) %>%
                 full_width = TRUE, position = "left")
 ```
 
-Students can answer the items by selecting one the following response options or skip them without choosing a response option (999 in the data):
+Students can answer the items by selecting one the following response options or skip them without choosing a response option (missing responses are labeled as 999 in the data):
 
 * 1 = Strongly disagree
 * 2 = Disagree
@@ -111,13 +110,13 @@ In the following sections, I will demonstrate how to visualize the items in the 
 
 ### Correlation Matrix Plot
 
-We will begin the visualization process by creating a correlation matrix plot. This plot takes the correlation matrix of items as an input and transforms it into a colored table similar to a heatmap. Negative and positive correlations are represented by different colors. Also, the darkness (or lightness) of the colors indicate the strength of pairwise correlations. Using this plot, we can:
+We will begin the visualization process by creating a correlation matrix plot. This plot takes the correlation matrix of a group of items as an input and transforms it into a colored table similar to a heatmap. Negative and positive correlations are represented by different colors. Also, the darkness (or lightness) of the colors indicates the strength of pairwise correlations. Using this plot, we can:
 
 * understand the direction and strength of the relationships among the items,
 * detect problematic items (i.e., items that are weakly correlated with the rest of the items), and
 * identify the items that may require reverse-coding due to inconsistent phrasing (e.g., negative phrasing in some items).
 
-To create a correlation matrix plot, we can use either **corrplot** [@corrplot] or **ggcorrplot** [@ggcorrplot]. First, we will select the survey items (those starting with ST082 and ST034 in the data). Next, we will save pairwise correlations among the items (i.e., a 10x10 matrix of correlations). Finally, we will create a correlation matrix plot using the two aforementioned packages. For preparing the data for the data visualizations, we will use the **dplyr** package [@dplyr].
+To create a correlation matrix plot, we can use either **corrplot** [@corrplot] or **ggcorrplot** [@ggcorrplot]. First, we will select the survey items (those starting with ST082 and ST034 in the data). Next, we will save pairwise correlations among the items (i.e., a 10x10 matrix of correlations). Finally, we will create a correlation matrix plot using the two packages above. For preparing the data for data visualizations, we will use the **dplyr** package [@dplyr].
 
 
 ```{r ch3.1, eval=FALSE}
@@ -130,7 +129,7 @@ cormat <- data %>%
   cor(., use = "pairwise.complete.obs")
 ```
 
-Now using "cormat", let's create our correlation matrix plot using **corrplot**. In the corrplot function, order = "hclust" applies hierarchical clustering to group the items together based on their correlations with each other. The other option, addrect = 2, refers to the number of rectangles that we want to draw around the item clusters. In our example, I suspect that there will be two clusters: one for the first 8 items (focusing on teamwork) and another for the last 2 items (focusing on being liked by friends). Item clusters in Figure \@ref(fig:ch4) seem to confirm our suspicion. 
+Now, let's create our correlation matrix plot using **corrplot**. In the `corrplot` function, `order = "hclust"` applies hierarchical clustering to group the items together based on their correlations with each other. The other option, `addrect = 2`, refers to the number of rectangles that we want to draw around the item clusters. In our example, we suspect that there may be two clusters of items: one for the first 8 items (focusing on teamwork) and another for the last 2 items (focusing on being liked by friends). Item clusters in Figure \@ref(fig:ch4) seem to confirm our suspicion. 
 
 
 ```{r ch3.2, eval=FALSE}
@@ -154,9 +153,10 @@ cormat <- data %>%
 corrplot(cormat, order = "hclust", addrect = 2)
 ```
 
-Next, we will use **ggcorrplot** to create a correlation matrix plot. The procedure is very similar. By using type = "lower", we will only visualize the lower diagonal part of the correlation matrix. 
+We will also use **ggcorrplot** to create a correlation matrix plot. The procedure is very similar. By using `type = "lower"`, we will only visualize the lower diagonal part of the correlation matrix. 
 
 ```{r ch5, eval=FALSE}
+# Activate the ggcorrplot package
 library("ggcorrplot")
 
 # Correlation matrix plot
@@ -177,17 +177,18 @@ ggcorrplot(cormat, # correlation matrix
            lab = TRUE) # add correlation values as labels
 ```
 
-Both correlation matrix plots confirm our initial suspicion that the last two items (i.e., ST034Q02 and ST034Q05) are not correlated with the rest of the survey items. If we are building a scale focusing on "teamwork", we can exclude these two items since they would not contribute to the scale sufficiently. 
+Both correlation matrix plots confirm our initial suspicion that the last two items (i.e., ST034Q02 and ST034Q05) are correlated with each other, but not with the rest of the survey items. If we are building a scale focusing on "teamwork", we can probably exclude these two items since they would not contribute to the scale sufficiently. 
 
 
 ### UpSet Plot
 
-The next visualization tools that we will try is called "UpSet plot". UpSet plots can show the intersections of multiple sets of data. These plots allow users to visualize complex set of relationships among variables from different data sets. This visualization method enables users to combine different plots (e.g., venn diagrams, bar charts, etc.) based on the intersections in the data. You can watch [this nice video](https://youtu.be/-IfF2wGw7Qk) to better understand the design and use of UpSet plots^[See Johannes Kepler University's [Visual Data Science Lab](https://jku-vds-lab.at/tools/upset/#:~:text=UpSet%20plots%20the%20intersections%20of,as%20indicated%20in%20the%20figure.&text=This%20figure%20shows%20a%20Simpsons,in%20a%20corresponding%20Venn%20diagram.) for further information.]. In R, the **UpSetR** package [@upsetr] can be used to generate UpSet plots. The creators of the package also have a [Shiny](https://gehlenborglab.shinyapps.io/upsetr/) app and a web version (<https://vcg.github.io/upset/>) that help users generate UpSet plots without any coding in R. 
+The next visualization tool that we will try is called "UpSet plot". UpSet plots can show the intersections of multiple sets of data. These plots allow users to visualize a complex set of relationships among variables from different data sets. This visualization method enables users to combine different plots (e.g., Venn diagrams, bar charts, etc.) based on the intersections in the data. You can watch [this nice video](https://youtu.be/-IfF2wGw7Qk) to better understand the design and use of UpSet plots^[See Johannes Kepler University's [Visual Data Science Lab](https://jku-vds-lab.at/tools/upset/#:~:text=UpSet%20plots%20the%20intersections%20of,as%20indicated%20in%20the%20figure.&text=This%20figure%20shows%20a%20Simpsons,in%20a%20corresponding%20Venn%20diagram.) for further information.]. In R, the **UpSetR** package [@upsetr] can be used to generate UpSet plots easily. The authors of the package also have a [Shiny](https://gehlenborglab.shinyapps.io/upsetr/) app and a web version (<https://vcg.github.io/upset/>) that help users generate UpSet plots without any coding in R. 
 
-In our example, we will use the **naniar** package [@naniar] to create an UpSet plot for visualizing missing data. The **naniar** package offers several tools for visualizing missing data, including UpSet plots^[Check out the package's GitHub page: <https://github.com/njtierney/naniar>]. Using this package, we will create an UpSet package that will show us missing response patterns in our survey data. First, we will select the survey items in the data and then send the items to the gg_miss_upset function to create an UpSet plot. In the function, nsets = 10 refers to the number of item sets that we want to visualize. So, we use 10 to visualize all of the ten items in the data. In addition, we can use nintersects argument (e.g., nintersects = 10) to change the number of intersections to be shown in the plot. 
+In our example, we will use the **naniar** package [@naniar] to create an UpSet plot for visualizing missing data. The **naniar** package offers several tools for visualizing missing data, including UpSet plots^[Check out the package's GitHub page: <https://github.com/njtierney/naniar>]. Using this package, we will create an UpSet plot that will show us missing response patterns in our survey data. First, we will select the survey items in the data and then send the items to the `gg_miss_upset` function to create an UpSet plot. In the function, `nsets = 10` refers to the number of item sets that we want to visualize. So, we use 10 to visualize all of the ten items in the data. In addition, we can use `nintersects` argument (e.g., `nintersects = 10`) to change the number of intersections to be shown in the plot. 
 
 
 ```{r ch8,eval=FALSE}
+# Activate the naniar package
 library("naniar")
 
 data %>%
@@ -206,15 +207,15 @@ data %>%
   gg_miss_upset(., nsets = 10)
 ```
 
-We can use Figure \@ref(fig:ch9) to understand the number of missing responses per item. For example, if we look at the first row (ST082Q01), we can see that there are 83 missing responses based on the sum of the three frequencies marked for this item (i.e., 79 + 3 + 1). In addition, we can use the plot to identify missing response patterns. For example, the plot shows that 79 students skipped all of the survey items without selecting an answer (see the first vertical bar), while 13 students skipped either ST034Q05 or ST082Q14 (see the second and third vertical bars). Each column represents a different combination of items with missing responses (i.e., those with black marks). The UpSet plot can help researchers identify problematic item groups in terms of missingness. 
+We can use Figure \@ref(fig:ch9) to understand the number of missing responses per item. For example, if we look at the first row (ST082Q01), we can see that there are 83 missing responses based on the sum of the three frequencies marked for this item (i.e., 79 + 3 + 1). In addition, we can use the plot to identify missing response patterns. For example, the plot shows that 79 students skipped all of the survey items without selecting an answer (see the first vertical bar), while 13 students skipped either ST034Q05 or ST082Q14 (see the second and third vertical bars). Each column represents a different combination of items with missing responses (i.e., those with black marks). Overall, the UpSet plot can be quite useful for identifying problematic items in terms of missingness. 
 
 ### Stacked Bar Chart
 
-The next visualization tool is the stacked bar chart. Stacked bar charts are not necessarily very exciting forms of data visualization but they are widely used in survey research to visually present Likert-type items. The **likert** package [@likert] offers a relatively straightforward way to create stacked bar charts for survey items. Without diving into all the options to customize these charts, I will demonstrate how to create a simple stacked bar chart using the first eight items focusing on teamwork. Since the **likert** package relies on the **plyr** package, we will have to activate both packages before running the codes. 
+The next visualization tool is the stacked bar chart. Stacked bar charts are not necessarily very exciting forms of data visualization but they are widely used in survey research to visualize Likert-type items (e.g., items with response options of strongly disagree, disagree, agree, and strongly agree). The **likert** package [@likert] offers a relatively straightforward way to create stacked bar charts for survey items. Without diving into all the options to customize these charts, I will demonstrate how to create a simple stacked bar chart using the first eight items focusing on teamwork. Since the **likert** package relies on the **plyr** package, we will have to activate both packages. The resulting plot shows the percentages of responses for each response option across the eight items. 
 
 
 ```{r ch10, eval=FALSE}
-
+# Activate likert and plyr
 library("likert")
 library("plyr")
 
@@ -309,12 +310,12 @@ plot(items_likert,
 
 ### Alluvial Plot
 
-Alluvial plots (or diagrams) are similar to flow diagrams that represent changes over time or between different groups. Using an alluvial plot, we can demonstrate the flow of survey responses between different items or between different groups of respondents. In this example, we will use the **ggalluvial** package [@ggalluvial]. You can check out the package [vignette](https://cran.r-project.org/web/packages/ggalluvial/vignettes/ggalluvial.html) for more examples. We will choose one of the survey items and create an alluvial plot using gender, immigration status, and responses given to the item. 
+Alluvial plots (or diagrams) are similar to flow diagrams that represent changes over time or between different groups. Using an alluvial plot, we can demonstrate the flow of survey responses between different items or between different groups of respondents. You can check out the package [vignette](https://cran.r-project.org/web/packages/ggalluvial/vignettes/ggalluvial.html) for more examples. In this example, we will use the **ggalluvial** package [@ggalluvial]. We will choose one of the survey items and create an alluvial plot using gender, immigration status, and responses given to the item. To transform the data from wide format to long format, we will use the **reshape2** package [@reshape].
 
 
-```{r ch12, eval=TRUE, fig.width=9, fig.height=6, layout="l-body-outset"}
+```{r ch12, eval=TRUE, fig.width=9, fig.height=6, layout="l-body-outset", fig.cap="Alluvial plot of the item ST082Q01, gender, and immigration status"}
+# Activate reshape2 and ggalluvial
 library("reshape2")
-library("ggplot2")
 library("ggalluvial")
 
 # Transform the data from wide format to long format
@@ -358,7 +359,7 @@ ST082Q01 <- data_long %>%
   group_by(gender, immigration, response3) %>%
   summarise(Freq = n())
   
-
+# Create an alluvial plot
 ggplot(ST082Q01,
        aes(y = Freq, axis1 = gender, axis2 = immigration, axis3 = response3)) +
   geom_alluvium(aes(fill = gender), width = 1/12) +
@@ -372,25 +373,41 @@ ggplot(ST082Q01,
 
 ### Item-Person Map
 
-```{r ch13, eval=TRUE, fig.width=8, fig.height=6, layout="l-body-outset", fig.cap="An item-person map of the items"}
+The last data visualization tool that we will review is called the item-person map (also known as the Wright map). The Partial Credit Model (PCM), which is an extension of the Rasch model for polytomous item responses, can be used for survey development and validation [@green2002]. We can analyze survey items using PCM and obtain item thresholds for each item. These thresholds indicate the magnitude of the latent trait required to select a particular response option (e.g., selecting disagree over strongly disagree). Using an item-person map, we can see thresholds for the items as well as the distribution of the latent trait for the respondents. This plot is quite useful for analyzing the alignment (or match) between the items and respondents answering the items. 
 
-#detach("package:plyr", unload=TRUE)
+PCM can be estimated using a variety of R packages, such as **mirt** [@mirt] and **eRm** [@erm]. In the [Handbook of Educational and Psychological Measurement Using R](https://www.routledge.com/Handbook-of-Educational-Measurement-and-Psychometrics-Using-R/Desjardins-Bulut/p/book/9781498770132), we provide a step-by-step demonstration of how to estimate PCM using the **mirt** package. To create an item-person map, users can use the `plotPImap` function in the **eRm** package. Since I typically use the **mirt** package instead of **eRm**, I wrote my own function to create an item-person map using PCM results returned from the **mirt** package. My `itempersonmap` function is available [here](https://raw.githubusercontent.com/okanbulut/blog/master/data_and_codes/itempersonmap.R). 
+
+After downloading the R codes for the `itempersonmap` function, we can use the `source` function to import it into R. First, we will select the eight items focusing on teamwork (remember that the other two items did not seem to work well with the rest of the items and thus they are excluded here). Next, we will recode the responses from 1-2-3-4 to 0-1-2-3^[This is what the `mirt` function requires.]. Finally, we will estimate the item parameters using PCM. In the `mirt` function, `itemtype = "Rasch"` applies the Rasch model to binary items and PCM to polytomous items. Since our survey responses are polytomous, PCM will be selected for estimating the item thresholds. Note that we add technical = `list(removeEmptyRows=TRUE)` because there are 79 respondents who skipped all of the items on the survey. Therefore, we have to remove them before estimating the model. 
+
+We are saving the results of the model estimation as "mod". If the model converges properly, all the information that we need to create an item-person map will be saved in this `mirt` object. After the estimation is complete, we can simply use `itempersonmap(mod)` to create an item-person map. In the plot, red points indicate item thresholds for each item (three thresholds separating four response categories) and the asterisk indicates the average value of the thresholds for each item. The higher these thresholds, the more "teamwork" is necessary. On the left-hand side of the plot, we also see the distribution of the latent trait (i.e., the construct of teamwork).  
+
+```{r ch13, eval=TRUE, fig.width=8, fig.height=6, layout="l-body-outset", fig.cap="An item-person map of the PISA survey items"}
+source("itempersonmap.R")
 
 # Save the items as a separate dataset
-items <- select(data, starts_with(c("ST082")))
+items <- select(data, starts_with(c("ST082"))) %>%
+  # Change responses from 1-2-3-4 to 0-1-2-3 by subtracting 1
+  apply(., 2, function(x) x-1)
 
-# Change responses from 1-2-3-4 to 0-1-2-3 by subtracting 1
-items2 <- apply(items, 2, function(x) x-1)
+# Activate the mirt package
+library("mirt")
 
-# Apply the Partial Credit Model
-mod <- mirt(items2, 1, itemtype = "Rasch", technical = list(removeEmptyRows=TRUE),
+# Estimate the Partial Credit Model
+mod <- mirt(items, 1, itemtype = "Rasch", 
+            technical = list(removeEmptyRows=TRUE),
             verbose = FALSE)
 
 
 # Create the item-person map
 itempersonmap(mod)
 ```
+
 ## Conclusion
 
-xxx
+In this post, I wanted to demonstrate five alternative ways to visualize survey data effectively. Some of the visualizations (e.g., stacked bar chart and alluvial plot) can be used for presenting the survey results, while the other plots (e.g., UpSet plot and correlation matrix plot) can be used for identifying problematic items in the survey. The item-person map is also a very effective tool that can be used for evaluating the overall quality of the survey (i.e., the alignment between items and respondents) and determining whether more items are necessary to measure the latent trait precisely.
+
+
+
+
+
 
