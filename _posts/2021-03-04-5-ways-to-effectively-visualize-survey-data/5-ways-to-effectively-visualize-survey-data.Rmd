@@ -82,7 +82,7 @@ kbl(quest) %>%
                 full_width = TRUE, position = "left")
 ```
 
-Students can answer the items by selecting one the following response options or skip them without choosing a response option (missing responses are labeled as 999 in the data):
+Students can answer the items by selecting one of the following response options or skip them without choosing a response option (missing responses are labeled as 999 in the data):
 
 * 1 = Strongly disagree
 * 2 = Disagree
