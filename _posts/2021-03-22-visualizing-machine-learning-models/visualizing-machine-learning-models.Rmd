@@ -39,6 +39,7 @@ knitr::opts_chunk$set(echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE
 suppressWarnings({
   library("rmarkdown")
   library("kableExtra")
+  library("emo")
   library("caret")
   library("DALEX")
   library("ggplot2")
@@ -50,9 +51,9 @@ suppressWarnings({
 
 ## Introduction
 
-In recent years, advanced machine learning algorithms have been studied in different contexts of education. The literature shows that most of the researchers in education perform machine learning models for classification (or prediction) problems such as student engagement [e.g., @hew2018understanding], performance [e.g., @xu2017machine], and dropout [e.g., @tan2015prediction]. This growing and important use of machine learning models require better comparison among models to understand and interpret which and why one model outperforms another. Comparison and evaluation of the classification models only based on recall, precision, accuracy, and area under the curve may not be enough to obtain a sufficient understanding of their statistical details and performances. In this post, we show you one of the R packages that can be used to visualize and interpret machine learning models: **DALEX** [@dalex]. **DALEX** package stands for **moDel Agnostic Language for Exploration and eXplanation**. It can be used for any regression and classification machine learning tasks. It consists of very useful functions to help interpret, explain and compare different machine learning models. With the **DALEX** package, you can investigate residual diagnostics, feature importance, the relationship between feature and outcome variable, and a single prediction.
+In recent years, advanced machine learning algorithms have been studied in different contexts of education. The literature shows that most of the researchers in education perform machine learning models for classification (or prediction) problems such as student engagement [e.g., @hew2018understanding], performance [e.g., @xu2017machine], and dropout [e.g., @tan2015prediction]. This growing and important use of machine learning models require better comparison among models to understand and interpret which and why one model outperforms another. Comparison and evaluation of the classification models only based on recall, precision, accuracy, and area under the curve may not be enough to obtain a sufficient understanding of their statistical details and performances. In this post, we show you one of the R packages that can be used to visualize and interpret machine learning models: **DALEX** [@dalex]. **DALEX** package stands for **moDel Agnostic Language for Exploration and eXplanation**. It can be used for any regression and classification machine learning tasks. It consists of very useful functions to help interpret, explain and compare different machine learning models. With the **DALEX** package, you can investigate residual diagnostics, feature importance, the relationship between feature and outcome variable, and a single prediction. 
 
-More examples are available on the **DALEX** authors' book [@dalexbook], which is available online at <http://ema.drwhy.ai/>.
+Now, let's get started `r emo::ji("trend")`.
 
 ## Example 
 
@@ -74,22 +75,31 @@ reading       | Student reading scores in PISA 2015
    
 First, let’s import the data into R, view its content, and remove missing cases.
 
-```{r}
+```{r ch1, eval=FALSE}
 pisa <- read.csv("PISA_Turkey.csv", header = TRUE)
 head(pisa)
-pisa <-na.omit(pisa)
-sum(is.na(pisa))
+```
+
+```{r ch2, eval=TRUE, echo=FALSE}
+pisa <- read.csv("PISA_Turkey.csv", header = TRUE)
+paged_table(pisa, options = list(cols.print = 12))
+```
+
+Second, we will remove missing cases from the data.
+
+```{r ch3, echo=TRUE}
+pisa <- na.omit(pisa)
 ```
 
 Second, we convert gender and grade to numeric variables. Also, in the **DALEX** package, the outcome variable needs to be a numeric vector for both regression and classification tasks. Thus, for our current example, we convert the reading performance to a binary classification based on the sample mean: 1 (i.e., high performing) vs. 0 (i.e., low performing).
 
-```{r}
-# convert gender to a numeric variable
+```{r ch4, echo=TRUE}
+# Convert gender to a numeric variable
 pisa$gender = (as.numeric(sapply(pisa$gender, function(x) {
   if(x=="Female") "1"
   else if (x=="Male") "0"})))
 
-# convert grade to a numeric variable
+# Convert grade to a numeric variable
 pisa$grade = (as.numeric(sapply(pisa$grade, function(x) {
   if(x=="Grade 7") "7"
   else if (x=="Grade 8") "8"
@@ -98,9 +108,11 @@ pisa$grade = (as.numeric(sapply(pisa$grade, function(x) {
   else if (x=="Grade 11") "11"
   else if (x=="Grade 12") "12"})))
 
-# convert reading performance to binary classification based on average. 1 represents higher and 0 represents lower performance.
-mean(pisa$reading)
-pisa$reading= factor(ifelse(pisa$reading >= 428, 1, 0))
+# Convert reading performance to a binary variable based on the average score 
+# 1 represents high and 0 represents low performance
+pisa$reading <- factor(ifelse(pisa$reading >= mean(pisa$reading), 1, 0))
+
+# View the frequencies for high and low performance groups
 table(pisa$reading)
 ```
 
@@ -124,7 +136,7 @@ control = trainControl(method="repeatedcv", number = 5, savePredictions=TRUE)
 mod_rf = train(reading ~ .,
                data = train, method='rf', trControl = control)
 
-# Logistic Regression
+# Generalized Linear Model
 mod_glm = train(reading ~ .,
                 data = train, method="glm", family = "binomial", trControl = control)
 
@@ -253,5 +265,6 @@ plot(model_profile(explainer_rf, variable = "grade"),
 
 ## Conclusion
 
-In this post, we wanted to share with you the use of the **DALEX** package and show what you can obtain about the machine learning models beyond the conventional performance measures in order for a better understanding, interpretation, and comparison. In addition to the conventional performance measures, the package provides the residual diagnostics of the machine learning models that can be identified by calculating and plotting residuals. It also helps explore the feature importance to decide the more influential variables across all models. Moreover, it provides the relationship between each predictor and outcome variable as well as the effect of each predictor on the outcome variable. These features of the **DALEX** package will help you discover the results of the machine learning models that you probably have not considered before.
+In this post, we wanted to share with you the use of the **DALEX** package and show what you can obtain about the machine learning models beyond the conventional performance measures in order for a better understanding, interpretation, and comparison. In addition to the conventional performance measures, the package provides the residual diagnostics of the machine learning models that can be identified by calculating and plotting residuals. It also helps explore the feature importance to decide the more influential variables across all models. Moreover, it provides the relationship between each predictor and outcome variable as well as the effect of each predictor on the outcome variable. These features of the **DALEX** package will help you discover the results of the machine learning models that you probably have not considered before. More examples are available on the **DALEX** authors' book [@dalexbook], which is available online at <http://ema.drwhy.ai/>.
+
 
