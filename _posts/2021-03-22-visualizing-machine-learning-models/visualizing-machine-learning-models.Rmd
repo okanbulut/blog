@@ -56,7 +56,7 @@ More examples are available on the **DALEX** authors' book [@dalexbook], which i
 
 ## Example 
 
-In this post, we use the Turkish sample of the PISA 2015 dataset to demonstrate model visualization techniques for machine learning models through a binary classification of reading performance (i.e., high performance vs. low performance). ^[You can also follow this post for a regression model task.] The data set is available [here](https://raw.githubusercontent.com/SeymaErbasli/visualizing-ml-models/main/pisa_turkey.csv). The variables in the data set are:
+In this post, we use the Turkish sample of the PISA 2015 dataset to demonstrate model visualization techniques for machine learning models through a binary classification of reading performance (i.e., high performance vs. low performance). ^[You can also follow this post for a regression model task.] The data set is available [here](https://raw.githubusercontent.com/okanbulut/blog/master/data_and_codes/PISA_Turkey.csv). The variables in the data set are:
 
 Variable      | Description
 ------------- | -------------
@@ -75,7 +75,7 @@ reading       | Student reading scores in PISA 2015
 First, let’s import the data into R, view its content, and remove missing cases.
 
 ```{r}
-pisa <- read.csv("pisa_turkey.csv", header = TRUE)
+pisa <- read.csv("PISA_Turkey.csv", header = TRUE)
 head(pisa)
 pisa <-na.omit(pisa)
 sum(is.na(pisa))
