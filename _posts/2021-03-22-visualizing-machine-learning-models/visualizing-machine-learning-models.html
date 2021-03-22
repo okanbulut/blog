@@ -114,6 +114,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <meta name="citation_reference" content="citation_title=Prediction of student dropout in e-learning program through the use of machine learning method.;citation_publication_date=2015;citation_volume=10;citation_doi=10.3991/ijet.v10i1.4189;citation_author=Mingjie Tan;citation_author=Peiji Shao"/>
   <meta name="citation_reference" content="citation_title=DALEX: Explainers for complex predictive models in r;citation_publication_date=2018;citation_volume=19;citation_author=Przemyslaw Biecek"/>
   <meta name="citation_reference" content="citation_title=Caret: Classification and regression training;citation_publication_date=2020;citation_author=Max Kuhn"/>
+  <meta name="citation_reference" content="citation_title=Explanatory Model Analysis;citation_publication_date=2021;citation_publisher=Chapman; Hall/CRC, New York;citation_author=Przemyslaw Biecek;citation_author=Tomasz Burzykowski"/>
   <!--radix_placeholder_rmarkdown_metadata-->
 
   <script type="text/json" id="radix-rmarkdown-metadata">
@@ -122,7 +123,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["algorithm.jpg","apa.csl","pisa_turkey.csv","references.bib","visualizing-machine-learning-models_files/figure-html5/unnamed-chunk-10-1.png","visualizing-machine-learning-models_files/figure-html5/unnamed-chunk-11-1.png","visualizing-machine-learning-models_files/figure-html5/unnamed-chunk-12-1.png","visualizing-machine-learning-models_files/figure-html5/unnamed-chunk-8-1.png","visualizing-machine-learning-models_files/figure-html5/unnamed-chunk-9-1.png"]}
+  {"type":"character","attributes":{},"value":["algorithm.jpg","apa.csl","pisa_turkey.csv","references.bib","visualizing-machine-learning-models_files/anchor-4.2.2/anchor.min.js","visualizing-machine-learning-models_files/bowser-1.9.3/bowser.min.js","visualizing-machine-learning-models_files/distill-2.2.21/template.v2.js","visualizing-machine-learning-models_files/figure-html5/unnamed-chunk-10-1.png","visualizing-machine-learning-models_files/figure-html5/unnamed-chunk-11-1.png","visualizing-machine-learning-models_files/figure-html5/unnamed-chunk-12-1.png","visualizing-machine-learning-models_files/figure-html5/unnamed-chunk-13-1.png","visualizing-machine-learning-models_files/figure-html5/unnamed-chunk-14-1.png","visualizing-machine-learning-models_files/figure-html5/unnamed-chunk-15-1.png","visualizing-machine-learning-models_files/figure-html5/unnamed-chunk-8-1.png","visualizing-machine-learning-models_files/figure-html5/unnamed-chunk-9-1.png","visualizing-machine-learning-models_files/header-attrs-2.7/header-attrs.js","visualizing-machine-learning-models_files/jquery-1.11.3/jquery.min.js","visualizing-machine-learning-models_files/popper-2.6.0/popper.min.js","visualizing-machine-learning-models_files/tippy-6.2.7/tippy-bundle.umd.min.js","visualizing-machine-learning-models_files/tippy-6.2.7/tippy-light-border.css","visualizing-machine-learning-models_files/tippy-6.2.7/tippy.css","visualizing-machine-learning-models_files/tippy-6.2.7/tippy.umd.min.js","visualizing-machine-learning-models_files/webcomponents-2.0.0/webcomponents.js"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
   <!--/radix_placeholder_navigation_in_header-->
@@ -1513,8 +1514,9 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </figure>
 <h2 id="introduction">Introduction</h2>
 <p>In recent years, advanced machine learning algorithms have been studied in different contexts of education. The literature shows that most of the researchers in education perform machine learning models for classification (or prediction) problems such as student engagement <span class="citation" data-cites="hew2018understanding">(e.g., <a href="#ref-hew2018understanding" role="doc-biblioref">Hew et al., 2018</a>)</span>, performance <span class="citation" data-cites="xu2017machine">(e.g., <a href="#ref-xu2017machine" role="doc-biblioref">Xu et al., 2017</a>)</span>, and dropout <span class="citation" data-cites="tan2015prediction">(e.g., <a href="#ref-tan2015prediction" role="doc-biblioref">Tan &amp; Shao, 2015</a>)</span>. This growing and important use of machine learning models require better comparison among models to understand and interpret which and why one model outperforms another. Comparison and evaluation of the classification models only based on recall, precision, accuracy, and area under the curve may not be enough to obtain a sufficient understanding of their statistical details and performances. In this post, we show you one of the R packages that can be used to visualize and interpret machine learning models: <strong>DALEX</strong> <span class="citation" data-cites="dalex">(<a href="#ref-dalex" role="doc-biblioref">Biecek, 2018</a>)</span>. <strong>DALEX</strong> package stands for <strong>moDel Agnostic Language for Exploration and eXplanation</strong>. It can be used for any regression and classification machine learning tasks. It consists of very useful functions to help interpret, explain and compare different machine learning models. With the <strong>DALEX</strong> package, you can investigate residual diagnostics, feature importance, the relationship between feature and outcome variable, and a single prediction.</p>
+<p>More examples are available on the <strong>DALEX</strong> authors’ book <span class="citation" data-cites="dalexbook">(<a href="#ref-dalexbook" role="doc-biblioref">Biecek &amp; Burzykowski, 2021</a>)</span>, which is available online at <a href="http://ema.drwhy.ai/" class="uri">http://ema.drwhy.ai/</a>.</p>
 <h2 id="example">Example</h2>
-<p>In this post, we use the Turkish sample of the PISA 2015 dataset to demonstrate model visualization techniques for machine learning models through a binary classification of reading performance (i.e., high performance vs. low performance).<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> The data set is available <a href="https://raw.githubusercontent.com/SeymaErbasli/visualizing-ml-models/main/pisa_turkey.csv">here</a>. The variables in the dataset are:</p>
+<p>In this post, we use the Turkish sample of the PISA 2015 dataset to demonstrate model visualization techniques for machine learning models through a binary classification of reading performance (i.e., high performance vs. low performance).<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> The data set is available <a href="https://raw.githubusercontent.com/SeymaErbasli/visualizing-ml-models/main/pisa_turkey.csv">here</a>. The variables in the data set are:</p>
 <table>
 <thead>
 <tr class="header">
@@ -1707,7 +1709,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
                          predict_function <span class='op'>=</span> <span class='va'>p_fun</span>,
                          verbose <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
-<span class='va'>explainer_svm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dalex.drwhy.ai/reference/explain.html'>explain</a></span><span class='op'>(</span><span class='va'>mod_svm</span>,  label <span class='op'>=</span> <span class='st'>"SVM"</span>,
+<span class='va'>explainer_svm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dalex.drwhy.ai/reference/explain.html'>explain</a></span><span class='op'>(</span><span class='va'>mod_svm</span>, label <span class='op'>=</span> <span class='st'>"SVM"</span>,
                          data <span class='op'>=</span> <span class='va'>test</span>, y <span class='op'>=</span> <span class='va'>yTest</span>,
                          predict_function <span class='op'>=</span> <span class='va'>p_fun</span>,
                          verbose <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
@@ -1791,6 +1793,15 @@ Residuals:
 <p><img src="visualizing-machine-learning-models_files/figure-html5/unnamed-chunk-9-1.png" width="624" /></p>
 </div>
 <p>According to boxplots of absolute residuals, RF seems to have the lowest median absolute residual value. Even though the GLM model has the highest AUC score, the RF model performs best when considering the median absolute residuals.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>p1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>mp_rf</span>, <span class='va'>mp_glm</span>, <span class='va'>mp_svm</span>, geom <span class='op'>=</span> <span class='st'>"histogram"</span><span class='op'>)</span> 
+<span class='va'>p2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>mp_rf</span>, <span class='va'>mp_glm</span>, <span class='va'>mp_svm</span>, geom <span class='op'>=</span> <span class='st'>"prc"</span><span class='op'>)</span> 
+<span class='va'>p1</span> <span class='op'>+</span> <span class='va'>p2</span>
+</code></pre>
+</div>
+<p><img src="visualizing-machine-learning-models_files/figure-html5/unnamed-chunk-10-1.png" width="624" /></p>
+</div>
 <h3 id="variable-importance">Variable Importance</h3>
 <p>In machine learning models, one of the important interpretations is to understand which predictor variables are more important on the predicted variable. Using the <strong>DALEX</strong> package, we can better understand which variables are more influential on the predicted outcome. <em>variable_importance()</em> function computes variable importances through permutation, and they can also be plotted. In the plot, the left edge of the interval is the loss function for the full model. The length of the interval corresponds to variable importance. Now let’s see the feature importance plots.</p>
 <div class="layout-chunk" data-layout="l-body">
@@ -1801,9 +1812,21 @@ Residuals:
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>vi_rf</span>, <span class='va'>vi_glm</span>, <span class='va'>vi_svm</span><span class='op'>)</span>
 </code></pre>
 </div>
-<p><img src="visualizing-machine-learning-models_files/figure-html5/unnamed-chunk-10-1.png" width="624" /></p>
+<p><img src="visualizing-machine-learning-models_files/figure-html5/unnamed-chunk-11-1.png" width="624" /></p>
 </div>
 <p>The left edge of the x-axis in the feature importance plot illustrates the difference in the RMSE loss across the models. Thus, GLM model has the lowest RMSE, and RF has the highest RMSE. According to the results, if we list the first two most influential variables on the predicted outcome, grade and school books seem to largely influence all three models.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>vip_rf</span>  <span class='op'>&lt;-</span> <span class='fu'><a href='https://dalex.drwhy.ai/reference/model_parts.html'>model_parts</a></span><span class='op'>(</span>explainer <span class='op'>=</span> <span class='va'>explainer_rf</span>,  B <span class='op'>=</span> <span class='fl'>50</span>, N <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
+<span class='va'>vip_glm</span>  <span class='op'>&lt;-</span> <span class='fu'><a href='https://dalex.drwhy.ai/reference/model_parts.html'>model_parts</a></span><span class='op'>(</span>explainer <span class='op'>=</span> <span class='va'>explainer_glm</span>,  B <span class='op'>=</span> <span class='fl'>50</span>, N <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
+<span class='va'>vip_svm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dalex.drwhy.ai/reference/model_parts.html'>model_parts</a></span><span class='op'>(</span>explainer <span class='op'>=</span> <span class='va'>explainer_svm</span>, B <span class='op'>=</span> <span class='fl'>50</span>, N <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
+
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>vip_rf</span>, <span class='va'>vip_glm</span>, <span class='va'>vip_svm</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>ggtitle</a></span><span class='op'>(</span><span class='st'>"Mean variable-importance over 50 permutations"</span>, <span class='st'>""</span><span class='op'>)</span> 
+</code></pre>
+</div>
+<p><img src="visualizing-machine-learning-models_files/figure-html5/unnamed-chunk-12-1.png" width="624" /></p>
+</div>
 <h3 id="partial-depedence-plot">Partial Depedence Plot</h3>
 <p>With the <strong>DALEX</strong> package, we can also create explainers that are designed to better understand the relationship between a variable and model output through Partial Dependence Plots (PDP) and Accumulated Local Effects (ALE). They show whether the relationship between the target and a feature is linear or not and how each predictor affects the predictions. However, their one disadvantage is that they can only be performed for each variable one by one. <em>model_profile()</em> function with the parameter <em>type = “partial”</em> calculate PDP.</p>
 <div class="layout-chunk" data-layout="l-body">
@@ -1814,7 +1837,7 @@ Residuals:
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>pdp_rf</span>, <span class='va'>pdp_glm</span>, <span class='va'>pdp_svm</span><span class='op'>)</span>
 </code></pre>
 </div>
-<p><img src="visualizing-machine-learning-models_files/figure-html5/unnamed-chunk-11-1.png" width="624" /></p>
+<p><img src="visualizing-machine-learning-models_files/figure-html5/unnamed-chunk-13-1.png" width="624" /></p>
 </div>
 <p>The above PDP plot helps us to understand how grade affects the classification of reading performance. It shows that the probability is low until grade 9 but then increases for all models. However, it decreases after grade 10 for RF and SVM models.</p>
 <h3 id="acumulated-local-effects-plot">Acumulated Local Effects Plot</h3>
@@ -1827,7 +1850,17 @@ Residuals:
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>ale_rf</span>, <span class='va'>ale_glm</span>, <span class='va'>ale_svm</span><span class='op'>)</span>
 </code></pre>
 </div>
-<p><img src="visualizing-machine-learning-models_files/figure-html5/unnamed-chunk-12-1.png" width="624" /></p>
+<p><img src="visualizing-machine-learning-models_files/figure-html5/unnamed-chunk-14-1.png" width="624" /></p>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'><a href='https://dalex.drwhy.ai/reference/model_profile.html'>model_profile</a></span><span class='op'>(</span><span class='va'>explainer_rf</span>, variable <span class='op'>=</span> <span class='st'>"grade"</span><span class='op'>)</span>,
+     <span class='fu'><a href='https://dalex.drwhy.ai/reference/model_profile.html'>model_profile</a></span><span class='op'>(</span><span class='va'>explainer_glm</span>, variable <span class='op'>=</span> <span class='st'>"grade"</span><span class='op'>)</span>,
+     <span class='fu'><a href='https://dalex.drwhy.ai/reference/model_profile.html'>model_profile</a></span><span class='op'>(</span><span class='va'>explainer_svm</span>, variable <span class='op'>=</span> <span class='st'>"grade"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>ggtitle</a></span><span class='op'>(</span><span class='st'>"Predictions for Grade"</span><span class='op'>)</span>
+</code></pre>
+</div>
+<p><img src="visualizing-machine-learning-models_files/figure-html5/unnamed-chunk-15-1.png" width="624" /></p>
 </div>
 <h2 id="conclusion">Conclusion</h2>
 <p>In this post, we wanted to share with you the use of the <strong>DALEX</strong> package and show what you can obtain about the machine learning models beyond the conventional performance measures in order for a better understanding, interpretation, and comparison. In addition to the conventional performance measures, the package provides the residual diagnostics of the machine learning models that can be identified by calculating and plotting residuals. It also helps explore the feature importance to decide the more influential variables across all models. Moreover, it provides the relationship between each predictor and outcome variable as well as the effect of each predictor on the outcome variable. These features of the <strong>DALEX</strong> package will help you discover the results of the machine learning models that you probably have not considered before.</p>
@@ -1835,6 +1868,9 @@ Residuals:
 <div id="refs" class="references csl-bib-body hanging-indent" data-line-spacing="2" role="doc-bibliography">
 <div id="ref-dalex" class="csl-entry" role="doc-biblioentry">
 Biecek, P. (2018). DALEX: Explainers for complex predictive models in r. <em>Journal of Machine Learning Research</em>, <em>19</em>(84), 1–5. <a href="https://jmlr.org/papers/v19/18-416.html">https://jmlr.org/papers/v19/18-416.html</a>
+</div>
+<div id="ref-dalexbook" class="csl-entry" role="doc-biblioentry">
+Biecek, P., &amp; Burzykowski, T. (2021). <em><span>Explanatory Model Analysis</span></em>. Chapman; Hall/CRC, New York. <a href="https://pbiecek.github.io/ema/">https://pbiecek.github.io/ema/</a>
 </div>
 <div id="ref-hew2018understanding" class="csl-entry" role="doc-biblioentry">
 Hew, K. F., Qiao, C., &amp; Tang, Y. (2018). Understanding student engagement in large-scale open online courses: A machine learning facilitated analysis of student’s reflections in 18 highly rated MOOCs. <em>International Review of Research in Open and Distributed Learning</em>, <em>19</em>(3), 70–93. <a href="https://doi.org/10.19173/irrodl.v19i3.3596">https://doi.org/10.19173/irrodl.v19i3.3596</a>

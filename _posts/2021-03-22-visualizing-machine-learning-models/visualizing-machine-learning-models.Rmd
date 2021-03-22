@@ -41,6 +41,8 @@ suppressWarnings({
   library("kableExtra")
   library("caret")
   library("DALEX")
+  library("ggplot2")
+  library("patchwork")
 })
 ```
 
@@ -190,6 +192,12 @@ p2
 
 According to boxplots of absolute residuals, RF seems to have the lowest median absolute residual value. Even though the GLM model has the highest AUC score, the RF model performs best when considering the median absolute residuals.
 
+```{r}
+p1 <- plot(mp_rf, mp_glm, mp_svm, geom = "histogram") 
+p2 <- plot(mp_rf, mp_glm, mp_svm, geom = "prc") 
+p1 + p2
+```
+
 ### Variable Importance
 
 In machine learning models, one of the important interpretations is to understand which predictor variables are more important on the predicted variable. Using the **DALEX** package, we can better understand which variables are more influential on the predicted outcome. *variable_importance()* function computes variable importances through permutation, and they can also be plotted. In the plot, the left edge of the interval is the loss function for the full model. The length of the interval corresponds to variable importance. Now let’s see the feature importance plots.
@@ -202,6 +210,15 @@ plot(vi_rf, vi_glm, vi_svm)
 ```
 
 The left edge of the x-axis in the feature importance plot illustrates the difference in the RMSE loss across the models. Thus, GLM model has the lowest RMSE, and RF has the highest RMSE. According to the results, if we list the first two most influential variables on the predicted outcome, grade and school books seem to largely influence all three models.
+
+```{r}
+vip_rf  <- model_parts(explainer = explainer_rf,  B = 50, N = NULL)
+vip_glm  <- model_parts(explainer = explainer_glm,  B = 50, N = NULL)
+vip_svm <- model_parts(explainer = explainer_svm, B = 50, N = NULL)
+
+plot(vip_rf, vip_glm, vip_svm) +
+  ggtitle("Mean variable-importance over 50 permutations", "") 
+```
 
 ### Partial Depedence Plot
 
@@ -225,6 +242,13 @@ ale_rf  <- model_profile(explainer_rf, variable = "grade", type = "accumulated")
 ale_glm  <- model_profile(explainer_glm, variable = "grade", type = "accumulated")
 ale_svm  <- model_profile(explainer_svm, variable = "grade", type = "accumulated")
 plot(ale_rf, ale_glm, ale_svm)
+```
+
+```{r}
+plot(model_profile(explainer_rf, variable = "grade"),
+     model_profile(explainer_glm, variable = "grade"),
+     model_profile(explainer_svm, variable = "grade")) +
+  ggtitle("Predictions for Grade")
 ```
 
 ## Conclusion
