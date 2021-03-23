@@ -1,7 +1,7 @@
 ---
 title: "Visualizing Machine Learning Models"
 description: |
-  Model visualization plays an important part in order to explore machine learning algorithms in detail. In this post, we show you one of the R packages that we have found very useful to perform machine learning model visualization: **DALEX** [@dalex]. With the **DALEX** package, you can make comparisons across machine learning models to decide which model outperforms others and why.
+ Data visualization plays an important role when evaluating the performance of machine learning models. In this post, we demonstrate how the **DALEX** package can be used for visualizing machine learning models. These visualizations can faciliate the comparison of machine learning models and help researchers understand which model works better and why.
   ```{r, include=FALSE}
   bytes <- file.size("visualizing-machine-learning-models.Rmd")
   words <- bytes/10
@@ -73,7 +73,7 @@ tech.book     | Technical books
 art.book      | Art book
 reading       | Student reading scores in PISA 2015
    
-First, let’s import the data into R, view its content, and remove missing cases.
+First, let’s import the data into R and view its content
 
 ```{r ch1, eval=FALSE}
 pisa <- read.csv("PISA_Turkey.csv", header = TRUE)
@@ -91,7 +91,7 @@ Second, we will remove missing cases from the data.
 pisa <- na.omit(pisa)
 ```
 
-Second, we convert gender and grade to numeric variables. Also, in the **DALEX** package, the outcome variable needs to be a numeric vector for both regression and classification tasks. Thus, for our current example, we convert the reading performance to a binary classification based on the sample mean: 1 (i.e., high performing) vs. 0 (i.e., low performing).
+Next, we will convert gender and grade to numeric variables. Also, in the **DALEX** package, the outcome variable needs to be a numeric vector for both regression and classification tasks. Thus, for our current example, we convert the reading performance to a binary classification based on the sample mean: 1 (i.e., high performing) vs. 0 (i.e., low performing).
 
 ```{r ch4, echo=TRUE}
 # Convert gender to a numeric variable
@@ -109,7 +109,7 @@ pisa$grade = (as.numeric(sapply(pisa$grade, function(x) {
   else if (x=="Grade 12") "12"})))
 
 # Convert reading performance to a binary variable based on the average score 
-# 1 represents high and 0 represents low performance
+# 1 represents high performance and 0 represents low performance
 pisa$reading <- factor(ifelse(pisa$reading >= mean(pisa$reading), 1, 0))
 
 # View the frequencies for high and low performance groups
@@ -145,11 +145,13 @@ mod_svm <- train(reading ~.,
                  data = train, method = "svmRadial", prob.model = TRUE, trControl=control)
 ```
 
-Now, we are ready to explore the **DALEX** package. The first step of using the **DALEX** package is to define explainers for machine learning models. For this, we write a custom *predict* function with two arguments: *model* and *newdata*. This function returns a vector of numeric values. Then, we create an explainer for each machine learning model using the *explainer()* function from the **DALEX** package with the *testing* dataset and the *predict* function. When we convert machine learning models to an *explainer* object, they contain a list of the training and metadata on the machine learning model.
+Now, we are ready to explore the **DALEX** package. The first step of using the **DALEX** package is to define explainers for machine learning models. For this, we write a custom `predict` function with two arguments: *model* and *newdata*. This function returns a vector of numeric values. Then, we create an explainer for each machine learning model using the `explainer()` function from the **DALEX** package with the *testing* data set and the `predict` function. When we convert machine learning models to an *explainer* object, they contain a list of the training and metadata on the machine learning model.
 
 ```{r}
 # create a custom predict function
-p_fun <- function(object, newdata){predict(object, newdata=newdata, type="prob")[,2]}
+p_fun <- function(object, newdata){
+  predict(object, newdata=newdata, type="prob")[,2]
+  }
 
 # convert the outcome variable to a numeric binary vector
 yTest <- as.numeric(as.character(test$reading))
@@ -173,7 +175,7 @@ explainer_svm <- explain(mod_svm, label = "SVM",
 
 ### Model Performance
 
-With the **DALEX** package, one of the things we can do is to analyze model performance as the distribution of residuals. Here, we consider the differences between observed and predicted probabilities as residuals. *model_performance()* function calculates predictions and residuals for the testing dataset.
+With the **DALEX** package, one of the things we can do is to analyze model performance as the distribution of residuals. Here, we consider the differences between observed and predicted probabilities as residuals. The `model_performance()` function calculates predictions and residuals for the testing data set.
 
 ```{r}
 mp_rf  <- model_performance(explainer_rf)
@@ -186,7 +188,7 @@ mp_glm
 mp_svm
 ```
 
-Based on the performance measures of these three models (i.e., recall, precision, f1, accuracy, and AUC) from the above output, we can say that they seem very similar. However, when we check the residual plots, we see how similar or different they are in terms of the residuals. Residual plots show the cumulative distribution function for absolute values from residuals and they can be generated for one or more models. Here, we use the *plot()* function to get a comparison of models. This plot allows us to make an easy comparison of absolute residual values across models.
+Based on the performance measures of these three models (i.e., recall, precision, f1, accuracy, and AUC) from the above output, we can say that they seem very similar. However, when we check the residual plots, we see how similar or different they are in terms of the residuals. Residual plots show the cumulative distribution function for absolute values from residuals and they can be generated for one or more models. Here, we use the `plot()` function to get a comparison of models. This plot allows us to make an easy comparison of absolute residual values across models.
 
 ```{r}
 p1 <- plot(mp_rf, mp_glm, mp_svm)
@@ -202,7 +204,7 @@ p2 <- plot(mp_rf, mp_glm, mp_svm, geom = "boxplot")
 p2
 ```
 
-According to boxplots of absolute residuals, RF seems to have the lowest median absolute residual value. Even though the GLM model has the highest AUC score, the RF model performs best when considering the median absolute residuals.
+According to boxplots of absolute residuals, RF seems to have the lowest median absolute residual value. Even though the GLM model has the highest AUC score, the RF model performs best when considering the median absolute residuals. We can also plot the distribution of residuals with histograms by setting the *geom="histogram"* and the precision recall curve by setting the *geom="prc"*.
 
 ```{r}
 p1 <- plot(mp_rf, mp_glm, mp_svm, geom = "histogram") 
@@ -212,7 +214,7 @@ p1 + p2
 
 ### Variable Importance
 
-In machine learning models, one of the important interpretations is to understand which predictor variables are more important on the predicted variable. Using the **DALEX** package, we can better understand which variables are more influential on the predicted outcome. *variable_importance()* function computes variable importances through permutation, and they can also be plotted. In the plot, the left edge of the interval is the loss function for the full model. The length of the interval corresponds to variable importance. Now let’s see the feature importance plots.
+In machine learning models, one of the important interpretations is to understand which predictor variables are more important on the predicted variable. Using the **DALEX** package, we can better understand which variables are more influential on the predicted outcome. The `variable_importance()` function computes variable importances through permutation, and they can also be plotted. In the plot, the left edge of the interval is the loss function for the full model. The length of the interval corresponds to variable importance. Now let’s see the feature importance plots.
 
 ```{r}
 vi_rf <- variable_importance(explainer_rf, loss_function = loss_root_mean_square)
@@ -223,18 +225,22 @@ plot(vi_rf, vi_glm, vi_svm)
 
 The left edge of the x-axis in the feature importance plot illustrates the difference in the RMSE loss across the models. Thus, GLM model has the lowest RMSE, and RF has the highest RMSE. According to the results, if we list the first two most influential variables on the predicted outcome, grade and school books seem to largely influence all three models.
 
+Another function that calculates the importance of variables using the permutations is the `DALEX::model_parts()`. Let's use the default *loss_fuction* - One minus AUC - and set the *show_boxplots = FALSE* this time. Also, we limit the number of variables on the plot with the *max_vars* to show how to make readable results if there is a large number of variables in the dataset.
+
 ```{r}
 vip_rf  <- model_parts(explainer = explainer_rf,  B = 50, N = NULL)
 vip_glm  <- model_parts(explainer = explainer_glm,  B = 50, N = NULL)
 vip_svm <- model_parts(explainer = explainer_svm, B = 50, N = NULL)
 
-plot(vip_rf, vip_glm, vip_svm) +
+plot(vip_rf, vip_glm, vip_svm, max_vars = 4, show_boxplots = FALSE) +
   ggtitle("Mean variable-importance over 50 permutations", "") 
 ```
 
+After identifying the more influential variables, we can show how the machine learning models change by the changes in the selected variables.
+
 ### Partial Depedence Plot
 
-With the **DALEX** package, we can also create explainers that are designed to better understand the relationship between a variable and model output through Partial Dependence Plots (PDP) and Accumulated Local Effects (ALE). They show whether the relationship between the target and a feature is linear or not and how each predictor affects the predictions. However, their one disadvantage is that they can only be performed for each variable one by one. *model_profile()* function with the parameter *type = "partial"* calculate PDP.
+With the **DALEX** package, we can also create explainers that are designed to better understand the relationship between a variable and model output through Partial Dependence Plots (PDP) and Accumulated Local Effects (ALE). They show whether the relationship between the target and a feature is linear or not and how each predictor affects the predictions. However, their one disadvantage is that they can only be performed for each variable one by one. The `model_profile()` function with the parameter *type = "partial"* calculate PDP. We use the variable *grade* as it seems the most influential variable in the data set from the previous visualization.
 
 ```{r}
 pdp_rf <- model_profile(explainer_rf, variable = "grade", type = "partial")
@@ -247,7 +253,7 @@ The above PDP plot helps us to understand how grade affects the classification o
 
 ### Acumulated Local Effects Plot
 
-ALE plots are the extension of PDP, which is more suited for correlated variables. *model_profile()* function with the parameter *type = "accumulated"* calculate the ALE curve. We recommend using ALE plots because features are usually correlated to some extent, and ALE plots are unbiased when features are correlated.
+ALE plots are the extension of PDP, which is more suited for correlated variables. The `model_profile()` function with the parameter *type = "accumulated"* calculate the ALE curve. We recommend using ALE plots because features are usually correlated to some extent, and ALE plots are unbiased when features are correlated.
 
 ```{r}
 ale_rf  <- model_profile(explainer_rf, variable = "grade", type = "accumulated")
@@ -263,8 +269,56 @@ plot(model_profile(explainer_rf, variable = "grade"),
   ggtitle("Predictions for Grade")
 ```
 
+### Instance Level Explanation
+
+Using the **DALEX** we can see how the models behave for a single observation. We can select an observation from the data set or define a new observation. We investigate this using the *predict_parts()* function. This function is a special case of the `model_parts()`. `predict_parts()` calculates the importance of the variables for a single observation while `model_parts()` calculates it for all observations in the data set.
+
+We show this single observation level explanation by using only the RF model. You can create the plots for each model and compare the importance of a selected variable across models. Let's first use one existing observation from the *test* set.
+
+```{r}
+student <- test[1, 1:11]
+pp_rf <- predict_parts(explainer_rf, new_observation = student)
+plot(pp_rf)
+```
+
+From the above plot, it seems that the prediction for the selected observation is 0.314. Also, the variable *grade* seems the most important one and decreases the prediction by 0.348. We can also define a new observation and investigate how the RF model behaves for this new observation.
+
+```{r}
+new_student <- data.frame(gender = 0,
+                          grade = 10,
+                          computer = 0,
+                          internet = 0,
+                          desk=1,
+                          own.room=1,
+                          quiet.study=1,
+                          book.sch = 1,
+                          tech.book=1,
+                          art.book=1)
+
+pp_rf_new <- predict_parts(explainer_rf, new_observation = new_student)
+plot(pp_rf_new)
+```
+
+For the new student we have defined, the prediction is 0.268. Also, the most important variable that decreases the prediction is *computer*. Setting the *type="shap"* we can inspect the contribution of variables to a single observation.
+
+```{r}
+pp_rf_shap <- predict_parts(explainer_rf, new_observation = new_student, type = "shap")
+plot(pp_rf_shap)
+```
+
+### Ceteris Paribus Profiles
+
+In the previous section, we have introduced the PDP plots. Ceteris Paribus Profiles (CPP) is the single observation level version of the PDP plots. For this we use `DALEX::predict_profile()` function. In this example, we show this plot by selecting a couple of variables from the data set for the same observation we have used before. You can plot the CPP for all variables. In the plot, *blue dots* represent the original value for the selected observation.
+
+```{r}
+selected_variables <- c("grade", "gender")
+cpp_rf <- predict_profile(explainer_rf, student, variables = selected_variables)
+plot(cpp_rf, variables = selected_variables)
+```
+
+
 ## Conclusion
 
-In this post, we wanted to share with you the use of the **DALEX** package and show what you can obtain about the machine learning models beyond the conventional performance measures in order for a better understanding, interpretation, and comparison. In addition to the conventional performance measures, the package provides the residual diagnostics of the machine learning models that can be identified by calculating and plotting residuals. It also helps explore the feature importance to decide the more influential variables across all models. Moreover, it provides the relationship between each predictor and outcome variable as well as the effect of each predictor on the outcome variable. These features of the **DALEX** package will help you discover the results of the machine learning models that you probably have not considered before. More examples are available on the **DALEX** authors' book [@dalexbook], which is available online at <http://ema.drwhy.ai/>.
+In this post, we wanted to share with you the use of the **DALEX** package and show what you can obtain about the machine learning models beyond the conventional performance measures in order for a better understanding, interpretation, and comparison. In addition to the conventional performance measures, the package provides the residual diagnostics of the machine learning models that can be identified by calculating and plotting residuals. It also helps explore the feature importance to decide the more influential variables across all models. It provides the relationship between each predictor and outcome variable as well as the effect of each predictor on the outcome variable. Moreover, you can make visual comparisons by a single observation level across the models. These features of the **DALEX** package will help you discover the results of the machine learning models that you probably have not considered before. More examples are available on the **DALEX** authors' book [@dalexbook], which is available online at <http://ema.drwhy.ai/>.
 
 
