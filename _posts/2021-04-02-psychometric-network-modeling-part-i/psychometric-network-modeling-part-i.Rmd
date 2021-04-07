@@ -1,0 +1,58 @@
+---
+title: "Psychometric Network Modeling - Part I"
+description: |
+  A short description of the post. 
+  ```{r, include=FALSE}
+  bytes <- file.size("psychometric-network-modeling-part-i.Rmd")
+  words <- bytes/10
+  minutes <- words/200
+  ``` 
+  (`r round(minutes)` min read)
+author:
+  - name: Okan Bulut
+    url: http://www.okanbulut.com/
+    affiliation: University of Alberta
+    affiliation_url: https://www.ualberta.ca
+    orcid_id: 0000-0001-5853-1267
+date: "`r Sys.Date()`"
+categories:
+  - network analysis
+  - psychometrics
+preview: network.jpg
+bibliography: network1.bib
+csl: apa.csl
+output:
+  distill::distill_article:
+    self_contained: false
+    toc: true
+draft: true
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE)
+suppressWarnings({
+  library("rmarkdown")
+  library("kableExtra")
+  library("emo")
+})
+```
+
+![Photo by [Omar Flores](https://unsplash.com/@omarg247) on [Unsplash](https://unsplash.com/)](network.jpg)
+
+## Introduction
+
+xxx
+
+## Example
+
+xxx
+
+## Conclusion
+
+xxx
+
+
+
+
+
