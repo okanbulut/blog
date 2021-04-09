@@ -1,7 +1,7 @@
 ---
 title: "Text Vectorization Using Python: Term-Document Matrix"
 description: |
-  Text vectorization is an important step in preprocessing and preparing textual data for advanced analyses of text mining and natural language processing (NLP). With text vectorization, raw text can be transformed into a numerical representation. In this two-part series, we will demonstrate different text vectorization techniques using Python. The first part focuses on the term-document matrix. 
+  Text vectorization is an important step in preprocessing and preparing textual data for advanced analyses of text mining and natural language processing (NLP). With text vectorization, raw text can be transformed into a numerical representation. In this three-part series, we will demonstrate different text vectorization techniques using Python. The first part focuses on the term-document matrix. 
   ```{r, include=FALSE}
   bytes <- file.size("text-vectorization-using-python-term-document-matrix.Rmd")
   words <- bytes/10
@@ -19,7 +19,7 @@ author:
     affiliation: University of Alberta
     affiliation_url: https://www.ualberta.ca
     orcid_id: 0000-0001-5853-1267
-date: "`r Sys.Date()`"
+date: 04-08-2021
 categories:
   - data science
   - text mining
@@ -47,11 +47,11 @@ suppressWarnings({
 
 [Natural language processing](https://en.wikipedia.org/wiki/Natural_language_processing) (NLP) is a subfield of artificial intelligence that focuses on the linguistic interaction between humans and computers. Over the last two decades, NLP has been a rapidly growing field of research across many disciplines, yielding some advanced applications (e.g., automatic speech recognition, automatic translation of text, and chatbots). With the help of evolving machine learning and deep learning algorithms, NLP can help us systematically analyze large volumes of text data. The fundamental idea of NLP in various tasks stems from converting the natural language into a numerical format that computers can understand and process. This process is known as **text vectorization**. Effective and efficient vectorization of human language and text lays an important foundation to conduct advanced NLP tasks. 
 
-In this two-part series, we will explain text vectorization and demonstrate different techniques for vectorizing textual data. First, we will begin with basic vectorization approaches that are widely used in text mining and NLP applications. More specifically, we will focus on how **term-document** and **term-frequency inverse-document frequency** matrices are constructed. In the following example, we will have a brief demonstration of these techniques using Python (instead of R). 
+In this three-part series, we will explain text vectorization and demonstrate different techniques for vectorizing textual data. First, we will begin with basic vectorization approaches that are widely used in text mining and NLP applications. More specifically, we will focus on how **term-document** and **term-frequency inverse-document frequency** matrices are constructed. In the following example, we will have a brief demonstration of these techniques using Python (instead of R). 
 
 ## Example 
 
-In this example, we will use a data set from one of the popular automated essay scoring competitions funded by the Hewlett Foundation: [Short Answer Scoring](https://www.kaggle.com/c/asap-sas). The data set includes students' responses to a set of short-answer items and scores assigned by human expert graders. The competition required participants to develop an automated scoring algorithm that could mimic the way human expert graders scored the items. On average, each answer is approximately 50 words in length.The data set (train_rel_2.tsv) is available [here](https://raw.githubusercontent.com/okanbulut/blog/master/data_and_codes/train_rel_2.tsv) as a tab-separated value (TSV) file. The data set consists of the following variables: 
+In this example, we will use a data set from one of the popular automated essay scoring competitions funded by the Hewlett Foundation: [Short Answer Scoring](https://www.kaggle.com/c/asap-sas). The data set includes students' responses to a set of short-answer items and scores assigned by human raters. The competition required participants to develop an automated scoring algorithm that could mimic the way human raters scored the items. On average, each answer is approximately 50 words in length.The data set (train_rel_2.tsv) is available [here](https://raw.githubusercontent.com/okanbulut/blog/master/data_and_codes/train_rel_2.tsv) as a tab-separated value (TSV) file. The data set consists of the following variables: 
 
 * **Id**: A unique identifier for each individual student essay.
 * **EssaySet**: 1-10, an id for each set of essays.
@@ -59,10 +59,13 @@ In this example, we will use a data set from one of the popular automated essay 
 * **Score2**: A second human rater's score for the answer. This is provided as a measure of reliability, but had no bearing on the score the essay received.
 * **EssayText**: The ASCII text of a student's response.
 
+In this example, we will take a look at "Essay Set 1", in which students were provided with a prompt describing a science experiment. The students were required to identify the missing information that is important to increase the replicability of the experiment procedures described in the prompt. 
+
 We will begin our analysis by importing the data set into Python. 
 
 ```{python chunk1, echo=TRUE, eval=TRUE}
-# Import pandas and pprint
+# Import pandas for dataframe 
+# Import pprint for printing the outcomes 
 import pandas as pd 
 from pprint import pprint 
 
@@ -81,7 +84,8 @@ with open('train_rel_2.tsv', 'r') as f:
             score.append(int(temp[2]))
         else: 
             None
-         
+
+# Construct a dataframe ("doc") which includes the response_id, responses, and the score        
 doc = pd.DataFrame(list(zip(response_id, data, score)))
 doc.columns = ['id', 'response', 'score']
 ```
@@ -105,7 +109,7 @@ doc.head(5)
 
 Each student response is associated with a score ranging from 0 to 3, which indicates the overall quality of the response. For example, the first item in the data set focuses on science for Grade 10 students. The item requires students to identify the missing information that would allow replicating the experiment. 
 
-```{r chunk15, echo=FALSE, out.width="100%", fig.cap="A preview of item 1 in the data set."}
+```{r chunk15, echo=FALSE, out.width="100%", fig.cap="A preview of Essay Set 1 in the data set."}
 knitr::include_graphics("item1.jpg")
 ```
 
@@ -147,7 +151,7 @@ term_document_matrix.columns = ['Doc '+str(i) for i in range(1, 6)]
 term_document_matrix['total_count'] = term_document_matrix.sum(axis=1)
 
 # Top 25 words 
-term_document_matrix = term_document_matrix.sort_values(by ='total_count',ascending=False )[:25] 
+term_document_matrix = term_document_matrix.sort_values(by ='total_count',ascending=False)[:25] 
 
 # Print the first 10 rows 
 print(term_document_matrix.drop(columns=['total_count']).head(10))
@@ -165,7 +169,7 @@ Not surprisingly, the function words (e.g., "the", "to", "is") appeared more fre
 
 Now that we represented each document as a unique vector that indicates information regarding word occurrence, we can visualize the relationship between the documents. This can be easily achieved by simply getting a transpose of the term-document matrix (i.e., document-term matrix). Let's use the two most frequent words *"the"* and *"to"* to plot the documents. 
 
-```{python chunk4, echo=TRUE, fig.cap="A scatterplot of frequencies for the and to across five documents."}
+```{python chunk4, echo=TRUE, fig.cap="A scatterplot of frequencies for the and to across the first five documents."}
 # Locate the and to in the documents
 term_document_matrix.loc[['the', 'to']].T
 
@@ -188,11 +192,11 @@ Now, let's define a function to calculate cosine similarity between two vectors:
 import math
 
 # Define a cosine similarity function
-def cosine_similarity(v1,v2):
-    "compute cosine similarity of v1 to v2: (v1 dot v2)/{||v1||*||v2||)"
+def cosine_similarity(a,b):
+    "compute cosine similarity of v1 to v2: (a dot b)/{||a||*||b||)"
     sumxx, sumxy, sumyy = 0, 0, 0
-    for i in range(len(v1)):
-        x = v1[i]; y = v2[i]
+    for i in range(len(a)):
+        x = a[i]; y = b[i]
         sumxx += x*x
         sumyy += y*y
         sumxy += x*y
@@ -213,38 +217,16 @@ def pair(s):
             yield [v1, s[j]]
 
 dic={} 
-for (a,b) in  list(pair(['Doc 1', 'Doc 2', 'Doc 3', 'Doc 4', 'Doc 5'])):
+for (a,b) in list(pair(['Doc 1', 'Doc 2', 'Doc 3', 'Doc 4', 'Doc 5'])):
   dic[(a,b)] = cosine_similarity(term_document_matrix[a].tolist(), term_document_matrix[b].tolist())
 
-# Print the similarity index
+# Print the cosine similarity index
 pprint(dic)
 ```
 
-The values shown above indicate the similarity index for each document pair (i.e., student pairs). For example, the first row shows that the first document (i.e., student 1's response) and the second document (i.e., student 2's response) had a similarity index of 0.70. 
+The values shown above indicate the similarity index for each document pair (i.e., student pairs). For example, the first row shows that the first document (i.e., student 1's response) and the second document (i.e., student 2's response) had a similarity index of 0.70. To see all the similarity indices together, we can create a heatmap that shows the cosine similarity index for each pair of documents.
 
 ```{python chunk7, echo=TRUE, eval=FALSE}
-documents= ['Doc 1', 'Doc 2', 'Doc 3', 'Doc 4', 'Doc 5']
-final_df = pd.DataFrame(np.asarray([[(dic[(x,y)] if (x,y) in dic else 0) for y in documents] for x in documents]))
-final_df.columns = documents
-final_df.index = documents 
-
-# Create a heatmap of the similarity index
-import matplotlib.pyplot as plt
-fig, ax = plt.subplots()
-ax.matshow(final_df, cmap='seismic')
-for (i, j), z in np.ndenumerate(final_df):
-  if z != 0 :
-    ax.text(j, i, '{:0.2f}'.format(z), ha='center', va='center',
-            bbox=dict(boxstyle='round', facecolor='white', edgecolor='0.3'))
-  else:
-    None
-fig.suptitle('Cosine Similarity Index')
-plt.show()
-```
-
-To see all the similarity indices together, we can create a heatmap that shows the similarity index for each pair of documents. 
-
-```{python chunk8, echo=FALSE, eval=TRUE, fig.width=9, fig.height=6, layout="l-body-outset", fig.cap="A heatmap of the cosine similarity indices across the five documents."}
 documents= ['Doc 1', 'Doc 2', 'Doc 3', 'Doc 4', 'Doc 5']
 final_df = pd.DataFrame(np.asarray([[(dic[(x,y)] if (x,y) in dic else 0) for y in documents] for x in documents]))
 final_df.columns =  documents
@@ -252,6 +234,10 @@ final_df.index = documents
 
 import matplotlib.pyplot as plt
 fig, ax = plt.subplots()
+ax.set_xticks(np.arange(len(documents)))
+ax.set_yticks(np.arange(len(documents)))
+ax.set_xticklabels(documents)
+ax.set_yticklabels(documents)
 ax.matshow(final_df, cmap='seismic')
 for (i, j), z in np.ndenumerate(final_df):
   if z != 0 :
@@ -259,12 +245,16 @@ for (i, j), z in np.ndenumerate(final_df):
             bbox=dict(boxstyle='round', facecolor='white', edgecolor='0.3'))
   else:
     None
-fig.suptitle('Cosine Similarity Index')
+fig.suptitle('Cosine Similarity Index between the Documents')
 plt.show()
 ```
 
-In our example, documents 1, 2, and 3 were scored as 1 point, document 4 was scored as 0 points, and document 5 was scored as 2 points. As shown in Figure \@ref(fig:chunk8), the highest similarity (0.85) occurs between Document 1 (labeled as 0 in the plot) and Document 5 (labeled as 4 in the plot). This might be a surprising finding because these two documents were given different scores. In terms of the lowest similarity, we can see that document 4 (labeled as 3 in the plot) is quite different from the rest of the documents with a relatively lower cosine similarity index (0.48, 0.52, and 0.48). This finding is not necessarily surprising because document 4 represents the only response scored as 0. 
+```{r chunk18, echo=FALSE, eval=TRUE, fig.width=9, fig.height=6, layout="l-body-outset", fig.cap="A heatmap of the cosine similarity indices across the five documents."}
+knitr::include_graphics("heatmap.png")
+```
+
+In our example, documents 1, 2, and 3 were scored as 1 point, document 4 was scored as 0 point, and document 5 was scored as 2 points. As shown in Figure \@ref(fig:chunk18), the highest similarity (0.85) occurs between Documents 1 and 5. This might be a surprising finding because these two documents were given different scores (1 and 2 points, respectively). In terms of the lowest similarity, we can see that document 4 is quite different from the rest of the documents with a relatively lower cosine similarity index (0.48, 0.52, and 0.48). This finding is not necessarily surprising because document 4 represents the only response scored as 0 points. 
 
 ## Conclusion
 
-In this post, we demonstrated how we could covert text documents (e.g., a student's written responses to an item) into a **term-document matrix**. Term-document vectorization is often called the **"bag-of-words" representation** (or shortly, BoW) as it focuses on considering the frequency of words in the document to understand and preserve its semantic representations. We also attempted to understand how we could use this vectorization approach to measure the similarities between the documents. In the next post, we will focus on how we can suppress the weights of "too frequently" occurring words, such as function words (e.g., "the", "to", "is"), using different vectorization approaches.
+In this post, we demonstrated how we could convert text documents (e.g., a student's written responses to an item) into a **term-document matrix**. Term-document vectorization is often called the **"bag-of-words" representation** (or shortly, BoW) as it focuses on considering the frequency of words in the document to understand and preserve its semantic representations. We also attempted to understand how we could use this vectorization approach to measure the similarities between the documents. In the next post, we will review how we can suppress the weights of "too frequently" occurring words, such as function words (e.g., "the", "to", "is"), using different vectorization approaches.

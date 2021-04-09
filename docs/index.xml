@@ -19,7 +19,7 @@ psychological data
       <dc:creator>Jinnie Shin</dc:creator>
       <dc:creator>Okan Bulut</dc:creator>
       <link>https://okan.cloud/posts/2021-04-08-text-vectorization-using-python-term-document-matrix</link>
-      <description>Text vectorization is an important step in preprocessing and preparing textual data for advanced analyses of text mining and natural language processing (NLP). With text vectorization, raw text can be transformed into a numerical representation. In this two-part series, we will demonstrate different text vectorization techniques using Python. The first part focuses on the term-document matrix. 
+      <description>Text vectorization is an important step in preprocessing and preparing textual data for advanced analyses of text mining and natural language processing (NLP). With text vectorization, raw text can be transformed into a numerical representation. In this three-part series, we will demonstrate different text vectorization techniques using Python. The first part focuses on the term-document matrix. 
 
 (8 min read)</description>
       <category>data science</category>
