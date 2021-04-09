@@ -24,6 +24,7 @@ categories:
   - data science
   - text mining
   - natural language processing
+preview: pexels.jpg
 output:
   distill::distill_article:
     self_contained: false
