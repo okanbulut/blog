@@ -37,6 +37,7 @@ suppressWarnings({
   # Add all the packages you will use in the article here
   library("rmarkdown")
   library("kableExtra")
+  library("emo")
   library("reticulate")
 })
 ```
@@ -47,11 +48,11 @@ suppressWarnings({
 
 [Natural language processing](https://en.wikipedia.org/wiki/Natural_language_processing) (NLP) is a subfield of artificial intelligence that focuses on the linguistic interaction between humans and computers. Over the last two decades, NLP has been a rapidly growing field of research across many disciplines, yielding some advanced applications (e.g., automatic speech recognition, automatic translation of text, and chatbots). With the help of evolving machine learning and deep learning algorithms, NLP can help us systematically analyze large volumes of text data. The fundamental idea of NLP in various tasks stems from converting the natural language into a numerical format that computers can understand and process. This process is known as **text vectorization**. Effective and efficient vectorization of human language and text lays an important foundation to conduct advanced NLP tasks. 
 
-In this three-part series, we will explain text vectorization and demonstrate different techniques for vectorizing textual data. First, we will begin with basic vectorization approaches that are widely used in text mining and NLP applications. More specifically, we will focus on how **term-document** and **term-frequency inverse-document frequency** matrices are constructed. In the following example, we will have a brief demonstration of these techniques using Python (instead of R). 
+In this three-part series, we will explain text vectorization and demonstrate different techniques for vectorizing textual data. First, we will begin with a basic vectorization approach that is widely used in text mining and NLP applications. More specifically, we will focus on how **term-document matrices** are constructed. In the following example, we will have a brief demonstration of these techniques using Python `r emo::ji("snake")` (instead of R)^[I plan to make a post showing the same analyses using R.]. 
 
 ## Example 
 
-In this example, we will use a data set from one of the popular automated essay scoring competitions funded by the Hewlett Foundation: [Short Answer Scoring](https://www.kaggle.com/c/asap-sas). The data set includes students' responses to a set of short-answer items and scores assigned by human raters. The competition required participants to develop an automated scoring algorithm that could mimic the way human raters scored the items. On average, each answer is approximately 50 words in length.The data set (train_rel_2.tsv) is available [here](https://raw.githubusercontent.com/okanbulut/blog/master/data_and_codes/train_rel_2.tsv) as a tab-separated value (TSV) file. The data set consists of the following variables: 
+In this example, we will use a data set from one of the popular automated essay scoring competitions funded by the Hewlett Foundation: [Short Answer Scoring](https://www.kaggle.com/c/asap-sas). The data set includes students' responses to a set of short-answer items and scores assigned by human raters. On average, each answer is approximately 50 words in length. The data set (train_rel_2.tsv) is available [here](https://raw.githubusercontent.com/okanbulut/blog/master/data_and_codes/train_rel_2.tsv) as a tab-separated value (TSV) file. The data set consists of the following variables: 
 
 * **Id**: A unique identifier for each individual student essay.
 * **EssaySet**: 1-10, an id for each set of essays.
