@@ -1664,7 +1664,7 @@ Figure 4: A scatterplot of frequencies for the and to across the first five docu
 <h3 id="cosine-similarity-between-documents">Cosine Similarity between Documents</h3>
 <p>We will use <strong>cosine similarity</strong> that evaluates the similarity between the two vectors by measuring the cosine angle between them. If the two vectors are in the same direction, hence similar, the similarity index yields a value close to 1. The cosine similarity index can be computed using the following formula:</p>
 <p><span class="math display">\[ similarity = cos(\theta)=\frac{\mathbf{A}.\mathbf{B}}{\|\mathbf{A}\|\|\mathbf{B}\|}=\frac{\Sigma_{i=1}^nA_iB_i}{\sqrt{\Sigma_{i=1}^nA_i^2}\sqrt{\Sigma_{i=1}^nB_i^2}} \]</span></p>
-<p>Now, let’s define a function to calculate cosine similarity between two vectors:</p>
+<p>Now, let’s define a <a href="https://stackoverflow.com/questions/18424228/cosine-similarity-between-2-number-lists">function</a> to calculate cosine similarity between two vectors<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Activate math</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
@@ -1747,6 +1747,7 @@ Figure 5: A heatmap of the cosine similarity indices across the five documents.
 <hr />
 <ol>
 <li id="fn1" role="doc-endnote"><p>I plan to make a post showing the same analyses using R.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>The original stackoverflow discussion with the cosine similarity function: <a href="https://stackoverflow.com/questions/18424228/cosine-similarity-between-2-number-lists" class="uri">https://stackoverflow.com/questions/18424228/cosine-similarity-between-2-number-lists</a><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 <!--radix_placeholder_article_footer-->

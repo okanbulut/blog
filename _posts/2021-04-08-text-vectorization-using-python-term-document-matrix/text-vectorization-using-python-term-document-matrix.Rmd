@@ -186,7 +186,7 @@ We will use **cosine similarity** that evaluates the similarity between the two 
 
 $$ similarity = cos(\theta)=\frac{\mathbf{A}.\mathbf{B}}{\|\mathbf{A}\|\|\mathbf{B}\|}=\frac{\Sigma_{i=1}^nA_iB_i}{\sqrt{\Sigma_{i=1}^nA_i^2}\sqrt{\Sigma_{i=1}^nB_i^2}} $$
 
-Now, let's define a function to calculate cosine similarity between two vectors:
+Now, let's define a [function](https://stackoverflow.com/questions/18424228/cosine-similarity-between-2-number-lists) to calculate cosine similarity between two vectors^[The original stackoverflow discussion with the cosine similarity function: <https://stackoverflow.com/questions/18424228/cosine-similarity-between-2-number-lists>]:
 
 ```{python chunk5, echo=TRUE}
 # Activate math
