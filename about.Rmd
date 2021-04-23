@@ -8,8 +8,6 @@ links:
     url: "https://twitter.com/drokanbulut"
   - label: GitHub
     url: "https://github.com/okanbulut"
-  - label: ORCID
-    url: "https://orcid.org/0000-0001-5853-1267"
   - label: Email
     url: "mailto:bulut@ualberta.ca"
 output:
