@@ -24,6 +24,7 @@
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
@@ -56,7 +57,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }
 code span.al { color: #ad0000; } /* Alert */
 code span.an { color: #5e5e5e; } /* Annotation */
-code span.at { color: #20794d; } /* Attribute */
+code span.at { } /* Attribute */
 code span.bn { color: #ad0000; } /* BaseN */
 code span.bu { } /* BuiltIn */
 code span.cf { color: #007ba5; } /* ControlFlow */
@@ -77,13 +78,14 @@ code span.kw { color: #007ba5; } /* Keyword */
 code span.op { color: #5e5e5e; } /* Operator */
 code span.ot { color: #007ba5; } /* Other */
 code span.pp { color: #ad0000; } /* Preprocessor */
-code span.sc { color: #20794d; } /* SpecialChar */
+code span.sc { color: #5e5e5e; } /* SpecialChar */
 code span.ss { color: #20794d; } /* SpecialString */
 code span.st { color: #20794d; } /* String */
 code span.va { color: #111111; } /* Variable */
 code span.vs { color: #20794d; } /* VerbatimString */
 code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </style>
+
 
   <!--radix_placeholder_meta_tags-->
   <title>Okan Bulut: Psychometrics and Data Science with R</title>
@@ -456,7 +458,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
   </style>
 
-  <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+  <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
   <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet"/>
   <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet"/>
   <script src="site_libs/headroom-0.9.4/headroom.min.js"></script>
@@ -1863,7 +1865,10 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
       // hoverable references
       $('span.citation[data-cites]').each(function() {
-        var refHtml = $('#ref-' + $(this).attr('data-cites')).html();
+        var refs = $(this).attr('data-cites').split(" ");
+        var refHtml = refs.map(function(ref) {
+          return "<p>" + $('#ref-' + ref).html() + "</p>";
+        }).join("\n");
         window.tippy(this, {
           allowHTML: true,
           content: refHtml,
@@ -2352,7 +2357,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     color: var(--hover-color, white);
   }</style>
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.7/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2548,28 +2553,6 @@ function init_posts_list() {
 <div class="posts-container posts-with-sidebar posts-apply-limit l-screen-inset">
 <div class="posts-list">
 <h1 class="posts-list-caption" data-caption="Psychometrics and Data Science with R">Psychometrics and Data Science with R</h1>
-<a href="posts/2021-12-06-text-vectorization-using-python-tf-idf/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":["data science","text mining","natural language processing"]}</script>
-<div class="metadata">
-<div class="publishedDate">Dec. 6, 2021</div>
-<div class="dt-authors">
-<div class="dt-author">Sevilay Kilmen</div>
-<div class="dt-author">Okan Bulut</div>
-</div>
-</div>
-<div class="thumbnail"></div>
-<div class="description">
-<h2>Text Vectorization Using Python: TF-IDF</h2>
-<div class="dt-tags">
-<div class="dt-tag">data science</div>
-<div class="dt-tag">text mining</div>
-<div class="dt-tag">natural language processing</div>
-</div>
-<p>We continue exploring text vectorization in Python. In the second part of our post, we will explain term frequency–inverse document frequency (TF-IDF) and demonstrate how to use vectorize text using TF-IDF in Python. xxx
-
-(2 min read)</p>
-</div>
-</a>
 <a href="posts/2021-04-08-text-vectorization-using-python-term-document-matrix/" class="post-preview">
 <script class="post-metadata" type="text/json">{"categories":["data science","text mining","natural language processing"]}</script>
 <div class="metadata">
@@ -2673,7 +2656,7 @@ function init_posts_list() {
 </div>
 </div>
 <div class="thumbnail">
-<img data-src="posts/2021-02-12-a-polytomous-scoring-approach-based-on-item-response-time/clock1.jpg"/>
+<img src="posts/2021-02-12-a-polytomous-scoring-approach-based-on-item-response-time/clock1.jpg"/>
 </div>
 <div class="description">
 <h2>A Polytomous Scoring Approach Based on Item Response Time</h2>
@@ -2800,14 +2783,14 @@ models in R.
 <div class="posts-sidebar">
 <div class="sidebar-section subscribe">
 <h3>Subscribe</h3>
-<form method='post' action='https://blogtrottr.com'>
-  <p>Enjoy this blog? Get notified of new posts via email:</p>
-  <input type='text' name='btr_email' />
-  <input type='hidden' name='btr_url'
-         value='https://okan.cloud/index.xml'/>
-  <input type='hidden' name='schedule_type' value='0' />
-  <input type='submit' value='Subscribe' />
-</form>
+<form method='post' action='https://blogtrottr.com'>
+  <p>Enjoy this blog? Get notified of new posts via email:</p>
+  <input type='text' name='btr_email' />
+  <input type='hidden' name='btr_url'
+         value='https://okan.cloud/index.xml'/>
+  <input type='hidden' name='schedule_type' value='0' />
+  <input type='submit' value='Subscribe' />
+</form>
 
 </div>
 <div class="sidebar-section categories">
@@ -2815,7 +2798,7 @@ models in R.
 <ul>
 <li>
 <a href="#category:Articles">Articles</a>
-<span class="category-count">(10)</span>
+<span class="category-count">(9)</span>
 </li>
 <li>
 <a href="#category:CAT">CAT</a>
@@ -2827,7 +2810,7 @@ models in R.
 </li>
 <li>
 <a href="#category:data_science">data science</a>
-<span class="category-count">(2)</span>
+<span class="category-count">(1)</span>
 </li>
 <li>
 <a href="#category:data_visualization">data visualization</a>
@@ -2859,7 +2842,7 @@ models in R.
 </li>
 <li>
 <a href="#category:natural_language_processing">natural language processing</a>
-<span class="category-count">(2)</span>
+<span class="category-count">(1)</span>
 </li>
 <li>
 <a href="#category:optimization">optimization</a>
@@ -2887,7 +2870,7 @@ models in R.
 </li>
 <li>
 <a href="#category:text_mining">text mining</a>
-<span class="category-count">(2)</span>
+<span class="category-count">(1)</span>
 </li>
 </ul>
 </div>
@@ -2896,7 +2879,7 @@ models in R.
 <a href="#">More articles &raquo;</a>
 </div>
 </div>
-<!--/radix_placeholder_article_listing-->
+<!--/radix_placeholder_article_listing-->
 
 <div class="d-title">
 <h1>Psychometrics and Data Science with R</h1>
@@ -2933,4 +2916,4 @@ models in R.
 
 </body>
 
-</html
+</html>
