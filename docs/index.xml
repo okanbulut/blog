@@ -19,7 +19,7 @@ psychological data
       <dc:creator>Sevilay Kilmen</dc:creator>
       <dc:creator>Okan Bulut</dc:creator>
       <link>https://okan.cloud/posts/2022-01-16-text-vectorization-using-python-tf-idf</link>
-      <description>In the first part of this text vectorization series, we demonstrated how to transform textual data into a term-document matrix. Although this approach is fairly easy to use, it fails to consider the impact of words occuring frequently across the documents. To measure the similarities and differences among the documents, it is essential to reduce the weight of the words that frequently occur across the documents while identifying unique words that are more important for each document. In the second part of the series, we will focus on the term frequency-inverse document frequency (TF-IDF) technique. First, we will explain how TF-IDF can adjust the weights of the words based on their frequency in the documents and then demonstrate the use of TF-IDF technique in Python.
+      <description>In the first part of this text vectorization series, we demonstrated how to transform textual data into a term-document matrix. Although this approach is fairly easy to use, it fails to consider the impact of words occuring frequently across the documents. In the second part of the series, we will focus on term frequency-inverse document frequency (TF-IDF) that can reduce the weight of common words while emphasizing unique words that are more important for each document. First, we will explain how TF-IDF can adjust the weights of the words based on their frequency in the documents and then demonstrate the use of TF-IDF in Python.
 
 (9 min read)</description>
       <category>data science</category>

@@ -1,7 +1,7 @@
 ---
 title: "Text Vectorization Using Python: TF-IDF"
 description: |
-  In the first part of this text vectorization series, we demonstrated how to transform textual data into a term-document matrix. Although this approach is fairly easy to use, it fails to consider the impact of words occuring frequently across the documents. To measure the similarities and differences among the documents, it is essential to reduce the weight of the words that frequently occur across the documents while identifying unique words that are more important for each document. In the second part of the series, we will focus on the term frequency-inverse document frequency (TF-IDF) technique. First, we will explain how TF-IDF can adjust the weights of the words based on their frequency in the documents and then demonstrate the use of TF-IDF technique in Python.
+  In the first part of this text vectorization series, we demonstrated how to transform textual data into a term-document matrix. Although this approach is fairly easy to use, it fails to consider the impact of words occuring frequently across the documents. In the second part of the series, we will focus on term frequency-inverse document frequency (TF-IDF) that can reduce the weight of common words while emphasizing unique words that are more important for each document. First, we will explain how TF-IDF can adjust the weights of the words based on their frequency in the documents and then demonstrate the use of TF-IDF in Python.
   ```{r, include=FALSE}
   bytes <- file.size("text-vectorization-using-python-tf-idf.Rmd")
   words <- bytes/10
@@ -50,7 +50,9 @@ suppressWarnings({
 
 ## Introduction
 
-After a long (unintentional) hiatus, I am back to sharing more interesting examples of psychometrics and data science on my blog `r emo::ji("biceps")`. In [my last blog post](https://okan.cloud/posts/2021-04-08-text-vectorization-using-python-term-document-matrix/), my colleague [Dr. Jinnie Shin from the University of Florida](https://jinnieshin.netlify.app/) and I had started a three-part series focusing on text vectorization using Python `r emo::ji("snake")`. In the first part, we explained the term-document matrix. In the second part of this series, we will discuss another text vectorization technique known as **TF-IDF**. We will explain how **TF-IDF** works, why it is better than a regular term-document matrix, and then demonstrate how to calculate **TF-IDF** using Python. I want to thank [Dr. Sevilay Kilmen](https://akademik.yok.gov.tr/AkademikArama/view/viewAuthor.jsp) for her detailed work on this blog post, as well as for motivating me to continue my blog posts.
+After a long (unintentional) hiatus, I am back to sharing more interesting examples of psychometrics and data science on my blog `r emo::ji("biceps")`. 
+
+In [my last blog post](https://okan.cloud/posts/2021-04-08-text-vectorization-using-python-term-document-matrix/), my colleague [Dr. Jinnie Shin from the University of Florida](https://jinnieshin.netlify.app/) and I had started a three-part series focusing on text vectorization using Python `r emo::ji("snake")`. In the first part, we explained the term-document matrix. In the second part of this series, we will discuss another text vectorization technique known as **TF-IDF**. We will explain how **TF-IDF** works, why it is better than a regular term-document matrix, and then demonstrate how to calculate **TF-IDF** using Python. I want to thank [Dr. Sevilay Kilmen](https://akademik.yok.gov.tr/AkademikArama/view/viewAuthor.jsp) for her detailed work on this blog post, as well as for her encouragement to continue making blog posts.
 
 ### Text Vectorization
 
