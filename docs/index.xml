@@ -13,7 +13,24 @@ psychological data
       <link>https://okan.cloud/</link>
     </image>
     <generator>Distill</generator>
-    <lastBuildDate>Thu, 08 Apr 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 16 Jan 2022 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Text Vectorization Using Python: TF-IDF</title>
+      <dc:creator>Sevilay Kilmen</dc:creator>
+      <dc:creator>Okan Bulut</dc:creator>
+      <link>https://okan.cloud/posts/2022-01-16-text-vectorization-using-python-tf-idf</link>
+      <description>In the first part of this text vectorization series, we demonstrated how to transform textual data into a term-document matrix. Although this approach is fairly easy to use, it fails to consider the impact of words occuring frequently across the documents. To measure the similarities and differences among the documents, it is essential to reduce the weight of the words that frequently occur across the documents while identifying unique words that are more important for each document. In the second part of the series, we will focus on the term frequency-inverse document frequency (TF-IDF) technique. First, we will explain how TF-IDF can adjust the weights of the words based on their frequency in the documents and then demonstrate the use of TF-IDF technique in Python.
+
+(9 min read)</description>
+      <category>data science</category>
+      <category>text mining</category>
+      <category>text vectorization</category>
+      <category>natural language processing</category>
+      <category>python</category>
+      <guid>https://okan.cloud/posts/2022-01-16-text-vectorization-using-python-tf-idf</guid>
+      <pubDate>Sun, 16 Jan 2022 00:00:00 +0000</pubDate>
+      <media:content url="https://okan.cloud/posts/2022-01-16-text-vectorization-using-python-tf-idf/pixabay.jpg" medium="image" type="image/jpeg"/>
+    </item>
     <item>
       <title>Text Vectorization Using Python: Term-Document Matrix</title>
       <dc:creator>Jinnie Shin</dc:creator>

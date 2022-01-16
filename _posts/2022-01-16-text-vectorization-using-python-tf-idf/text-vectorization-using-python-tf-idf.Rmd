@@ -1,0 +1,216 @@
+---
+title: "Text Vectorization Using Python: TF-IDF"
+description: |
+  In the first part of this text vectorization series, we demonstrated how to transform textual data into a term-document matrix. Although this approach is fairly easy to use, it fails to consider the impact of words occuring frequently across the documents. To measure the similarities and differences among the documents, it is essential to reduce the weight of the words that frequently occur across the documents while identifying unique words that are more important for each document. In the second part of the series, we will focus on the term frequency-inverse document frequency (TF-IDF) technique. First, we will explain how TF-IDF can adjust the weights of the words based on their frequency in the documents and then demonstrate the use of TF-IDF technique in Python.
+  ```{r, include=FALSE}
+  bytes <- file.size("text-vectorization-using-python-tf-idf.Rmd")
+  words <- bytes/10
+  minutes <- words/200
+  ``` 
+  (`r round(minutes)` min read)
+author:
+  - name: Sevilay Kilmen 
+    url: https://akademik.yok.gov.tr/AkademikArama/view/viewAuthor.jsp
+    affiliation: Bolu Abant Izzet Baysal University
+    affiliation_url: http://www.ibu.edu.tr
+    orcid_id: 0000-0002-5432-7338
+  - name: Okan Bulut
+    url: http://www.okanbulut.com/
+    affiliation: University of Alberta
+    affiliation_url: https://www.ualberta.ca
+    orcid_id: 0000-0001-5853-1267
+date: 01-16-2022
+categories:
+  - data science
+  - text mining
+  - text vectorization
+  - natural language processing
+  - python
+preview: pixabay.jpg
+output:
+  distill::distill_article:
+    self_contained: false
+    toc: true
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE)
+suppressWarnings({
+  # Add all the packages you will use in the article here
+  library("rmarkdown")
+  library("kableExtra")
+  # https://github.com/hadley/emo
+  # devtools::install_github("hadley/emo")
+  library("emo")
+  library("reticulate")
+})
+```
+
+![Photo by [Ri_Ya](https://pixabay.com/users/ri_ya-12911237/) on [Pixabay](https://pixabay.com/)](pixabay.jpg)
+
+## Introduction
+
+After a long (unintentional) hiatus, I am back to sharing more interesting examples of psychometrics and data science on my blog `r emo::ji("biceps")`. In [my last blog post](https://okan.cloud/posts/2021-04-08-text-vectorization-using-python-term-document-matrix/), my colleague [Dr. Jinnie Shin from the University of Florida](https://jinnieshin.netlify.app/) and I had started a three-part series focusing on text vectorization using Python `r emo::ji("snake")`. In the first part, we explained the term-document matrix. In the second part of this series, we will discuss another text vectorization technique known as **TF-IDF**. We will explain how **TF-IDF** works, why it is better than a regular term-document matrix, and then demonstrate how to calculate **TF-IDF** using Python. I want to thank [Dr. Sevilay Kilmen](https://akademik.yok.gov.tr/AkademikArama/view/viewAuthor.jsp) for her detailed work on this blog post, as well as for motivating me to continue my blog posts.
+
+### Text Vectorization
+
+Before we get into the details of **TF-IDF**, let's remember what **text vectorization** means. We use text vectorization to transform textual data (e.g., students' written responses to essay questions) into a numerical format that computers can understand and process the input. After text vectorization is performed, the resulting numerical data can be used for more advanced linguistic applications (e.g., automated essay scoring). 
+
+In [the first part](https://okan.cloud/posts/2021-04-08-text-vectorization-using-python-term-document-matrix/) of this series, we demonstrated how to convert textual data into a term-document matrix (bag of words), which is a simple text vectorization method. The term-document matrix is a very simple and easy-to-use approach to transform textual data into numerical vectors. However, this approach simply focuses on the frequency of each word in the document without considering the weights of too frequently occurring words. This may lead to confusing results when it comes to evaluating similarities and differences among documents. For example, two documents may appear quite similar if both documents include similar stop words (e.g., was, is, to, the) that frequently occur in the documents. Thus, it is essential to emphasize distinct words representing the content of each document more accurately. 
+
+### TF-IDF
+
+Now we know that the term-document matrix (or bag of words) fails to capture distinct or unique words that provide stronger content representation for each document. So, what is a good alternative to using the term-document matrix? The answer is the term frequency-inverse document frequency, or shortly [**TF-IDF**](https://en.wikipedia.org/wiki/Tf%E2%80%93idf). To describe what **TF-IDF** is, we first need to explain the meanings of term frequency (**TF**) and inverse document frequency (**IDF**).   
+
+Term frequency (or, **TF**) represents a particular word's weight in a given document. But, why are we supposed to weight individual words in a document? The main reason is that each document may have different number of words. That is, the length of one document can be very different from the length of another document. For example, assume that we are looking for a particular word in two documents: a document with 22 words and another document with 250 words. Compared with the shorter document, the longer document would be more likely to contain the word. To make these documents more comparable, word weights (i.e., counts) need to be standardized based on the length of each document. **TF** provides this standardization by dividing the frequency of a word by the total of words in the document.
+
+TF = (Frequency of a word in the document) / (Total number of words in the document)
+
+Let's see a simple example of how TF is calculated. Assume that we have two documents. One of the documents consists of the following sentence: “John likes apple”. In the document, the word "John" occurs only once. Therefore, the TF value for “John” is $1/3=0.333$. The second document also consists of a single sentence: “Mary likes apple and cherry”. This document consists of five words, and “Mary” is included one time in the document. Therefore, the TF value of the word “Mary” is $1/5=0.2$. 
+
+If a particular word is not included in a document, then its TF value becomes 0 for that document. On the other hand, if the document includes the word but no other words, then its TF value becomes 1 for the document. So, we can see that the TF value ranges between 0 and 1. Words that frequently occur within a document have higher TF values and other words that are not as common. 
+
+Unlike **TF**, inverse document frequency (**IDF**) represents a particular word's weight across all documents. The reason for calling it "inverse" is that as the number of documents including a particular word increases, the weight of that word decreases. **IDF** accomplishes this by calculating the logarithm of the ratio of the total number of documents to the number of documents including the word.
+
+IDF = log(total number of documents / number of documents including the word)
+
+Let's see another simple example to demonstrate how IDF can be calculated. Assume that there are 1000 documents in a corpus (i.e., a collection of texts). If all documents include a particular word, the IDF value of that word becomes $log(1000/1000)=log(1)=0$. If that word takes a place in 100 documents of 1000 documents, the IDF value of the word becomes log(1000/100)=log(10)=1. If, however, the word occurs only in 10 documents out of 1000 documents, then the IDF value of that word becomes $log(1000/10)=log(100)=2$. This example shows that as the number of documents including the word increases, the IDF value of the word decreases.
+
+Now we know how to calculate **TF** and **IDF** but how do we find **TF-IDF**? To calculate the **TF-IDF** value of a particular word in a document, we can simply multiply its **TF** and **IDF** values. The **TF-IDF** value depends on the frequency of the word in the document, the total number of words in the document, the total number of documents in the corpus, and the number of documents including the word. If a particular word is included in all documents, its IDF value becomes zero and thus its **TF-IDF** value also becomes zero. Similarly, if a word is not included in a document, then its **TF** value for that document becomes zero and thus the **TF-IDF** value also becomes zero. 
+
+In the following section, we will demonstrate the calculation of **TF-IDF** in Python. We will use real data (i.e., students' written responses from an automated essay scoring competition) to prepare text vectors using the **TF-IDF** algorithm in Python.
+
+ 
+## Example 
+
+In this example, we will use a data set from one of the popular automated essay scoring competitions funded by the Hewlett Foundation: [Short Answer Scoring](https://www.kaggle.com/c/asap-sas). The data set includes students' responses to ten different sets of short-answer items and scores assigned by two human raters. The data set is available [here](https://raw.githubusercontent.com/okanbulut/blog/master/data_and_codes/train_rel_2.tsv) as a tab-separated value (TSV) file. The data set consists of the following variables: 
+
+* **Id**: A unique identifier for each individual student essay.
+* **EssaySet**: An id for each set of essays (ranges from 1 to 10).
+* **Score1**: Rater1's score (ranges from 0 to 2). 
+* **Score2**: Rater2's score (ranges from 0 to 2). 
+* **EssayText**: Student's response (textual data).
+
+For our demonstration, we will use “Essay Set 3” where students are asked to explain how pandas in China are similar to koalas in Australia and how they are different from pythons. They also need to support their responses with information from the articles given in the reading passage included in the item. There are three scoring categories (0, 1, or 2 points). Each score category contains a range of student responses which reflect the descriptions given below:
+
+* **Score 2**: The response demonstrates an exploration or development of the ideas presented in the text, a strong conceptual understanding by the inclusion of specific relevant information from the text an extension of ideas that may include extensive and/or insightful inferences, connections between ideas in the text, and references to prior knowledge and/or experiences.
+
+* **Score 1**: The response demonstrates some exploration or development of ideas presented in the text a fundamental understanding by the inclusion of some relevant information from the text an extension of ideas that lacks depth, although may include some inferences, connections between ideas in the text, or references to prior knowledge and/or experiences.
+
+* **Score 0**: The response demonstrates limited or no exploration or development of ideas presented in the text limited or no understanding of the text, may be illogical, vague, or irrelevant possible incomplete or limited inferences, connections between ideas in the text, or references to prior knowledge and/or experiences. 
+
+Now, let's begin our analysis by importing the data into Python and selecting Essay Set 3. 
+
+```{python chunk1, echo=TRUE, eval=TRUE}
+# Import pandas for dataframe 
+import pandas as pd 
+
+# Import train_rel_2.tsv into Python
+with open('train_rel_2.tsv', 'r') as f:
+    lines = f.readlines()
+    columns = lines[0].split('\t')
+    response = []
+    score = []
+    for line in lines[1:]:
+        temp = line.split('\t') 
+        if temp[1] == '3':   # Select the Essay Set 3
+            response.append(temp[-1])  # Select EssayText as response
+            score.append(int(temp[2])) # Select score1 for human scoring only
+        else: 
+            None
+```
+
+Now, let's format the data in such a way that it consists of the necessary columns (two columns: response and score), and then review how many rows and columns the data set consists of.
+
+```{python chunk2, echo=TRUE, eval=TRUE}
+# Construct a dataframe ("data") which includes response and score column     
+data = pd.DataFrame(list(zip(response, score))) 
+data.columns = ['response', 'score'] 
+
+# Print how many rows and columns of the data set consists  
+print(data.shape)
+```
+
+The values shown above indicate that the data set consists of 1808 rows and two columns (i.e., response and score columns). Now, let's take a look at the first ten responses.
+
+```{python chunk3, echo=TRUE, eval=TRUE}
+# Preview the first ten row in the data set
+print(data.head(10))
+```
+
+Each document includes a set of words contribute to the meaning in the sentence, as well as stop words 
+(e.g., articles, prepositions, pronouns, and conjunctions) that do not add much information to the text. Since stop words are very common and yet they only provide low-level information, removing them from the text can help us highlight words that are more important for each document. In addition, the presence of stop words leads to high sparsity and high dimensionality in the data (see [curse of dimensionality](https://en.wikipedia.org/wiki/Curse_of_dimensionality)). Furthermore, lowercase-uppercase texts and [lemmatization](https://en.wikipedia.org/wiki/Lemmatisation) are other factors that may impact the vectorization of text. Therefore, before performing **TF-IDF** text vectorization, a preprocessing process that involves removing stop words, converting uppercase letters to lowercase letters, and lemmatization can be implemented as follow:
+
+```{python chunk4, echo=TRUE, eval=TRUE, results="hide"}
+# Import re, nltk, and WordNetLemmatizer
+import re
+import nltk
+from nltk.stem import WordNetLemmatizer
+
+# Stopword removal, converting uppercase into lower case, and lemmatization
+stopwords = nltk.corpus.stopwords.words('english')
+lemmatizer = WordNetLemmatizer()
+nltk.download('stopwords')
+data_without_stopwords = []
+for i in range(0, len(response)):
+    doc = re.sub('[^a-zA-Z]', ' ', response[i])
+    doc = doc.lower()
+    doc = doc.split()
+    doc = [lemmatizer.lemmatize(word) for word in doc if not word in set(stopwords)]
+    doc = ' '.join(doc)
+    data_without_stopwords.append(doc)
+```
+
+To better understand how preprocessing affects the data, we can print the first student's response before preprocess.
+
+```{python chunk5, echo=TRUE, eval=TRUE}
+# Print first row in the the original data set 
+print(data.response[0])    
+```
+
+Now, we will print the same response after preprocessing to see the difference.
+
+```{python chunk6, echo=TRUE, eval=TRUE}
+# Print first row in the the data set after preprocessing
+print(data_without_stopwords[0])
+```
+
+We can see that after preprocessing, stop words have been removed, all the words have been transformed into lowercase letters, and the words have been lemmatized. Now, we can go ahead and vectorize the responses by using `TfidfVectorizer` from [sklearn](https://scikit-learn.org/stable/). 
+
+```{python chunk7, echo=TRUE, eval=TRUE}
+# Import Tfidf vectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
+vectorizer = TfidfVectorizer() 
+vectors = vectorizer.fit_transform(data_without_stopwords)
+```
+
+Let’s have a look at how many rows and columns of the **TF-IDF** matrix consists of.
+
+```{python chunk8, echo=TRUE, eval=TRUE}
+# Print how many rows and columns of the TF-IDF matrix consists
+print("n_samples: %d, n_features: %d" % vectors.shape)
+```
+
+The output shows that a new vector consisting of 1978 features belonging to 1808 participants have been created. The **TF-IDF** matrix is a large matrix, including numerous rows and columns. For the sake of brevity, we will focus on the first five student responses and the most frequent ten words in the **TF-IDF** matrix.
+
+```{python chunk9, echo=TRUE, eval=TRUE}
+# Select the first five documents from the data set
+tf_idf = pd.DataFrame(vectors.todense()).iloc[:5]  
+tf_idf.columns = vectorizer.get_feature_names()
+tfidf_matrix = tf_idf.T
+tfidf_matrix.columns = ['response'+ str(i) for i in range(1, 6)]
+tfidf_matrix['count'] = tfidf_matrix.sum(axis=1)
+
+# Top 10 words 
+tfidf_matrix = tfidf_matrix.sort_values(by ='count', ascending=False)[:10] 
+
+# Print the first 10 words 
+print(tfidf_matrix.drop(columns=['count']).head(10))
+```
+
+In the matrix, we can see that each word has a different weight (**TF-IDF** value) for each document and that the **TF-IDF** values of the words not included in the document are zero. For example, the word "specialist" is not included in document 1 (i.e., response 1) and thus its **TF-IDF** value is zero.
+
+## Conclusion
+
+In this post, we wanted to demonstrate how to use the **TF-IDF** vectorization to create text vectors beyond the term-document matrix (i.e., bag of words). The **TF-IDF** vectorization transforms textual data into numerical vectors while considering the frequency of each word in the document, the total number of words in the document, the total number of documents, and the number of documents including each unique word. Therefore, unlike the term-document matrix that only shows the presence, absence, or count of a word in a document, it creates more meaningful text vectors focusing on the weight of the words representing their unique contribution to the document. We hope that this post will help you gain a deeper understanding of text vectorization. In the last part of this series, we will discuss word embedding approaches (e.g., [Word2Vec](https://www.tensorflow.org/tutorials/text/word2vec)) as one of the most popular methods for vectorizing textual data. 
+
