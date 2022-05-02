@@ -22,7 +22,7 @@ author:
 date: 01-16-2022
 categories:
   - data science
-  - text mining
+  - Word2Vec
   - text vectorization
   - natural language processing
   - python
