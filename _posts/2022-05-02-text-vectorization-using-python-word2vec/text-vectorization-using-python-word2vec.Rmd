@@ -31,7 +31,6 @@ output:
   distill::distill_article:
     self_contained: false
     toc: true
-draft: true
 ---
 
 
@@ -52,14 +51,13 @@ suppressWarnings({
 
 ## Introduction
 
-Assume that you want to send a text message to a friend using your smartphone. After you typed the first word of your message, "Happy", which word would the smart keyboard on your phone suggest for the next word? "Christmas" or "birthday"? It is quite likely that the smart keyboard will recommend the word "birthday", instead of "Christmas". Now, you have "Happy birthday" in the message. What would be the following words? At this point, it is not hard to guess that the smart keyword will suggest "to" and then "you" to turn the whole sentence to "Happy birthday to you". But, how could the smart keyboard predict words one by one and help you create this sentence? How does it associate the word with each other? Or more broadly, when you have a Google search, how does Google come up with the most relevant website about a word or a phrase that you typed? To understand this magic, let's step into the magical world of **Word2Vec**.
+Assume that you want to send a text message to a friend using your smartphone. After you typed the first word of your message, "Happy", which word would the smart keyboard on your phone suggest for the next word? "Christmas" or "birthday"? It is quite likely that the smart keyboard will recommend the word "birthday", instead of "Christmas". Now, you have "Happy birthday" in the message. What would be the following words? At this point, it is not hard to guess that the smart keyword will suggest "to" and then "you" to turn the whole sentence to "Happy birthday to you". But, how could the smart keyboard predict words one by one and help you create this sentence? How does it associate the word with each other? Or more broadly, when you have a Google search, how does Google come up with the most relevant website about a word or a phrase that you typed? To understand this magic, let's step into the magical world of **Word2Vec** `r emo::ji("highfive")`.
 
 ### Word2Vec 
    
+As we explained in the last two posts, computers need numerical representations to analyze textual data. This process is called "text vectorization". So far, we have talked about two text vectorization methods: [term-document matrix](https://okan.cloud/posts/2021-04-08-text-vectorization-using-python-term-document-matrix/) and [term frequency-inverse document frequency (TF-IDF)](https://okan.cloud/posts/2022-01-16-text-vectorization-using-python-tf-idf/). Both methods are very simple and easy-to-use when it comes to transforming textual data into numerical representations. In the last part of this series, we will focus on a more advanced approach, **Word2Vec**. Before we dive into what Word2Vec is and how it works, we need to define an important term, [word embedding](https://en.wikipedia.org/wiki/Word_embedding), which refers to an efficient and dense representation where words or phrases with similar meaning are closer in the vector space. In other words, a word embedding refers to a vector representation of a particular word or phrase in a multidimensional space. The vectorization of words or phrases as word embeddings facilitates the estimation of semantic similarities between different text materials (e.g., documents). 
 
-As we explained in the previous posts of this series, computers need numerical representations to analyze textual data. This process is called "text vectorization". So far, we have talked about two text vectorization methods: [term-document matrix](https://okan.cloud/posts/2021-04-08-text-vectorization-using-python-term-document-matrix/) and [term frequency-inverse document frequency (TF-IDF)](https://okan.cloud/posts/2022-01-16-text-vectorization-using-python-tf-idf/). Both methods are very simple and easy-to-use when it comes to transforming textual data into numerical vectors. in the last part of this series, we focus on a more advanced approach, **Word2Vec**. Before we dive into the details of Word2Vec, we should discuss another important term: [Word embedding](https://en.wikipedia.org/wiki/Word_embedding) is the representation of words in a corpus as numerical vectors by evaluating in terms of various features. 
-
-The vectorization of the words allows for estimating the similarities between the words. In the word embedding framework, one of the word vectorization algorithms is the [**Word2Vec**](https://en.wikipedia.org/wiki/Word2vec) algorithm recommended by [Tomas Mikolov](https://en.wikipedia.org/wiki/Tom%C3%A1%C5%A1_Mikolov). In the Word2Vec algorithm, word (i.e., target word) vectors are determined considering other words (i.e., context words) next to it. This means that a target word is evaluated in a context. The number of to be considered words before or after the target word is named "window size" in the Word2Vec algorithm.  For instance, determining window size as two means that two words before and after the target word would be considered context words in the Word2Vec algorithm. The following tables exemplify the window size:
+There are several word embedding techniques that are widely used in natural language processing (NLP) applications, such as [Word2Vec](https://en.wikipedia.org/wiki/Word2vec), [GloVe](https://nlp.stanford.edu/pubs/glove.pdf), and [BERT](https://ai.googleblog.com/2018/11/open-sourcing-bert-state-of-art-pre.html). In this post, we will talk about Word2Vec developed by [Tomas Mikolov](https://en.wikipedia.org/wiki/Tom%C3%A1%C5%A1_Mikolov) and other researchers at Google for semantic analysis tasks. In the Word2Vec method, word vectors (i.e., target word) are constructed based on other words (i.e., context words) that are semantically similar to the target word. The number of context words coming before or after the target word is called "window size". Now, let's see two examples where there is a single word before and after the target word (i.e., window size = 1) and there are are two words before and after the target word (i.e., window size = 2):
 
 ```{r chunk1, echo=FALSE, out.width="100%", fig.cap="Input and output words based on window size=1"}
 knitr::include_graphics("window_size1.jpg")
@@ -69,27 +67,30 @@ knitr::include_graphics("window_size1.jpg")
 knitr::include_graphics("window_size2.jpg")
 ```
 
-Based on addressing context words as input or output, there are main models in the Word2Vec algorithm: Continuous Bag of Word (CBOW) and Skip-gram models. In the CBOW, context are considered as input and the target word as output. In contrast, in the Skip-gram architecture, the target word is considered as the input and the context words as the output.
+Depending on whether context words are used as either input or output, Word2Vec offers two neural network-based variants: Continuous Bag of Word (CBOW) and Skip-gram models. In the CBOW, context words are considered as input and the target word as output, whereas in the Skip-gram architecture, the target word is considered as the input and the context words as the output. The following example shows how input and output words are utilized within the CBOW and Skip-gram models.
 
 ```{r chunk3, echo=FALSE, out.width="100%", fig.cap="CBOW and Skipgram models"}
 knitr::include_graphics("CBOW_skipgram.jpg")
 ```
 
-Let's consider the word "two" in the sentence "My brother is two years older than me" as the target word, and let's determine the window size as two. In the CBOW model, the word "two" is considered as output, and the words "brother", "is", "years",  and "older" as input. In contrast, in the Skip-gram model, the word "two" is considered as the input, and the words "brother", "is", "years",  and "older" as the output. Now, we will demonstrate the Word2Vec algorithm in Python. We will use real data (i.e., students’ written responses from an automated essay scoring competition) to prepare text vectors using the Word2Vec algorithm in Python.
+Let's assume that the word "two" in the sentence of "My brother is two years older than me" is the target word and the window size is two. In the CBOW model, "two" is considered as output, and the words "brother", "is", "years",  and "older" as input. In contrast, in the Skip-gram model, the word "two" is considered as the input, and the other words become the output. To further describe how the Word2Vec algorithm works, we will use real data (i.e., students’ written responses from an automated essay scoring competition) to prepare word embeddings using the Word2Vec algorithm in Python.
 
 ## Example 
 
-In this example, we will again continue with [Kaggle](https://www.kaggle.com/c/asap-sas) data set. This data set is essay scoring data used in a competition funded by the Hewlett Foundation.  The data set includes students' responses to ten different sets of short-answer items and scores assigned by two human raters. The data set is available [here](https://raw.githubusercontent.com/okanbulut/blog/master/data_and_codes/train_rel_2.tsv) as a tab-separated value (TSV) file. The data set consists of five variables: 
+In this example, we will continue using [the same Kaggle data set](https://www.kaggle.com/c/asap-sas) that comes from an automated essay scoring competition funded by the Hewlett Foundation. The data set includes students' responses to ten different sets of short-answer items and scores assigned by two human raters. The data set is available [here](https://raw.githubusercontent.com/okanbulut/blog/master/data_and_codes/train_rel_2.tsv) as a tab-separated value (TSV) file. The data set contains five variables: 
 
-* **Id**: A unique identifier for each individual student essay.
-* **EssaySet**: An id for each set of essays (ranges from 1 to 10).
-* **Score1**: Rater1's score. 
-* **Score2**: Rater2's score. 
-* **EssayText**: Student's response (textual data).
+* **Id**: A unique identifier for each individual student essay
+* **EssaySet**: An id for each set of essays (ranges from 1 to 10)
+* **Score1**: Rater1's score
+* **Score2**: Rater2's score
+* **EssayText**: Students' responses
 
-For our demonstration, we will use student responses in “Essay Set 2” as corpus. In this example, students are presented with an investigation procedure to test four different polymer plastics for stretchability and data from that investigation. Based on that data, students are asked to draw a conclusion based on research data and describe two ways to improve the experimental design and/or validity of the results. Now, let's begin our analysis by importing the EssaySet2 into Python and format the data in such a way that it consists of the necessary column (one column: response).
+For our demonstration, we will use student responses in “Essay Set 2” where students are presented with an investigation procedure to test four different polymer plastics for stretchability and data from that investigation. Students are asked to draw a conclusion based on the research data and describe two ways to improve the experimental design and/or validity of the results. 
+
+Now, let's begin our analysis by importing the Essay Set 2 into Python and format the data in such a way that it contains students' responses under a single column called "response".
 
 ```{python chunk4, echo=TRUE, eval=TRUE, results="hide"}
+# Import required packages
 import gensim
 from gensim.models import Word2Vec, KeyedVectors
 import pandas as pd 
@@ -101,8 +102,8 @@ with open('train_rel_2.tsv', 'r') as f:
     response = []
     for line in lines[1:]:
         temp = line.split('\t') 
-        if temp[1] == '2':   # Select the EssaySet 2
-            response.append(temp[-1])  # Select EssayText as corpus
+        if temp[1] == '2':   # Select the Essay Set 2
+            response.append(temp[-1])  # Select "EssayText" as a corpus
         else: 
             None
             
@@ -111,79 +112,80 @@ data = pd.DataFrame(list(zip(response)))
 data.columns = ['response']
 ```
 
-Let's review the data set.
+We can go ahead and review this data set.
 
 ```{python chunk5, echo=TRUE, eval=TRUE}
 print(data)
 ```
 
-The values at the bottom of the printout indicate that the data set consists of 1278 documents and only one column (i.e., the response column). We will use these responses as a corpus in this example.  For the Word2Vec algorithm, firstly, we need to perform tokenization for all the words in this corpus as the relationships between each word and other words will be calculated. As the corpus is pretty large, to be able to better understand what is tokenization, we will show this tokenization process in the first response, then we will apply tokenization to all corpus. Now, let's have a look at the first response in more detail.
+The values at the bottom of the output show that the data set consists of 1278 documents and only one column (i.e., response) which we will use as a corpus in this example. To implement the Word2Vec algorithm, we first need to perform tokenization for all the words in this corpus. Since the corpus is pretty large, we will demonstrate the tokenization process using the first response, and then we will apply tokenization to the entire corpus. Now, let's have a look at the first response more closely.
 
 ```{python chunk6, echo=TRUE, eval=TRUE}
 data.response[0]
 ```
 
-Now, let's get started with the tokenization process for this response. 
+Using the `simple_preprocess` function from **gensim.utils**, we will tokenize the response:
 
 ```{python chunk7, echo=TRUE, eval=TRUE}
-print(gensim.utils.simple_preprocess("Changing the type of grafin would improve the student's experiment give a better new at those data. ^P Give the names of each type of plastic type used in this experiment. Each plastic should be the same length. ^P My conclusion is plastic type held up a much stronger than all of the different types"))
+print(gensim.utils.simple_preprocess("Changing the type of grafin would improve the student's experiment give a better new at those data. Give the names of each type of plastic type used in this experiment. Each plastic should be the same length. My conclusion is plastic type held up a much stronger than all of the different types"))
 ```
 
-As the output shows, all the words in this response are separated from each other. This means that in the next steps, each word in the corpus will be handled separately in the Word2Vec process. Now, let's do this for the entire corpus.
+As the output shows, after tokenization, all the words in the response are separated into smaller units (i.e., tokens). In the following analysis, each word in the corpus will be handled separately in the Word2Vec process. Now, let's repeat the same procedure for the entire corpus.
 
 ```{python chunk8, echo=TRUE, eval=TRUE}
 response_new=data.response.apply(gensim.utils.simple_preprocess)
 response_new
 ```
 
-After tokenization is completed for the entire corpus, we can now create the word embedding model.
+After tokenization is completed for the entire corpus, we can now create a word embedding model using Word2Vec:
 
 ```{python chunk9, echo=TRUE, eval=TRUE, results="hide"}
-model= gensim.models.Word2Vec(window=5, min_count=2, workers=4)
+# Model parameters
+model=gensim.models.Word2Vec(window=5, min_count=2, workers=4, sg=0)
+
+# Train the model
 model.build_vocab(response_new, progress_per=1000)
 model.train(response_new, total_examples=model.corpus_count, epochs=model.epochs)
+
+# Save the trained model
 model.save("./responses.model")
 ```
 
-After this process, we have created a vector for each word. Let's take a look at the vectors of any word (e.g., the word plastic) from the corpus  to get an idea of what the generated vector looks like.
+The hyperparameters used in `gensim.models.Word2Vec` are as follows:
+
+* **size**: The number of dimensions of the embeddings (the default is 100).
+* **window**: The maximum distance between a target word and words around the target word (the default is 5).
+* **min_count**: The minimum count of words to consider when training the model (the default for is 5).
+* **workers**: The number of partitions during training (the default is 3).
+* **sg**: The training algorithm, either 0 for CBOW or 1 for skip gram (the default is 0).
+
+After the training process is complete, we get a vector for each word. Now, let's take a look at the vectors of a particular from the corpus (e.g., the word "plastic") to get an idea of what the generated vector looks like.
 
 ```{python chunk10, echo=TRUE, eval=TRUE}
 model.wv["plastic"]
 ```
 
-As you can see, the generated vector is an array of numbers. Once we convert a word to a numerical vector, we can now calculate the similarities between the words. Let's take a look at the words closest to any word from the corpus (e.g., the word "experimental").
+The vector for the word "plastic" is essentially an array of numbers. Once we convert a word to a numerical vector, we can calculate its semantic similarity with other words in the corpus. For example, let's find the top 2 words that are semantically the closest to the word "experimental" based on the cosine similarity between the vectors of the words in our corpus.
 
 ```{python chunk11, echo=TRUE, eval=TRUE}
-print(model.wv.most_similar("experimental"))
+model.wv.most_similar("experimental", topn=2)
 ```
 
-We see that the words closest to the word experiment are the words such as improved, design, validity, and experiment. Now let's examine the similarity between the word experiment and a specific word, for example, the word plastic:
+We see that the words that are similar to the word "experimental" include "improved" and "design". We can also calculate the similarity among specific words. In the following example, we will see the similarity of the word "plastic" with two other words, "experiment" and "length". 
 
 ```{python chunk12, echo=TRUE, eval=TRUE}
 model.wv.similarity(w1="experiment", w2="plastic")
 ```
 
-Now let's look at the relationship between the word "plastic" and the word "length".
-
 ```{python chunk13, echo=TRUE, eval=TRUE}
-model.wv.similarity(w1="lenght", w2="plastic")
+model.wv.similarity(w1="length", w2="plastic")
 ```
 
-As you can see, the word plastic seems to be closer to the word "length" rather than "experimental". We need not forget that these results are valid for the corpus we use. 
+The similarity results show that the word "plastic" seems to be closer to the word "length" than the word "experimental". We must note that this interesting finding is valid only for the corpus we used in this example (i.e., responses from Essay Set 2). The [Gensim](https://radimrehurek.com/gensim/index.html) library in Python also provides [pre-trained models and corpora](https://radimrehurek.com/gensim/auto_examples/howtos/run_downloader_api.html). A pre-trained model based on a massive data set (e.g., [Google News dataset](https://code.google.com/archive/p/word2vec/)) can be used for exploring semantic similarities as long as the data set is relevant to the domain we are working on. 
 
 ## Conclusion
 
-In this post, we wanted to show you how to use **Word2Vec** to create word vectors and observe similarities between words in a sentence. Word2Vec allows words to be represented as numerical vectors, considering the use of a word in a document with other words. Thus, it is a beneficial method in creating systems that provide an incredible convenience in applications such as detecting similarities between words, predicting words that may follow a word in a sentence, completing incomplete sentences, evaluating questionnaires, and suggestion engines. We have come to the end of our three-part text vectorization series with this post. This series has tried to explain text vectorization with straightforward examples. We hope this series to help researchers interested in natural language processing studies to gain an understanding of the nature of natural language processing.
-
-
-
-
-
-
-
-
-
-
+In this post, we wanted to demonstrate how to use Word2Vec to create word vectors and to calculate semantic similarities between words. Word2Vec transforms individual words or phrases into numerical vectors in a multidimensional semantic space. Word embeddings obtained from Word2Vec can be used for a variety of applications such as [generating cloze sentences](https://www.diva-portal.org/smash/get/diva2:1463843/FULLTEXT01.pdf), [query auto-completion](https://iopscience.iop.org/article/10.1088/1742-6596/1004/1/012018), and [building a recommendation system](https://www.analyticsvidhya.com/blog/2019/07/how-to-build-recommendation-system-word2vec-python/). For readers who want to learn more about Word2Vec, we recommend Tensorflow's [Word2Vec tutorial](https://www.tensorflow.org/tutorials/text/word2vec). With this post, we have come to the end of our three-part text vectorization series. We hope that the examples we presented here and in the last two posts help researchers who are interested in using text vectorization for their NLP applications.
 
 
 

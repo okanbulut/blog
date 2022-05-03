@@ -13,7 +13,24 @@ psychological data
       <link>https://okan.cloud/</link>
     </image>
     <generator>Distill</generator>
-    <lastBuildDate>Sun, 16 Jan 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 02 May 2022 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Text Vectorization Using Python: Word2Vec</title>
+      <dc:creator>Sevilay Kilmen</dc:creator>
+      <dc:creator>Okan Bulut</dc:creator>
+      <link>https://okan.cloud/posts/2022-05-02-text-vectorization-using-python-word2vec</link>
+      <description>In the first two part of this series, we demonstrated how to convert text into numerical representation (i.e., text vectorization) using the term-document matrix and term frequency-inverse document frequency (TF-IDF) approaches. In the last part of the series, we focus on a more advanced approach, Word2Vec, that can capture the meaning and association of words within a text. First, we will briefly explain how Word2Vec works, and then demonstrate how to use Word2Vec in Python.
+
+(7 min read)</description>
+      <category>data science</category>
+      <category>text mining</category>
+      <category>text vectorization</category>
+      <category>natural language processing</category>
+      <category>python</category>
+      <guid>https://okan.cloud/posts/2022-05-02-text-vectorization-using-python-word2vec</guid>
+      <pubDate>Mon, 02 May 2022 00:00:00 +0000</pubDate>
+      <media:content url="https://okan.cloud/posts/2022-05-02-text-vectorization-using-python-word2vec/pexels.jpg" medium="image" type="image/jpeg"/>
+    </item>
     <item>
       <title>Text Vectorization Using Python: TF-IDF</title>
       <dc:creator>Sevilay Kilmen</dc:creator>
