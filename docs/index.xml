@@ -19,7 +19,7 @@ psychological data
       <dc:creator>Sevilay Kilmen</dc:creator>
       <dc:creator>Okan Bulut</dc:creator>
       <link>https://okan.cloud/posts/2022-05-02-text-vectorization-using-python-word2vec</link>
-      <description>In the first two part of this series, we demonstrated how to convert text into numerical representation (i.e., text vectorization) using the term-document matrix and term frequency-inverse document frequency (TF-IDF) approaches. In the last part of the series, we focus on a more advanced approach, Word2Vec, that can capture the meaning and association of words within a text. First, we will briefly explain how Word2Vec works, and then demonstrate how to use Word2Vec in Python.
+      <description>In the first two part of this series, we demonstrated how to convert text into numerical representation (i.e., text vectorization) using the term-document matrix and term frequency-inverse document frequency (TF-IDF) approaches. In the last part of the series, we focus on a more advanced approach, Word2Vec, that can capture the meaning and association of words within a text. First, we will briefly explain how Word2Vec works and then demonstrate how to use Word2Vec in Python.
 
 (7 min read)</description>
       <category>data science</category>

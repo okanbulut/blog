@@ -2,54 +2,54 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" version="1.0">
   <url>
     <loc>https://okan.cloud/about.html</loc>
-    <lastmod>2021-12-09T16:37:49-07:00</lastmod>
+    <lastmod>2022-02-02T15:50:11-07:00</lastmod>
   </url>
   <url>
     <loc>https://okan.cloud/</loc>
-    <lastmod>2021-12-09T16:36:24-07:00</lastmod>
+    <lastmod>2022-02-02T15:50:11-07:00</lastmod>
   </url>
   <url>
     <loc>https://okan.cloud/posts/2022-05-02-text-vectorization-using-python-word2vec/</loc>
-    <lastmod>2022-05-02T22:51:58-06:00</lastmod>
+    <lastmod>2022-05-03T11:26:48-06:00</lastmod>
   </url>
   <url>
     <loc>https://okan.cloud/posts/2022-01-16-text-vectorization-using-python-tf-idf/</loc>
-    <lastmod>2022-01-16T10:32:54-07:00</lastmod>
+    <lastmod>2022-02-02T15:50:11-07:00</lastmod>
   </url>
   <url>
     <loc>https://okan.cloud/posts/2021-04-08-text-vectorization-using-python-term-document-matrix/</loc>
-    <lastmod>2021-12-09T16:34:10-07:00</lastmod>
+    <lastmod>2021-12-06T15:41:06-07:00</lastmod>
   </url>
   <url>
     <loc>https://okan.cloud/posts/2021-03-23-visualizing-machine-learning-models/</loc>
-    <lastmod>2021-12-09T16:34:10-07:00</lastmod>
+    <lastmod>2021-12-06T15:41:06-07:00</lastmod>
   </url>
   <url>
     <loc>https://okan.cloud/posts/2021-03-04-5-ways-to-effectively-visualize-survey-data/</loc>
-    <lastmod>2021-12-09T16:34:10-07:00</lastmod>
+    <lastmod>2021-12-06T15:41:06-07:00</lastmod>
   </url>
   <url>
     <loc>https://okan.cloud/posts/2021-02-20-building-a-computerized-adaptive-version-of-psychological-scales/</loc>
-    <lastmod>2021-12-09T16:34:10-07:00</lastmod>
+    <lastmod>2021-12-06T15:41:06-07:00</lastmod>
   </url>
   <url>
     <loc>https://okan.cloud/posts/2021-02-12-a-polytomous-scoring-approach-based-on-item-response-time/</loc>
-    <lastmod>2021-12-09T16:34:10-07:00</lastmod>
+    <lastmod>2021-12-06T15:41:06-07:00</lastmod>
   </url>
   <url>
     <loc>https://okan.cloud/posts/2021-01-19-how-to-shorten-a-measurement-instrument-automatically-part-ii/</loc>
-    <lastmod>2021-12-09T16:34:10-07:00</lastmod>
+    <lastmod>2021-12-06T15:41:05-07:00</lastmod>
   </url>
   <url>
     <loc>https://okan.cloud/posts/2021-01-04-how-to-shorten-a-measurement-instrument-automatically-part-i/</loc>
-    <lastmod>2021-12-09T16:34:10-07:00</lastmod>
+    <lastmod>2021-12-06T15:41:05-07:00</lastmod>
   </url>
   <url>
     <loc>https://okan.cloud/posts/2020-12-21-testing-for-measurement-invariance-in-r/</loc>
-    <lastmod>2021-12-09T16:34:10-07:00</lastmod>
+    <lastmod>2021-12-06T15:41:05-07:00</lastmod>
   </url>
   <url>
     <loc>https://okan.cloud/posts/2020-12-14-explanatory-irt-models-in-r/</loc>
-    <lastmod>2021-12-09T16:34:10-07:00</lastmod>
+    <lastmod>2021-12-06T15:41:05-07:00</lastmod>
   </url>
 </urlset>

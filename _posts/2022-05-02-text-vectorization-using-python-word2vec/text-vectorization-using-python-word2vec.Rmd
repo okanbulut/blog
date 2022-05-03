@@ -1,7 +1,7 @@
 ---
 title: "Text Vectorization Using Python: Word2Vec"
 description: |
-  In the first two part of this series, we demonstrated how to convert text into numerical representation (i.e., text vectorization) using the term-document matrix and term frequency-inverse document frequency (TF-IDF) approaches. In the last part of the series, we focus on a more advanced approach, Word2Vec, that can capture the meaning and association of words within a text. First, we will briefly explain how Word2Vec works, and then demonstrate how to use Word2Vec in Python.
+  In the first two part of this series, we demonstrated how to convert text into numerical representation (i.e., text vectorization) using the term-document matrix and term frequency-inverse document frequency (TF-IDF) approaches. In the last part of the series, we focus on a more advanced approach, Word2Vec, that can capture the meaning and association of words within a text. First, we will briefly explain how Word2Vec works and then demonstrate how to use Word2Vec in Python.
   ```{r, include=FALSE}
   bytes <- file.size("text-vectorization-using-python-word2vec.Rmd")
   words <- bytes/10
@@ -181,7 +181,8 @@ model.wv.similarity(w1="experiment", w2="plastic")
 model.wv.similarity(w1="length", w2="plastic")
 ```
 
-The similarity results show that the word "plastic" seems to be closer to the word "length" than the word "experimental". We must note that this interesting finding is valid only for the corpus we used in this example (i.e., responses from Essay Set 2). The [Gensim](https://radimrehurek.com/gensim/index.html) library in Python also provides [pre-trained models and corpora](https://radimrehurek.com/gensim/auto_examples/howtos/run_downloader_api.html). A pre-trained model based on a massive data set (e.g., [Google News dataset](https://code.google.com/archive/p/word2vec/)) can be used for exploring semantic similarities as long as the data set is relevant to the domain we are working on. 
+The similarity results show that the word "plastic" seems to be closer to the word "length" than the word "experimental". We must note that this interesting finding is valid only for the corpus we used in this example (i.e., responses from Essay Set 2). The [Gensim](https://radimrehurek.com/gensim/index.html) library in Python also provides [pre-trained models and corpora](https://radimrehurek.com/gensim/auto_examples/howtos/run_downloader_api.html). A pre-trained model based on a massive data set (e.g. the [Google News ](https://code.google.com/archive/p/word2vec/) data set) can be used for exploring semantic similarities as long as the data set is relevant to the domain we are working on.
+
 
 ## Conclusion
 
