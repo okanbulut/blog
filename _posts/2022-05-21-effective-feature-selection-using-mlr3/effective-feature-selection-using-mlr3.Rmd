@@ -1,0 +1,55 @@
+---
+title: "Automatic Feature Selection in Machine Learning"
+description: |
+  A short description of the post.
+  ```{r, include=FALSE}
+  bytes <- file.size("effective-feature-selection-using-mlr3.Rmd")
+  words <- bytes/10
+  minutes <- words/200
+  ``` 
+  (`r round(minutes)` min read)
+author:
+  - name: Okan Bulut
+    url: http://www.okanbulut.com/
+    affiliation: University of Alberta
+    affiliation_url: https://www.ualberta.ca
+    orcid_id: 0000-0001-5853-1267
+date: 2022-05-21
+categories:
+  - data science
+  - machine learning
+  - feature selection
+preview: pexels.jpg
+output:
+  distill::distill_article:
+    self_contained: false
+    toc: true
+draft: true
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE)
+suppressWarnings({
+  # Add all the packages you will use in the article here
+  library("rmarkdown")
+  library("kableExtra")
+  # https://github.com/hadley/emo
+  # devtools::install_github("hadley/emo")
+  # library("emo")
+})
+```
+
+![Photo by [Arek Socha](https://pixabay.com/users/qimono-1962238/) on [Pixabay](https://pixabay.com/)](pixabay.jpg)
+
+## Introduction
+
+Last year I wrote [Effective Feature Selection: Recursive Feature Elimination Using R](https://medium.com/p/148ff998e4f7) for [Towards Data Science](https://medium.com/towards-data-science).
+
+https://mlr3.mlr-org.com/
+https://mlr-org.com/gallery/2020-09-14-mlr3fselect-basic/
+https://mlr3book.mlr-org.com/optimization.html#fs
+https://www.kaggle.com/datasets/aljarah/xAPI-Edu-Data
+https://arxiv.org/ftp/arxiv/papers/2112/2112.01247.pdf
+
+
