@@ -1,0 +1,76 @@
+---
+title: "Introduction to Psychometric Network Analysis"
+description: |
+  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tempor dui nec consequat euismod. Donec commodo ligula vitae ex interdum, nec tempor ex congue. Nam hendrerit id sapien eu posuere. Pellentesque efficitur consectetur laoreet. Nunc molestie dictum sem, et accumsan felis vestibulum maximus. Mauris felis turpis, lacinia sed interdum ornare.
+  ```{r, include=FALSE}
+  bytes <- file.size("psychometric-network-analysis-using-r.Rmd")
+  words <- bytes/10
+  minutes <- words/200
+  ``` 
+  (`r round(minutes)` min read)
+author:
+  - name: Okan Bulut
+    url: http://www.okanbulut.com/
+    affiliation: University of Alberta
+    affiliation_url: https://www.ualberta.ca
+    orcid_id: 0000-0001-5853-1267
+date: 2024-01-05
+categories:
+  - psychometrics
+  - network
+  - correlation
+preview: network.jpg
+bibliography: network.bib
+csl: apa.csl
+output:
+  distill::distill_article:
+    self_contained: false
+    toc: true
+draft: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE)
+suppressWarnings({
+  # Add all the packages you will use in the article here
+  library("rmarkdown")
+  library("kableExtra")
+  # https://github.com/hadley/emo
+  # devtools::install_github("hadley/emo")
+  library("emo")
+})
+```
+
+![Photo by [Omar Flores](https://unsplash.com/@designedbyflores) on [Unsplash](https://unsplash.com/)](network.jpg)
+
+## Introduction
+
+Psychometric Network Analysis (PNA), which is also referred to as "network psychometrics", is an emerging field that combines concepts from psychometrics and network analysis to study the relationships among psychological variables. Generally, psychometrics involves the measurement of latent traits, while network analysis focuses on modeling and analyzing complex systems of interconnected elements. PNA aims to represent the relationships between psychological constructs, such as symptoms, traits, or behaviors, as a network of interconnected nodes. The figure below shows a network graph for the Big Five Personality Test:
+
+```{r, echo=FALSE, fig.cap="Figure from [Epskamp (2017)](https://hdl.handle.net/11245.1/a76273c6-6abc-4cc7-a2e9-3b5f1ae3c29e)"}
+knitr::include_graphics("pna1.png")
+```
+
+Each node represents a specific personality trait, and the edges (connections) between nodes reflect the statistical relationships between those variables. The edges can be weighted to represent the strength (e.g., thicker edges represents stronger associations) and direction of the relationships between the corresponding traits (e.g., green lines for positive and red lines for negative associations).
+
+In social sciences (especially in psychology and education), researchers often use "partial correlation" coefficients to understand the associations between the variables. A partial correlation is the association between two [quantitative] variables, after conditioning on all other variables in the dataset. Networks based on partial correlations are known as Gaussian Graphical Models (GGMs; @costantini).
+
+To prevent over-interpretation in network structures, we want to limit the number of spurious connections (i.e., weak partial correlations due to sampling variation). It is possible to eliminate spurious connections using statistical regularization techniques, such as "least absolute shrinkage and selection operator" (LASSO; @tibshirani). LASSO (L1) regularization shrinks partial correlation coefficients when estimating a network model, which means that small coefficients are estimated to be exactly zero. 
+
+As an extension of LASSO, graphical LASSO, or shortly glasso [@friedman], involves a penalty parameter ($\lambda$) to remove weak associations within a network. The following figure demonstrates the impact of the penalty parameter. 
+
+```{r, echo=FALSE, fig.cap="Figure Adapted from [Epskamp and Fried (2017)](https://doi.org/10.1037/met0000167)"}
+knitr::include_graphics("pna2.png")
+```
+
+When estimating network models, glasso is typically combined with the extended Bayesian information criterion (EBIC; @chen2008) for tuning parameter selection, resulting in EBICglasso [@epskamp2018tutorial]. If the dataset for PNA consists of continuous variables that are multivariate normally distributed, then we can estimate a GGM based on partial correlations with glasso or EBICglasso. GGM can also be used for ordinal data (e.g., Likert-scale data) wherein the network is based on the polychoric correlations instead of partial correlations.
+
+In this blog post, I want to demonstrate how to perform PNA and visualize resulting network models (specifically, GGMs) using R `r ji("web")` `r ji("coder")`. I highly encourage readers to check out [Network Psychometrics with R](https://doi.org/10.4324/9781003111238) by @isvoranu2022 for a comprehensive discussion of network models and their estimation using R. 
+
+Let's get started `r emo::ji("biceps")`.
+
+## Example
+
+xxx
+
+
