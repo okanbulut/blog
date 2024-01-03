@@ -38,6 +38,12 @@ suppressWarnings({
   # https://github.com/hadley/emo
   # devtools::install_github("hadley/emo")
   library("emo")
+  library("dplyr")
+  library("psych")
+  library("ggcorrplot")
+  library("bootnet")
+  library("psychonetrics")
+  library("plotly")
 })
 ```
 
@@ -47,7 +53,7 @@ suppressWarnings({
 
 Psychometric Network Analysis (PNA), which is also referred to as "network psychometrics", is an emerging field that combines concepts from psychometrics and network analysis to study the relationships among psychological variables. Generally, psychometrics involves the measurement of latent traits, while network analysis focuses on modeling and analyzing complex systems of interconnected elements. PNA aims to represent the relationships between psychological constructs, such as symptoms, traits, or behaviors, as a network of interconnected nodes. The figure below shows a network graph for the Big Five Personality Test:
 
-```{r, echo=FALSE, fig.cap="Figure from [Epskamp (2017)](https://hdl.handle.net/11245.1/a76273c6-6abc-4cc7-a2e9-3b5f1ae3c29e)"}
+```{r, echo=FALSE, fig.cap="Figure from [Epskamp (2017)](https://hdl.handle.net/11245.1/a76273c6-6abc-4cc7-a2e9-3b5f1ae3c29e)", , out.extra="class=external", layout="l-body-outset"}
 knitr::include_graphics("pna1.png")
 ```
 
@@ -59,7 +65,7 @@ To prevent over-interpretation in network structures, we want to limit the numbe
 
 As an extension of LASSO, graphical LASSO, or shortly glasso [@friedman], involves a penalty parameter ($\lambda$) to remove weak associations within a network. The following figure demonstrates the impact of the penalty parameter. 
 
-```{r, echo=FALSE, fig.cap="Figure Adapted from [Epskamp and Fried (2017)](https://doi.org/10.1037/met0000167)"}
+```{r, echo=FALSE, fig.cap="Figure Adapted from [Epskamp and Fried (2017)](https://doi.org/10.1037/met0000167)", out.extra="class=external", layout="l-body-outset"}
 knitr::include_graphics("pna2.png")
 ```
 
@@ -71,6 +77,89 @@ Let's get started `r emo::ji("biceps")`.
 
 ## Example
 
-xxx
+In our example, we will use a subset of The Synthetic Aperture Personality Assessment (SAPA)--a web based personality assessment project (<https://www.sapa-project.org/>). The purpose of SAPA is to find patterns among the vast number of ways that people differ from one another in terms of their thoughts, feelings, interests, abilities, desires, values, and preferences [@condon2014; @revelle2010]. The dataset consists of 16 SAPA items sampled from the full instrument (80 items). These items measure four subskills (i.e., verbal reasoning, letter series, matrix reasoning, and spatial rotations) as part of the general intelligence, also known as *g* factor. The "sapa_data.csv" dataset is a data frame with 1525 individuals who responded to 16 multiple-choice items in SAPA. The original dataset is included in the **psych** package [@R-psych]. The dataset can be downloaded from [**here**](https://raw.githubusercontent.com/okanbulut/psychometrics/master/sapa_data.csv). Now, let's import the data into R and then review its content.
 
+
+```{r ch1, eval=FALSE}
+# Read the data in R
+sapa <- read.csv("sapa_data.csv", header = TRUE)
+
+# Preview the data
+head(data)
+```
+
+```{r ch2, echo=FALSE}
+# Read the data in R
+sapa <- read.csv("sapa_data.csv", header = TRUE)
+paged_table(sapa, options = list(cols.print = 12))
+```
+
+Next, we will check out the correlations among the SAPA items. Since the items are dichotomous (i.e., binary), we will compute the tetrachoric correlations and then visualize the matrix using a correlation matrix plot.
+
+```{r ch3, fig.width=8, fig.height=5, fig.cap="Correlation matrix plot of the SAPA items", layout="l-body-outset"}
+library("psych")
+library("ggcorrplot")  
+
+# Save the correlation matrix
+cormat <- psych::tetrachoric(x = sapa)$rho
+
+# Correlation matrix plot
+ggcorrplot::ggcorrplot(corr = cormat, # correlation matrix
+                       type = "lower", # print only the lower part of the correlation matrix
+                       hc.order = TRUE, # hierarchical clustering
+                       show.diag = TRUE, # show the diagonal values of 1
+                       lab = TRUE, # add correlation values as labels
+                       lab_size = 3) # Size of the labels
+
+```
+
+The figure above shows that all of the SAPA items are positively correlated with each other. the items associated with the same construct (e.g., rotation) seem to have been clustered together (e.g., see the rotate.4, rotate.3, rotate.6, and rotate.8 as the top cluster). Now, we can go ahead and estimate a GGM based on this correlation matrix. 
+
+We will use the **bootnet** package [@R-bootnet]. This package has many methods to estimate GGMs. In our example, we will use "IsingFit" because the Ising model deal with binary data. This model combines L1-regularized logistic regression with model selection based on the Extended Bayesian Information Criterion (EBIC).
+
+```{r ch4}
+library("bootnet")
+
+network_sapa_1 <- bootnet::estimateNetwork(
+  data = sapa, # dataset
+  default = "IsingFit", # for estimating GGM with the Ising model and EBIC,
+  verbose = FALSE # Ignore real-time updates on the estimation progress
+)
+
+# Print the estimated network
+print(network_sapa_1)
+
+# View the estimated network
+plot(network_sapa_1, layout = "spring") 
+```
+
+What if we compute the polychoric correlations for the SAPA items using `corMethod = "cor_auto"` and estimate a GGM with gLASSO and EBIC? 
+
+```{r ch5}
+network_sapa_2 <- bootnet::estimateNetwork(
+  data = sapa,
+  corMethod = "cor_auto", # for polychoric correlations
+  default = "EBICglasso", # for estimating GGM with gLASSO and EBIC
+  verbose = FALSE
+)
+
+# View the estimated network
+plot(network_sapa_2, layout = "spring") 
+```
+
+By default, the **bootnet** package uses `tuning = 0.5` for the penalty parameter for EBICglasso. We can increase or decrease this parameter to adjust the penalty on the model (**Note:** `tuning = 0` leads to model selection based on BIC instead of EBIC). 
+
+
+```{r ch6}
+network_sapa_3 <- bootnet::estimateNetwork(
+  data = sapa,
+  corMethod = "cor_auto", # for polychoric correlations
+  default = "EBICglasso", # for estimating GGM with gLASSO and EBIC
+  tuning = 1, 
+  verbose = FALSE
+)
+
+# View the estimated network
+plot(network_sapa_3, layout = "spring") 
+```
 
