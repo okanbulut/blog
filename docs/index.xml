@@ -13,7 +13,21 @@ psychological data
       <link>https://okan.cloud/</link>
     </image>
     <generator>Distill</generator>
-    <lastBuildDate>Mon, 02 May 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 04 Jan 2024 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Introduction to Psychometric Network Analysis</title>
+      <dc:creator>Okan Bulut</dc:creator>
+      <link>https://okan.cloud/posts/2024-01-04-introduction-to-psychometric-network-analysis</link>
+      <description>Psychometric network analysis (PNA), also known as network psychometrics, has emerged as a new framework to analyze the relationships among observed variables to better understand the underlying structure of psychological phenomena. Psychometric network models are particularly useful when dealing with complex and multidimensional data. In this post, I provide a brief introduction to psychometric network models, particularly Gaussian graphical models (GGMs), and demonstrate how to estimate them using R. 
+
+(7 min read)</description>
+      <category>psychometrics</category>
+      <category>network</category>
+      <category>correlation</category>
+      <guid>https://okan.cloud/posts/2024-01-04-introduction-to-psychometric-network-analysis</guid>
+      <pubDate>Thu, 04 Jan 2024 00:00:00 +0000</pubDate>
+      <media:content url="https://okan.cloud/posts/2024-01-04-introduction-to-psychometric-network-analysis/network.jpg" medium="image" type="image/jpeg"/>
+    </item>
     <item>
       <title>Text Vectorization Using Python: Word2Vec</title>
       <dc:creator>Sevilay Kilmen</dc:creator>
