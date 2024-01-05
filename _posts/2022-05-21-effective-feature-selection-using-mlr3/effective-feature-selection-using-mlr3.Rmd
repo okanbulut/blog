@@ -48,6 +48,7 @@ Last year I wrote [Effective Feature Selection: Recursive Feature Elimination Us
 
 https://mlr3.mlr-org.com/
 https://mlr-org.com/gallery/2020-09-14-mlr3fselect-basic/
+https://mlr-org.com/gallery/optimization/2020-09-14-mlr3fselect-basic/
 https://mlr3book.mlr-org.com/optimization.html#fs
 https://www.kaggle.com/datasets/aljarah/xAPI-Edu-Data
 https://arxiv.org/ftp/arxiv/papers/2112/2112.01247.pdf
