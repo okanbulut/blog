@@ -1,0 +1,57 @@
+---
+title: "Lexicon-Based Sentiment Analysis Using R"
+description: |
+  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vehicula tempor bibendum. Sed augue turpis, efficitur ut ipsum quis, fermentum pulvinar quam. Proin molestie orci erat, et condimentum dui ornare ac. Quisque sit amet lacus id nisl pellentesque sagittis. Vestibulum non urna non eros condimentum commodo. Proin vitae nulla fermentum.
+  ```{r, include=FALSE}
+  bytes <- file.size("lexicon-based-sentiment-analysis-using-r.Rmd")
+  words <- bytes/10
+  minutes <- words/200
+  ``` 
+  (`r round(minutes)` min read)
+author:
+  - name: Okan Bulut
+    url: http://www.okanbulut.com/
+    affiliation: University of Alberta
+    affiliation_url: https://www.ualberta.ca
+    orcid_id: 0000-0001-5853-1267
+date: 2024-01-31
+categories:
+  - data science
+  - language
+  - text analysis
+  - sentiment
+preview: emoji.jpg
+bibliography: sentiment.bib
+csl: apa.csl
+output:
+  distill::distill_article:
+    self_contained: false
+    toc: true
+draft: true
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE)
+suppressWarnings({
+  # Add all the packages you will use in the article here
+  library("rmarkdown")
+  library("kableExtra")
+  library("emo")
+  library("dplyr")
+})
+```
+
+![Photo by [Roman Odintsov](https://www.pexels.com/@roman-odintsov/) on [Pexels](https://www.pexels.com/)](emoji.jpg)
+
+## Introduction
+
+XXXX
+
+During the COVID-19 pandemic, my colleagues and I published several papers utilizing lexicon-based sentiment analysis [@sentimentbulut; @sentimentpoth].
+
+## Example 
+
+XXXX 
+
+
