@@ -37,8 +37,11 @@ suppressWarnings({
   # Add all the packages you will use in the article here
   library("rmarkdown")
   library("kableExtra")
+  # https://github.com/hadley/emo
   library("emo")
   library("dplyr")
+  library("tidytext")
+  library("ggplot2")
 })
 ```
 
@@ -50,7 +53,7 @@ During the COVID-19 pandemic, I decided to learn a new statistical technique to 
 
 Amidst the COVID-19 pandemic, numerous researchers turned to sentiment analysis to gauge public responses to news and developments surrounding the virus. This included scrutinizing user-generated content on popular social media platforms like Twitter, YouTube, and Instagram. Inspired by this approach, my colleagues and I aimed to expand upon existing research by analyzing the daily briefings delivered by public health authorities. In Alberta, Dr. Deena Hinshaw, the province's chief medical officer of health, regularly provided [updates on the region's response to the ongoing pandemic](https://www.youtube.com/watch?v=fvw_USRfXgY), Through our analysis of these public health announcements, we sought to evaluate Alberta's effectiveness in employing communication strategies during this complex public health crisis [@sentimentbulut; @sentimentpoth].
 
-In this post, my aim is to guide you through the process of conducting sentiment analysis using R. Specifically, I'll delve into "lexicon-based sentiment analysis," which I'll detail in the next section. You'll find examples of lexicon-based sentiment analysis that we've incorporated into our publications mentioned above. In upcoming posts, I'll also explore more sophisticated forms of sentiment analysis leveraging cutting-edge pretrained models available on [Hugging Face](https://huggingface.co/docs/transformers/en/index).
+In this post, my aim is to guide you through the process of conducting sentiment analysis using R. Specifically, I'll delve into "lexicon-based sentiment analysis," which I'll detail in the next section. You'll find examples of lexicon-based sentiment analysis that we've incorporated into our publications mentioned above. In upcoming posts, I'll also explore more sophisticated forms of sentiment analysis leveraging cutting-edge pre-trained models available on [Hugging Face](https://huggingface.co/docs/transformers/en/index).
 
 ## Lexicon-Based Sentiment Analysis
 
@@ -58,11 +61,96 @@ As I began to explore sentiment analysis, I found that the most common method of
 
 Lexicon-based sentiment analysis is a process that involves matching words in a given text with the words present in general-purpose lexicons like NRC and Bing. Each word is assigned a specific sentiment, such as positive or negative. The overall sentiment score of the text is then calculated by adding up the individual sentiment scores of each word. For example, if a text contains 50 positive and 30 negative words based on the Bing lexicon, the total sentiment score would be 20, which indicates that the text expresses mostly positive sentiments. Conversely, a negative value would suggest the opposite sentiment.
 
-Performing lexicon-based sentiment analysis using R can be both fun and tricky at the same time. While analyzing public health announcements in terms of sentiments, I found Julia Silge and David Robinson's book, [Text Mining with R](https://www.tidytextmining.com/), to be very helpful. The book has [a chapter dedicated to sentiment analysis](https://www.tidytextmining.com/sentiment), where the authors demonstrate how to conduct sentiment analysis using general-purpose lexicons like Bing and NRC. However, Julia and David also highlight a major limitation of lexicon-based sentiment analysis. The analysis considers only single words (i.e., unigrams) and does not consider qualifiers before a word. For instance, negation words like "not" in "not true" are ignored, and sentiment analysis processes them as two separate words, "not" and "true". Furthermore, if a particular word (either positive or negative) is repeatedly used throughout the text, this may skew the results depending on the polarity (positive or negative) of this word. Therefore, the results of lexicon-based sentiment analysis should be interpreted carefully.  
+Performing lexicon-based sentiment analysis using R can be both fun and tricky at the same time. While analyzing public health announcements in terms of sentiments, I found Julia Silge and David Robinson's book, [Text Mining with R](https://www.tidytextmining.com/), to be very helpful. The book has [a chapter dedicated to sentiment analysis](https://www.tidytextmining.com/sentiment), where the authors demonstrate how to conduct sentiment analysis using general-purpose lexicons like Bing and NRC. However, Julia and David also highlight a major limitation of lexicon-based sentiment analysis. The analysis considers only single words (i.e., unigrams) and does not consider qualifiers before a word. For instance, negation words like "not" in "not true" are ignored, and sentiment analysis processes them as two separate words, "not" and "true". Furthermore, if a particular word (either positive or negative) is repeatedly used throughout the text, this may skew the results depending on the polarity (positive or negative) of this word. Therefore, the results of lexicon-based sentiment analysis should be interpreted carefully. 
+
+Now, let's move to our example where we will conduct lexicon-based sentiment analysis using Dr. Deena Hinshaw's media briefings during the COVID-19 pandemic. My goal is to showcase several R packages capable of running sentiment analysis `r ji("graph")`.
 
 ## Example 
 
-XXXX 
+For the sake of simplicity, we will focus on the first wave of the pandemic (March 2020 - June 2020). The transcripts of all media briefings were available in the government of Alberta’s COVID-19 pandemic website (<https://www.alberta.ca/covid>). After importing these transcripts into R, I turned all the text into lowercase and then applied word tokenization using the **tidytext** [@R-tidytext] and **tokenizers** [@R-tokenizers] packages. Word tokenization split the sentences in the media briefings into individual words for each entry (i.e., day of media briefings). Next, I applied lemmatization to the tokens to resolve each word into its canonical form using the **textstem** package [@R-textstem]. Finally, I removed common stopwords, such as "my", "for", "that", "with", and "for, using the **stopwords** package [@R-stopwords]. The final dataset is available [**here**](https://github.com/okanbulut/blog/raw/master/data_and_codes/wave1_alberta.RData). Now, let's import the data into R and then review its content. 
+
+```{r ch1, echo=TRUE, eval=FALSE}
+load("wave1_alberta.RData")
+
+head(wave1_alberta, 10)
+```
+
+```{r ch2, echo=FALSE, eval=TRUE}
+load("wave1_alberta.RData")
+paged_table(wave1_alberta, options = list(cols.print = 12))
+```
+
+The dataset has three columns: 
+
+* month (the month of the media briefing)
+* date (the exact date of the media briefing), and 
+* word (words or tokens used in media briefing)
+
+Now, we can calculate some descriptive statistics to better understand the content of our dataset. We can begin by finding the most common 5 words for each month. 
+
+```{r ch3, echo=TRUE, eval=TRUE}
+library("dplyr")
+
+wave1_alberta %>%
+  group_by(month) %>%
+  count(word, sort = TRUE) %>%
+  slice_head(n = 5) %>%
+  as.data.frame()
+```
+
+We see that words such as health, continue, and test were commonly used in the media briefings across this 4-month period. We can also expand our list to the most common 10 words and print it visually:
+
+```{r ch4, echo=TRUE, eval=TRUE}
+library("tidytext")
+library("ggplot2")
+
+wave1_alberta %>%
+  group_by(month) %>%
+  count(word, sort = TRUE) %>%
+  # Find the top 10 words
+  slice_head(n = 10) %>%
+  ungroup() %>%
+  # Order the words by their frequency within each month
+  mutate(word = reorder_within(word, n, month)) %>%
+  # Create a bar graph
+  ggplot(aes(x = n, y = word, fill = month)) +
+  geom_col() +
+  scale_y_reordered() +
+  facet_wrap(~ month, scales = "free_y") +
+  labs(x = "Frequency", y = NULL) +
+  theme(legend.position = "none",
+        axis.text.x = element_text(size = 11),
+        axis.text.y = element_text(size = 11),
+        strip.background = element_blank(),
+        strip.text = element_text(colour = "black", face = "bold", size = 13))
+```
+
+Since some words may be common across all four months, the plot above may not necessarily show us the important words that are unique to each month. To find such important words, we can use Term Frequency - Inverse Document Frequency (TF-IDF)--a widely used technique in NLP for measuring how important a term is within a document relative to a collection of documents (i.e., relative to a corpus).
+
+```{r ch5, echo=TRUE, eval=TRUE}
+# Calculate TF-IDF for the words for each month
+wave1_tf_idf <- wave1_alberta %>%
+  count(month, word, sort = TRUE) %>%
+  bind_tf_idf(word, month, n) %>%
+  arrange(month, -tf_idf) %>%
+  group_by(month) %>%
+  top_n(10) %>%
+  ungroup
+
+# Visualize the results
+wave1_tf_idf %>%
+  mutate(word = reorder_within(word, tf_idf, month)) %>%
+  ggplot(aes(word, tf_idf, fill = month)) +
+  geom_col(show.legend = FALSE) + 
+  facet_wrap(~ month, scales = "free", ncol = 2) +
+  scale_x_reordered() +
+  coord_flip() +
+  theme(strip.background = element_blank(),
+        strip.text = element_text(colour = "black", face = "bold", size = 13),
+        axis.text.x = element_text(size = 11),
+        axis.text.y = element_text(size = 11)) +
+  labs(x = NULL, y = "TF-IDF")
+```
 
 ## Concluding Remarks
 
