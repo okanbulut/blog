@@ -13,7 +13,22 @@ psychological data
       <link>https://okan.cloud/</link>
     </image>
     <generator>Distill</generator>
-    <lastBuildDate>Thu, 04 Jan 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 09 Feb 2024 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Lexicon-Based Sentiment Analysis Using R</title>
+      <dc:creator>Okan Bulut</dc:creator>
+      <link>https://okan.cloud/posts/2024-02-09-lexicon-based-sentiment-analysis-using-r</link>
+      <description>In this post, we will uncover the power of lexicon-based sentiment analysis using R. I demonstrate how to harness the capabilities of lexicons like NRC and Bing to decipher the emotional pulse of your text data. With practical examples, you'll gain the skills to analyze sentiment scores and extract valuable insights from your textual data sets.
+
+(12 min read)</description>
+      <category>data science</category>
+      <category>natural language processing</category>
+      <category>text mining</category>
+      <category>sentiment</category>
+      <guid>https://okan.cloud/posts/2024-02-09-lexicon-based-sentiment-analysis-using-r</guid>
+      <pubDate>Fri, 09 Feb 2024 00:00:00 +0000</pubDate>
+      <media:content url="https://okan.cloud/posts/2024-02-09-lexicon-based-sentiment-analysis-using-r/emoji.jpg" medium="image" type="image/jpeg"/>
+    </item>
     <item>
       <title>Introduction to Psychometric Network Analysis</title>
       <dc:creator>Okan Bulut</dc:creator>
