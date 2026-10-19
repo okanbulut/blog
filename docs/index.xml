@@ -13,7 +13,23 @@ psychological data
       <link>https://okan.cloud/</link>
     </image>
     <generator>Distill</generator>
-    <lastBuildDate>Fri, 09 Feb 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 18 Oct 2026 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>DeBERTa vs. UltraBERT: Does a Longer Context Window Help Automated Essay Scoring?</title>
+      <dc:creator>Okan Bulut</dc:creator>
+      <link>https://okan.cloud/posts/2026-10-18-deberta-vs-ultrabert-in-automated-essay-scoring</link>
+      <description>Most transformer encoders used for automated essay scoring can only read the first 512 tokens of an essay. In this post, I compare DeBERTa-v3, a popular encoder with a 512-token limit, to UltraBERT, a new encoder that can read up to 32,000 tokens. Using the PERSUADE 2.0 corpus, I show how much of an essay gets cut off, why the cut falls unevenly on the best essays, and how much a longer context window actually improves agreement with human raters.
+
+(17 min read)</description>
+      <category>automated scoring</category>
+      <category>natural language processing</category>
+      <category>transformers</category>
+      <category>machine learning</category>
+      <category>python</category>
+      <guid>https://okan.cloud/posts/2026-10-18-deberta-vs-ultrabert-in-automated-essay-scoring</guid>
+      <pubDate>Sun, 18 Oct 2026 00:00:00 +0000</pubDate>
+      <media:content url="https://okan.cloud/posts/2026-10-18-deberta-vs-ultrabert-in-automated-essay-scoring/deberta_vs_ultrabert.png" medium="image" type="image/png" width="1774" height="887"/>
+    </item>
     <item>
       <title>Lexicon-Based Sentiment Analysis Using R</title>
       <dc:creator>Okan Bulut</dc:creator>

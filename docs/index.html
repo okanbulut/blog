@@ -21,6 +21,7 @@
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -460,8 +461,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
 
   <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-  <link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet"/>
-  <link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet"/>
+  <link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"/>
+  <link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"/>
   <script src="site_libs/headroom-0.9.4/headroom.min.js"></script>
   <script src="site_libs/autocomplete-0.37.1/autocomplete.min.js"></script>
   <script src="site_libs/fuse-6.4.1/fuse.min.js"></script>
@@ -2419,7 +2420,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     color: var(--hover-color, white);
   }</style>
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.32/header-attrs.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2615,6 +2616,31 @@ function init_posts_list() {
 <div class="posts-container posts-with-sidebar posts-apply-limit l-screen-inset">
 <div class="posts-list">
 <h1 class="posts-list-caption" data-caption="Psychometrics and Data Science with R and Python">Psychometrics and Data Science with R and Python</h1>
+<a href="posts/2026-10-18-deberta-vs-ultrabert-in-automated-essay-scoring/" class="post-preview">
+<script class="post-metadata" type="text/json">{"categories":["automated scoring","natural language processing","transformers","machine learning","python"]}</script>
+<div class="metadata">
+<div class="publishedDate">Oct. 18, 2026</div>
+<div class="dt-authors">
+<div class="dt-author">Okan Bulut</div>
+</div>
+</div>
+<div class="thumbnail">
+<img src="posts/2026-10-18-deberta-vs-ultrabert-in-automated-essay-scoring/deberta_vs_ultrabert.png"/>
+</div>
+<div class="description">
+<h2>DeBERTa vs. UltraBERT: Does a Longer Context Window Help Automated Essay Scoring?</h2>
+<div class="dt-tags">
+<div class="dt-tag">automated scoring</div>
+<div class="dt-tag">natural language processing</div>
+<div class="dt-tag">transformers</div>
+<div class="dt-tag">machine learning</div>
+<div class="dt-tag">python</div>
+</div>
+<p>Most transformer encoders used for automated essay scoring can only read the first 512 tokens of an essay. In this post, I compare DeBERTa-v3, a popular encoder with a 512-token limit, to UltraBERT, a new encoder that can read up to 32,000 tokens. Using the PERSUADE 2.0 corpus, I show how much of an essay gets cut off, why the cut falls unevenly on the best essays, and how much a longer context window actually improves agreement with human raters.
+
+(17 min read)</p>
+</div>
+</a>
 <a href="posts/2024-02-09-lexicon-based-sentiment-analysis-using-r/" class="post-preview">
 <script class="post-metadata" type="text/json">{"categories":["data science","natural language processing","text mining","sentiment"]}</script>
 <div class="metadata">
@@ -2724,7 +2750,7 @@ function init_posts_list() {
 </div>
 </div>
 <div class="thumbnail">
-<img src="posts/2021-04-08-text-vectorization-using-python-term-document-matrix/pexels.jpg"/>
+<img data-src="posts/2021-04-08-text-vectorization-using-python-term-document-matrix/pexels.jpg"/>
 </div>
 <div class="description">
 <h2>Text Vectorization Using Python: Term-Document Matrix</h2>
@@ -2959,7 +2985,11 @@ models in R.
 <ul>
 <li>
 <a href="#category:Articles">Articles</a>
-<span class="category-count">(13)</span>
+<span class="category-count">(14)</span>
+</li>
+<li>
+<a href="#category:automated_scoring">automated scoring</a>
+<span class="category-count">(1)</span>
 </li>
 <li>
 <a href="#category:CAT">CAT</a>
@@ -2999,7 +3029,7 @@ models in R.
 </li>
 <li>
 <a href="#category:machine_learning">machine learning</a>
-<span class="category-count">(3)</span>
+<span class="category-count">(4)</span>
 </li>
 <li>
 <a href="#category:measurement_invariance">measurement invariance</a>
@@ -3007,7 +3037,7 @@ models in R.
 </li>
 <li>
 <a href="#category:natural_language_processing">natural language processing</a>
-<span class="category-count">(4)</span>
+<span class="category-count">(5)</span>
 </li>
 <li>
 <a href="#category:network">network</a>
@@ -3027,7 +3057,7 @@ models in R.
 </li>
 <li>
 <a href="#category:python">python</a>
-<span class="category-count">(2)</span>
+<span class="category-count">(3)</span>
 </li>
 <li>
 <a href="#category:response_time">response time</a>
@@ -3052,6 +3082,10 @@ models in R.
 <li>
 <a href="#category:text_vectorization">text vectorization</a>
 <span class="category-count">(2)</span>
+</li>
+<li>
+<a href="#category:transformers">transformers</a>
+<span class="category-count">(1)</span>
 </li>
 </ul>
 </div>

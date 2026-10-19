@@ -1,0 +1,3207 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+  <meta name="generator" content="distill" />
+
+  <style type="text/css">
+  /* Hide doc at startup (prevent jankiness while JS renders/transforms) */
+  body {
+    visibility: hidden;
+  }
+  </style>
+
+ <!--radix_placeholder_import_source-->
+ <!--/radix_placeholder_import_source-->
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  { color: #00769e; background-color: #f1f3f5; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span { color: #00769e; } /* Normal */
+code span.al { color: #ad0000; } /* Alert */
+code span.an { color: #5e5e5e; } /* Annotation */
+code span.at { color: #657422; } /* Attribute */
+code span.bn { color: #ad0000; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #00769e; } /* ControlFlow */
+code span.ch { color: #20794d; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #5e5e5e; } /* Comment */
+code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+code span.dt { color: #ad0000; } /* DataType */
+code span.dv { color: #ad0000; } /* DecVal */
+code span.er { color: #ad0000; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #ad0000; } /* Float */
+code span.fu { color: #4758ab; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #5e5e5e; } /* Information */
+code span.kw { color: #00769e; } /* Keyword */
+code span.op { color: #5e5e5e; } /* Operator */
+code span.ot { color: #00769e; } /* Other */
+code span.pp { color: #ad0000; } /* Preprocessor */
+code span.sc { color: #5e5e5e; } /* SpecialChar */
+code span.ss { color: #20794d; } /* SpecialString */
+code span.st { color: #20794d; } /* String */
+code span.va { color: #111111; } /* Variable */
+code span.vs { color: #20794d; } /* VerbatimString */
+code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+</style>
+
+<style>
+  div.csl-bib-body { }
+  div.csl-entry {
+    clear: both;
+      margin-bottom: 0em;
+    }
+  .hanging div.csl-entry {
+    margin-left:2em;
+    text-indent:-2em;
+  }
+  div.csl-left-margin {
+    min-width:2em;
+    float:left;
+  }
+  div.csl-right-inline {
+    margin-left:2em;
+    padding-left:1em;
+  }
+  div.csl-indent {
+    margin-left: 2em;
+  }
+</style>
+
+  <!--radix_placeholder_meta_tags-->
+<title>Okan Bulut: DeBERTa vs. UltraBERT: Does a Longer Context Window Help Automated Essay Scoring?</title>
+
+<meta property="description" itemprop="description" content="Most transformer encoders used for automated essay scoring can only read the first 512 tokens of an essay. In this post, I compare DeBERTa-v3, a popular encoder with a 512-token limit, to UltraBERT, a new encoder that can read up to 32,000 tokens. Using the PERSUADE 2.0 corpus, I show how much of an essay gets cut off, why the cut falls unevenly on the best essays, and how much a longer context window actually improves agreement with human raters.&#10;&#10;(17 min read)"/>
+
+<link rel="canonical" href="https://okan.cloud/posts/2026-10-18-deberta-vs-ultrabert-in-automated-essay-scoring/"/>
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/"/>
+<link rel="icon" type="image/png" href="../..//images/favicon/favicon.png"/>
+
+<!--  https://schema.org/Article -->
+<meta property="article:published" itemprop="datePublished" content="2026-10-18"/>
+<meta property="article:created" itemprop="dateCreated" content="2026-10-18"/>
+<meta name="article:author" content="Okan Bulut"/>
+
+<!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
+<meta property="og:title" content="Okan Bulut: DeBERTa vs. UltraBERT: Does a Longer Context Window Help Automated Essay Scoring?"/>
+<meta property="og:type" content="article"/>
+<meta property="og:description" content="Most transformer encoders used for automated essay scoring can only read the first 512 tokens of an essay. In this post, I compare DeBERTa-v3, a popular encoder with a 512-token limit, to UltraBERT, a new encoder that can read up to 32,000 tokens. Using the PERSUADE 2.0 corpus, I show how much of an essay gets cut off, why the cut falls unevenly on the best essays, and how much a longer context window actually improves agreement with human raters.&#10;&#10;(17 min read)"/>
+<meta property="og:url" content="https://okan.cloud/posts/2026-10-18-deberta-vs-ultrabert-in-automated-essay-scoring/"/>
+<meta property="og:image" content="https://okan.cloud/posts/2026-10-18-deberta-vs-ultrabert-in-automated-essay-scoring/deberta_vs_ultrabert.png"/>
+<meta property="og:image:width" content="1774"/>
+<meta property="og:image:height" content="887"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:site_name" content="Okan Bulut"/>
+
+<!--  https://dev.twitter.com/cards/types/summary -->
+<meta property="twitter:card" content="summary_large_image"/>
+<meta property="twitter:title" content="Okan Bulut: DeBERTa vs. UltraBERT: Does a Longer Context Window Help Automated Essay Scoring?"/>
+<meta property="twitter:description" content="Most transformer encoders used for automated essay scoring can only read the first 512 tokens of an essay. In this post, I compare DeBERTa-v3, a popular encoder with a 512-token limit, to UltraBERT, a new encoder that can read up to 32,000 tokens. Using the PERSUADE 2.0 corpus, I show how much of an essay gets cut off, why the cut falls unevenly on the best essays, and how much a longer context window actually improves agreement with human raters.&#10;&#10;(17 min read)"/>
+<meta property="twitter:url" content="https://okan.cloud/posts/2026-10-18-deberta-vs-ultrabert-in-automated-essay-scoring/"/>
+<meta property="twitter:image" content="https://okan.cloud/posts/2026-10-18-deberta-vs-ultrabert-in-automated-essay-scoring/deberta_vs_ultrabert.png"/>
+<meta property="twitter:image:width" content="1774"/>
+<meta property="twitter:image:height" content="887"/>
+<meta property="twitter:site" content="@drokanbulut"/>
+<meta property="twitter:creator" content="@drokanbulut"/>
+
+<!--  https://scholar.google.com/intl/en/scholar/inclusion.html#indexing -->
+<meta name="citation_title" content="Okan Bulut: DeBERTa vs. UltraBERT: Does a Longer Context Window Help Automated Essay Scoring?"/>
+<meta name="citation_fulltext_html_url" content="https://okan.cloud/posts/2026-10-18-deberta-vs-ultrabert-in-automated-essay-scoring/"/>
+<meta name="citation_fulltext_world_readable" content=""/>
+<meta name="citation_online_date" content="2026/10/18"/>
+<meta name="citation_publication_date" content="2026/10/18"/>
+<meta name="citation_author" content="Okan Bulut"/>
+<meta name="citation_author_institution" content="University of Alberta"/>
+<!--/radix_placeholder_meta_tags-->
+  
+  <meta name="citation_reference" content="citation_title=On calibration of modern neural networks;citation_author=Chuan Guo;citation_author=Geoff Pleiss;citation_author=Yu Sun;citation_author=Kilian Q. Weinberger"/>
+  <meta name="citation_reference" content="citation_title=A framework for evaluation and use of automated scoring;citation_volume=31;citation_doi=10.1111/j.1745-3992.2011.00223.x;citation_author=David M. Williamson;citation_author=Xiaoming Xi;citation_author=F. Jay Breyer"/>
+  <!--radix_placeholder_rmarkdown_metadata-->
+
+<script type="text/json" id="radix-rmarkdown-metadata">
+{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["creative_commons","title","description","author","date","categories","preview","bibliography","csl","resource_files","output","citation_url","canonical_url"]}},"value":[{"type":"character","attributes":{},"value":["CC BY"]},{"type":"character","attributes":{},"value":["DeBERTa vs. UltraBERT: Does a Longer Context Window Help Automated Essay Scoring?"]},{"type":"character","attributes":{},"value":["Most transformer encoders used for automated essay scoring can only read the first 512 tokens of an essay. In this post, I compare DeBERTa-v3, a popular encoder with a 512-token limit, to UltraBERT, a new encoder that can read up to 32,000 tokens. Using the PERSUADE 2.0 corpus, I show how much of an essay gets cut off, why the cut falls unevenly on the best essays, and how much a longer context window actually improves agreement with human raters.\n\n(17 min read)"]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","url","affiliation","affiliation_url","orcid_id"]}},"value":[{"type":"character","attributes":{},"value":["Okan Bulut"]},{"type":"character","attributes":{},"value":["http://www.okanbulut.com/"]},{"type":"character","attributes":{},"value":["University of Alberta"]},{"type":"character","attributes":{},"value":["https://www.ualberta.ca"]},{"type":"character","attributes":{},"value":["0000-0001-5853-1267"]}]}]},{"type":"character","attributes":{},"value":["2026-10-18"]},{"type":"character","attributes":{},"value":["automated scoring","natural language processing","transformers","machine learning","python"]},{"type":"character","attributes":{},"value":["deberta_vs_ultrabert.png"]},{"type":"character","attributes":{},"value":["aes.bib"]},{"type":"character","attributes":{},"value":["apa.csl"]},{"type":"character","attributes":{},"value":["code/prepare_persuade.py"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["distill::distill_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["self_contained","toc"]}},"value":[{"type":"logical","attributes":{},"value":[false]},{"type":"logical","attributes":{},"value":[true]}]}]},{"type":"character","attributes":{},"value":["https://okan.cloud/posts/2026-10-18-deberta-vs-ultrabert-in-automated-essay-scoring/"]},{"type":"character","attributes":{},"value":["https://okan.cloud/posts/2026-10-18-deberta-vs-ultrabert-in-automated-essay-scoring/"]}]}
+</script>
+<!--/radix_placeholder_rmarkdown_metadata-->
+  
+  <script type="text/json" id="radix-resource-manifest">
+  {"type":"character","attributes":{},"value":["aes.bib","apa.csl","code/prepare_persuade.py","data/decomposition.csv","data/error_by_score_length.csv","data/model_summary.csv","data/per_prompt_qwk.csv","data/training_curves.csv","data/truncation_by_score.csv","deberta_vs_ultrabert.png","deberta-vs-ultrabert-in-automated-essay-scoring_files/anchor-4.2.2/anchor.min.js","deberta-vs-ultrabert-in-automated-essay-scoring_files/bowser-1.9.3/bowser.min.js","deberta-vs-ultrabert-in-automated-essay-scoring_files/bsTable-3.3.7/bootstrapTable.js","deberta-vs-ultrabert-in-automated-essay-scoring_files/bsTable-3.3.7/bootstrapTable.min.css","deberta-vs-ultrabert-in-automated-essay-scoring_files/distill-2.2.21/template.v2.js","deberta-vs-ultrabert-in-automated-essay-scoring_files/figure-html5/fig-bias-1.png","deberta-vs-ultrabert-in-automated-essay-scoring_files/figure-html5/fig-curves-1.png","deberta-vs-ultrabert-in-automated-essay-scoring_files/figure-html5/fig-prompts-1.png","deberta-vs-ultrabert-in-automated-essay-scoring_files/figure-html5/fig-truncation-1.png","deberta-vs-ultrabert-in-automated-essay-scoring_files/header-attrs-2.31/header-attrs.js","deberta-vs-ultrabert-in-automated-essay-scoring_files/jquery-3.6.0/jquery-3.6.0.js","deberta-vs-ultrabert-in-automated-essay-scoring_files/jquery-3.6.0/jquery-3.6.0.min.js","deberta-vs-ultrabert-in-automated-essay-scoring_files/jquery-3.6.0/jquery-3.6.0.min.map","deberta-vs-ultrabert-in-automated-essay-scoring_files/kePrint-0.0.1/kePrint.js","deberta-vs-ultrabert-in-automated-essay-scoring_files/lightable-0.0.1/lightable.css","deberta-vs-ultrabert-in-automated-essay-scoring_files/popper-2.6.0/popper.min.js","deberta-vs-ultrabert-in-automated-essay-scoring_files/tippy-6.2.7/tippy-bundle.umd.min.js","deberta-vs-ultrabert-in-automated-essay-scoring_files/tippy-6.2.7/tippy-light-border.css","deberta-vs-ultrabert-in-automated-essay-scoring_files/tippy-6.2.7/tippy.css","deberta-vs-ultrabert-in-automated-essay-scoring_files/tippy-6.2.7/tippy.umd.min.js","deberta-vs-ultrabert-in-automated-essay-scoring_files/webcomponents-2.0.0/webcomponents.js"]}
+  </script>
+  <!--radix_placeholder_navigation_in_header-->
+<meta name="distill:offset" content="../.."/>
+
+<script type="application/javascript">
+
+  window.headroom_prevent_pin = false;
+
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+
+    // initialize headroom for banner
+    var header = $('header').get(0);
+    var headerHeight = header.offsetHeight;
+    var headroom = new Headroom(header, {
+      tolerance: 5,
+      onPin : function() {
+        if (window.headroom_prevent_pin) {
+          window.headroom_prevent_pin = false;
+          headroom.unpin();
+        }
+      }
+    });
+    headroom.init();
+    if(window.location.hash)
+      headroom.unpin();
+    $(header).addClass('headroom--transition');
+
+    // offset scroll location for banner on hash change
+    // (see: https://github.com/WickyNilliams/headroom.js/issues/38)
+    window.addEventListener("hashchange", function(event) {
+      window.scrollTo(0, window.pageYOffset - (headerHeight + 25));
+    });
+
+    // responsive menu
+    $('.distill-site-header').each(function(i, val) {
+      var topnav = $(this);
+      var toggle = topnav.find('.nav-toggle');
+      toggle.on('click', function() {
+        topnav.toggleClass('responsive');
+      });
+    });
+
+    // nav dropdowns
+    $('.nav-dropbtn').click(function(e) {
+      $(this).next('.nav-dropdown-content').toggleClass('nav-dropdown-active');
+      $(this).parent().siblings('.nav-dropdown')
+         .children('.nav-dropdown-content').removeClass('nav-dropdown-active');
+    });
+    $("body").click(function(e){
+      $('.nav-dropdown-content').removeClass('nav-dropdown-active');
+    });
+    $(".nav-dropdown").click(function(e){
+      e.stopPropagation();
+    });
+  });
+</script>
+
+<style type="text/css">
+
+/* Theme (user-documented overrideables for nav appearance) */
+
+.distill-site-nav {
+  color: rgba(255, 255, 255, 0.8);
+  background-color: #0F2E3D;
+  font-size: 15px;
+  font-weight: 300;
+}
+
+.distill-site-nav a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.distill-site-nav a:hover {
+  color: white;
+}
+
+@media print {
+  .distill-site-nav {
+    display: none;
+  }
+}
+
+.distill-site-header {
+
+}
+
+.distill-site-footer {
+
+}
+
+
+/* Site Header */
+
+.distill-site-header {
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 3;
+}
+
+.distill-site-header .nav-left {
+  display: inline-block;
+  margin-left: 8px;
+}
+
+@media screen and (max-width: 768px) {
+  .distill-site-header .nav-left {
+    margin-left: 0;
+  }
+}
+
+
+.distill-site-header .nav-right {
+  float: right;
+  margin-right: 8px;
+}
+
+.distill-site-header a,
+.distill-site-header .title {
+  display: inline-block;
+  text-align: center;
+  padding: 14px 10px 14px 10px;
+}
+
+.distill-site-header .title {
+  font-size: 18px;
+  min-width: 150px;
+}
+
+.distill-site-header .logo {
+  padding: 0;
+}
+
+.distill-site-header .logo img {
+  display: none;
+  max-height: 20px;
+  width: auto;
+  margin-bottom: -4px;
+}
+
+.distill-site-header .nav-image img {
+  max-height: 18px;
+  width: auto;
+  display: inline-block;
+  margin-bottom: -3px;
+}
+
+
+
+@media screen and (min-width: 1000px) {
+  .distill-site-header .logo img {
+    display: inline-block;
+  }
+  .distill-site-header .nav-left {
+    margin-left: 20px;
+  }
+  .distill-site-header .nav-right {
+    margin-right: 20px;
+  }
+  .distill-site-header .title {
+    padding-left: 12px;
+  }
+}
+
+
+.distill-site-header .nav-toggle {
+  display: none;
+}
+
+.nav-dropdown {
+  display: inline-block;
+  position: relative;
+}
+
+.nav-dropdown .nav-dropbtn {
+  border: none;
+  outline: none;
+  color: rgba(255, 255, 255, 0.8);
+  padding: 16px 10px;
+  background-color: transparent;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  margin: 0;
+  margin-top: 1px;
+  z-index: 2;
+}
+
+.nav-dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 200px;
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 4px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+  z-index: 1;
+  margin-top: 2px;
+  white-space: nowrap;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.nav-dropdown-content hr {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.nav-dropdown-active {
+  display: block;
+}
+
+.nav-dropdown-content a, .nav-dropdown-content .nav-dropdown-header {
+  color: black;
+  padding: 6px 24px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.nav-dropdown-content .nav-dropdown-header {
+  display: block;
+  padding: 5px 24px;
+  padding-bottom: 0;
+  text-transform: uppercase;
+  font-size: 14px;
+  color: #999999;
+  white-space: nowrap;
+}
+
+.nav-dropdown:hover .nav-dropbtn {
+  color: white;
+}
+
+.nav-dropdown-content a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.nav-right .nav-dropdown-content {
+  margin-left: -45%;
+  right: 0;
+}
+
+@media screen and (max-width: 768px) {
+  .distill-site-header a, .distill-site-header .nav-dropdown  {display: none;}
+  .distill-site-header a.nav-toggle {
+    float: right;
+    display: block;
+  }
+  .distill-site-header .title {
+    margin-left: 0;
+  }
+  .distill-site-header .nav-right {
+    margin-right: 0;
+  }
+  .distill-site-header {
+    overflow: hidden;
+  }
+  .nav-right .nav-dropdown-content {
+    margin-left: 0;
+  }
+}
+
+
+@media screen and (max-width: 768px) {
+  .distill-site-header.responsive {position: relative; min-height: 500px; }
+  .distill-site-header.responsive a.nav-toggle {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .distill-site-header.responsive a,
+  .distill-site-header.responsive .nav-dropdown {
+    display: block;
+    text-align: left;
+  }
+  .distill-site-header.responsive .nav-left,
+  .distill-site-header.responsive .nav-right {
+    width: 100%;
+  }
+  .distill-site-header.responsive .nav-dropdown {float: none;}
+  .distill-site-header.responsive .nav-dropdown-content {position: relative;}
+  .distill-site-header.responsive .nav-dropdown .nav-dropbtn {
+    display: block;
+    width: 100%;
+    text-align: left;
+  }
+}
+
+/* Site Footer */
+
+.distill-site-footer {
+  width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  z-index: 3;
+  margin-top: 30px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  text-align: center;
+}
+
+/* Headroom */
+
+d-title {
+  padding-top: 6rem;
+}
+
+@media print {
+  d-title {
+    padding-top: 4rem;
+  }
+}
+
+.headroom {
+  z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.headroom--transition {
+  transition: all .4s ease-in-out;
+}
+
+.headroom--unpinned {
+  top: -100px;
+}
+
+.headroom--pinned {
+  top: 0;
+}
+
+/* adjust viewport for navbar height */
+/* helps vertically center bootstrap (non-distill) content */
+.min-vh-100 {
+  min-height: calc(100vh - 100px) !important;
+}
+
+</style>
+
+<script src="../../site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="../../site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"/>
+<link href="../../site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"/>
+<script src="../../site_libs/headroom-0.9.4/headroom.min.js"></script>
+<script src="../../site_libs/autocomplete-0.37.1/autocomplete.min.js"></script>
+<script src="../../site_libs/fuse-6.4.1/fuse.min.js"></script>
+
+<script type="application/javascript">
+
+function getMeta(metaName) {
+  var metas = document.getElementsByTagName('meta');
+  for (let i = 0; i < metas.length; i++) {
+    if (metas[i].getAttribute('name') === metaName) {
+      return metas[i].getAttribute('content');
+    }
+  }
+  return '';
+}
+
+function offsetURL(url) {
+  var offset = getMeta('distill:offset');
+  return offset ? offset + '/' + url : url;
+}
+
+function createFuseIndex() {
+
+  // create fuse index
+  var options = {
+    keys: [
+      { name: 'title', weight: 20 },
+      { name: 'categories', weight: 15 },
+      { name: 'description', weight: 10 },
+      { name: 'contents', weight: 5 },
+    ],
+    ignoreLocation: true,
+    threshold: 0
+  };
+  var fuse = new window.Fuse([], options);
+
+  // fetch the main search.json
+  return fetch(offsetURL('search.json'))
+    .then(function(response) {
+      if (response.status == 200) {
+        return response.json().then(function(json) {
+          // index main articles
+          json.articles.forEach(function(article) {
+            fuse.add(article);
+          });
+          // download collections and index their articles
+          return Promise.all(json.collections.map(function(collection) {
+            return fetch(offsetURL(collection)).then(function(response) {
+              if (response.status === 200) {
+                return response.json().then(function(articles) {
+                  articles.forEach(function(article) {
+                    fuse.add(article);
+                  });
+                })
+              } else {
+                return Promise.reject(
+                  new Error('Unexpected status from search index request: ' +
+                            response.status)
+                );
+              }
+            });
+          })).then(function() {
+            return fuse;
+          });
+        });
+
+      } else {
+        return Promise.reject(
+          new Error('Unexpected status from search index request: ' +
+                      response.status)
+        );
+      }
+    });
+}
+
+window.document.addEventListener("DOMContentLoaded", function (event) {
+
+  // get search element (bail if we don't have one)
+  var searchEl = window.document.getElementById('distill-search');
+  if (!searchEl)
+    return;
+
+  createFuseIndex()
+    .then(function(fuse) {
+
+      // make search box visible
+      searchEl.classList.remove('hidden');
+
+      // initialize autocomplete
+      var options = {
+        autoselect: true,
+        hint: false,
+        minLength: 2,
+      };
+      window.autocomplete(searchEl, options, [{
+        source: function(query, callback) {
+          const searchOptions = {
+            isCaseSensitive: false,
+            shouldSort: true,
+            minMatchCharLength: 2,
+            limit: 10,
+          };
+          var results = fuse.search(query, searchOptions);
+          callback(results
+            .map(function(result) { return result.item; })
+          );
+        },
+        templates: {
+          suggestion: function(suggestion) {
+            var img = suggestion.preview && Object.keys(suggestion.preview).length > 0
+              ? `<img src="${offsetURL(suggestion.preview)}"</img>`
+              : '';
+            var html = `
+              <div class="search-item">
+                <h3>${suggestion.title}</h3>
+                <div class="search-item-description">
+                  ${suggestion.description || ''}
+                </div>
+                <div class="search-item-preview">
+                  ${img}
+                </div>
+              </div>
+            `;
+            return html;
+          }
+        }
+      }]).on('autocomplete:selected', function(event, suggestion) {
+        window.location.href = offsetURL(suggestion.path);
+      });
+      // remove inline display style on autocompleter (we want to
+      // manage responsive display via css)
+      $('.algolia-autocomplete').css("display", "");
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+
+});
+
+</script>
+
+<style type="text/css">
+
+.nav-search {
+  font-size: x-small;
+}
+
+/* Algolioa Autocomplete */
+
+.algolia-autocomplete {
+  display: inline-block;
+  margin-left: 10px;
+  vertical-align: sub;
+  background-color: white;
+  color: black;
+  padding: 6px;
+  padding-top: 8px;
+  padding-bottom: 0;
+  border-radius: 6px;
+  border: 1px #0F2E3D solid;
+  width: 180px;
+}
+
+
+@media screen and (max-width: 768px) {
+  .distill-site-nav .algolia-autocomplete {
+    display: none;
+    visibility: hidden;
+  }
+  .distill-site-nav.responsive .algolia-autocomplete {
+    display: inline-block;
+    visibility: visible;
+  }
+  .distill-site-nav.responsive .algolia-autocomplete .aa-dropdown-menu {
+    margin-left: 0;
+    width: 400px;
+    max-height: 400px;
+  }
+}
+
+.algolia-autocomplete .aa-input, .algolia-autocomplete .aa-hint {
+  width: 90%;
+  outline: none;
+  border: none;
+}
+
+.algolia-autocomplete .aa-hint {
+  color: #999;
+}
+.algolia-autocomplete .aa-dropdown-menu {
+  width: 550px;
+  max-height: 70vh;
+  overflow-x: visible;
+  overflow-y: scroll;
+  padding: 5px;
+  margin-top: 3px;
+  margin-left: -150px;
+  background-color: #fff;
+  border-radius: 5px;
+  border: 1px solid #999;
+  border-top: none;
+}
+
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion {
+  cursor: pointer;
+  padding: 5px 4px;
+  border-bottom: 1px solid #eee;
+}
+
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion:last-of-type {
+  border-bottom: none;
+  margin-bottom: 2px;
+}
+
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item {
+  overflow: hidden;
+  font-size: 0.8em;
+  line-height: 1.4em;
+}
+
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item h3 {
+  font-size: 1rem;
+  margin-block-start: 0;
+  margin-block-end: 5px;
+}
+
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-description {
+  display: inline-block;
+  overflow: hidden;
+  height: 2.8em;
+  width: 80%;
+  margin-right: 4%;
+}
+
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-preview {
+  display: inline-block;
+  width: 15%;
+}
+
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-preview img {
+  height: 3em;
+  width: auto;
+  display: none;
+}
+
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-preview img[src] {
+  display: initial;
+}
+
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion.aa-cursor {
+  background-color: #eee;
+}
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion em {
+  font-weight: bold;
+  font-style: normal;
+}
+
+</style>
+
+
+<!--/radix_placeholder_navigation_in_header-->
+  <!--radix_placeholder_distill-->
+
+<style type="text/css">
+
+body {
+  background-color: white;
+}
+
+.pandoc-table {
+  width: 100%;
+}
+
+.pandoc-table>caption {
+  margin-bottom: 10px;
+}
+
+.pandoc-table th:not([align]) {
+  text-align: left;
+}
+
+.pagedtable-footer {
+  font-size: 15px;
+}
+
+d-byline .byline {
+  grid-template-columns: 2fr 2fr;
+}
+
+d-byline .byline h3 {
+  margin-block-start: 1.5em;
+}
+
+d-byline .byline .authors-affiliations h3 {
+  margin-block-start: 0.5em;
+}
+
+.authors-affiliations .orcid-id {
+  width: 16px;
+  height:16px;
+  margin-left: 4px;
+  margin-right: 4px;
+  vertical-align: middle;
+  padding-bottom: 2px;
+}
+
+d-title .dt-tags {
+  margin-top: 1em;
+  grid-column: text;
+}
+
+.dt-tags .dt-tag {
+  text-decoration: none;
+  display: inline-block;
+  color: rgba(0,0,0,0.6);
+  padding: 0em 0.4em;
+  margin-right: 0.5em;
+  margin-bottom: 0.4em;
+  font-size: 70%;
+  border: 1px solid rgba(0,0,0,0.2);
+  border-radius: 3px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+d-article table.gt_table td,
+d-article table.gt_table th {
+  border-bottom: none;
+  font-size: 100%;
+}
+
+.html-widget {
+  margin-bottom: 2.0em;
+}
+
+.l-screen-inset {
+  padding-right: 16px;
+}
+
+.l-screen .caption {
+  margin-left: 10px;
+}
+
+.shaded {
+  background: rgb(247, 247, 247);
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.shaded .html-widget {
+  margin-bottom: 0;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.shaded .shaded-content {
+  background: white;
+}
+
+.text-output {
+  margin-top: 0;
+  line-height: 1.5em;
+}
+
+.hidden {
+  display: none !important;
+}
+
+hr.section-separator {
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  margin: 0px;
+}
+
+
+d-byline {
+  border-top: none;
+}
+
+d-article {
+  padding-top: 2.5rem;
+  padding-bottom: 30px;
+  border-top: none;
+}
+
+d-appendix {
+  padding-top: 30px;
+}
+
+d-article>p>img {
+  width: 100%;
+}
+
+d-article h2 {
+  margin: 1rem 0 1.5rem 0;
+}
+
+d-article h3 {
+  margin-top: 1.5rem;
+}
+
+d-article iframe {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  margin-bottom: 2.0em;
+  width: 100%;
+}
+
+/* Tweak code blocks */
+
+d-article div.sourceCode code,
+d-article pre code {
+  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+}
+
+d-article pre,
+d-article div.sourceCode,
+d-article div.sourceCode pre {
+  overflow: auto;
+}
+
+d-article div.sourceCode {
+  background-color: white;
+}
+
+d-article div.sourceCode pre {
+  padding-left: 10px;
+  font-size: 12px;
+  border-left: 2px solid rgba(0,0,0,0.1);
+}
+
+d-article pre {
+  font-size: 12px;
+  color: black;
+  background: none;
+  margin-top: 0;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.5;
+
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+d-article pre a {
+  border-bottom: none;
+}
+
+d-article pre a:hover {
+  border-bottom: none;
+  text-decoration: underline;
+}
+
+d-article details {
+  grid-column: text;
+  margin-bottom: 0.8em;
+}
+
+@media(min-width: 768px) {
+
+d-article pre,
+d-article div.sourceCode,
+d-article div.sourceCode pre {
+  overflow: visible !important;
+}
+
+d-article div.sourceCode pre {
+  padding-left: 18px;
+  font-size: 14px;
+}
+
+/* tweak for Pandoc numbered line within distill */
+d-article pre.numberSource code > span {
+    left: -2em;
+}
+
+d-article pre {
+  font-size: 14px;
+}
+
+}
+
+figure img.external {
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
+  padding: 18px;
+  box-sizing: border-box;
+}
+
+/* CSS for d-contents */
+
+.d-contents {
+  grid-column: text;
+  color: rgba(0,0,0,0.8);
+  font-size: 0.9em;
+  padding-bottom: 1em;
+  margin-bottom: 1em;
+  padding-bottom: 0.5em;
+  margin-bottom: 1em;
+  padding-left: 0.25em;
+  justify-self: start;
+}
+
+@media(min-width: 1000px) {
+  .d-contents.d-contents-float {
+    height: 0;
+    grid-column-start: 1;
+    grid-column-end: 4;
+    justify-self: center;
+    padding-right: 3em;
+    padding-left: 2em;
+  }
+}
+
+.d-contents nav h3 {
+  font-size: 18px;
+  margin-top: 0;
+  margin-bottom: 1em;
+}
+
+.d-contents li {
+  list-style-type: none
+}
+
+.d-contents nav > ul {
+  padding-left: 0;
+}
+
+.d-contents ul {
+  padding-left: 1em
+}
+
+.d-contents nav ul li {
+  margin-top: 0.6em;
+  margin-bottom: 0.2em;
+}
+
+.d-contents nav a {
+  font-size: 13px;
+  border-bottom: none;
+  text-decoration: none
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.d-contents nav a:hover {
+  text-decoration: underline solid rgba(0, 0, 0, 0.6)
+}
+
+.d-contents nav > ul > li > a {
+  font-weight: 600;
+}
+
+.d-contents nav > ul > li > ul {
+  font-weight: inherit;
+}
+
+.d-contents nav > ul > li > ul > li {
+  margin-top: 0.2em;
+}
+
+
+.d-contents nav ul {
+  margin-top: 0;
+  margin-bottom: 0.25em;
+}
+
+.d-article-with-toc h2:nth-child(2) {
+  margin-top: 0;
+}
+
+
+/* Figure */
+
+.figure {
+  position: relative;
+  margin-bottom: 2.5em;
+  margin-top: 1.5em;
+}
+
+.figure .caption {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 12px;
+  line-height: 1.5em;
+}
+
+.figure img.external {
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
+  padding: 18px;
+  box-sizing: border-box;
+}
+
+.figure .caption a {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.figure .caption b,
+.figure .caption strong, {
+  font-weight: 600;
+  color: rgba(0, 0, 0, 1.0);
+}
+
+/* Citations */
+
+d-article .citation {
+  color: inherit;
+  cursor: inherit;
+}
+
+div.hanging-indent{
+  margin-left: 1em; text-indent: -1em;
+}
+
+/* Citation hover box */
+
+.tippy-box[data-theme~=light-border] {
+  background-color: rgba(250, 250, 250, 0.95);
+}
+
+.tippy-content > p {
+  margin-bottom: 0;
+  padding: 2px;
+}
+
+
+/* Tweak 1000px media break to show more text */
+
+@media(min-width: 1000px) {
+  .base-grid,
+  distill-header,
+  d-title,
+  d-abstract,
+  d-article,
+  d-appendix,
+  distill-appendix,
+  d-byline,
+  d-footnote-list,
+  d-citation-list,
+  distill-footer {
+    grid-template-columns: [screen-start] 1fr [page-start kicker-start] 80px [middle-start] 50px [text-start kicker-end] 65px 65px 65px 65px 65px 65px 65px 65px [text-end gutter-start] 65px [middle-end] 65px [page-end gutter-end] 1fr [screen-end];
+    grid-column-gap: 16px;
+  }
+
+  .grid {
+    grid-column-gap: 16px;
+  }
+
+  d-article {
+    font-size: 1.06rem;
+    line-height: 1.7em;
+  }
+  figure .caption, .figure .caption, figure figcaption {
+    font-size: 13px;
+  }
+}
+
+@media(min-width: 1180px) {
+  .base-grid,
+  distill-header,
+  d-title,
+  d-abstract,
+  d-article,
+  d-appendix,
+  distill-appendix,
+  d-byline,
+  d-footnote-list,
+  d-citation-list,
+  distill-footer {
+    grid-template-columns: [screen-start] 1fr [page-start kicker-start] 60px [middle-start] 60px [text-start kicker-end] 60px 60px 60px 60px 60px 60px 60px 60px [text-end gutter-start] 60px [middle-end] 60px [page-end gutter-end] 1fr [screen-end];
+    grid-column-gap: 32px;
+  }
+
+  .grid {
+    grid-column-gap: 32px;
+  }
+}
+
+
+/* Get the citation styles for the appendix (not auto-injected on render since
+   we do our own rendering of the citation appendix) */
+
+d-appendix .citation-appendix,
+.d-appendix .citation-appendix {
+  font-size: 11px;
+  line-height: 15px;
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  padding-left: 18px;
+  border: 1px solid rgba(0,0,0,0.1);
+  background: rgba(0, 0, 0, 0.02);
+  padding: 10px 18px;
+  border-radius: 3px;
+  color: rgba(150, 150, 150, 1);
+  overflow: hidden;
+  margin-top: -12px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* Include appendix styles here so they can be overridden */
+
+d-appendix {
+  contain: layout style;
+  font-size: 0.8em;
+  line-height: 1.7em;
+  margin-top: 60px;
+  margin-bottom: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  color: rgba(0,0,0,0.5);
+  padding-top: 60px;
+  padding-bottom: 48px;
+}
+
+d-appendix h3 {
+  grid-column: page-start / text-start;
+  font-size: 15px;
+  font-weight: 500;
+  margin-top: 1em;
+  margin-bottom: 0;
+  color: rgba(0,0,0,0.65);
+}
+
+d-appendix h3 + * {
+  margin-top: 1em;
+}
+
+d-appendix ol {
+  padding: 0 0 0 15px;
+}
+
+@media (min-width: 768px) {
+  d-appendix ol {
+    padding: 0 0 0 30px;
+    margin-left: -30px;
+  }
+}
+
+d-appendix li {
+  margin-bottom: 1em;
+}
+
+d-appendix a {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+d-appendix > * {
+  grid-column: text;
+}
+
+d-appendix > d-footnote-list,
+d-appendix > d-citation-list,
+d-appendix > distill-appendix {
+  grid-column: screen;
+}
+
+/* Include footnote styles here so they can be overridden */
+
+d-footnote-list {
+  contain: layout style;
+}
+
+d-footnote-list > * {
+  grid-column: text;
+}
+
+d-footnote-list a.footnote-backlink {
+  color: rgba(0,0,0,0.3);
+  padding-left: 0.5em;
+}
+
+
+
+/* Anchor.js */
+
+.anchorjs-link {
+  /*transition: all .25s linear; */
+  text-decoration: none;
+  border-bottom: none;
+}
+*:hover > .anchorjs-link {
+  margin-left: -1.125em !important;
+  text-decoration: none;
+  border-bottom: none;
+}
+
+/* Social footer */
+
+.social_footer {
+  margin-top: 30px;
+  margin-bottom: 0;
+  color: rgba(0,0,0,0.67);
+}
+
+.disqus-comments {
+  margin-right: 30px;
+}
+
+.disqus-comment-count {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+#disqus_thread {
+  margin-top: 30px;
+}
+
+.article-sharing a {
+  border-bottom: none;
+  margin-right: 8px;
+}
+
+.article-sharing a:hover {
+  border-bottom: none;
+}
+
+.sidebar-section.subscribe {
+  font-size: 12px;
+  line-height: 1.6em;
+}
+
+.subscribe p {
+  margin-bottom: 0.5em;
+}
+
+
+.article-footer .subscribe {
+  font-size: 15px;
+  margin-top: 45px;
+}
+
+
+.sidebar-section.custom {
+  font-size: 12px;
+  line-height: 1.6em;
+}
+
+.custom p {
+  margin-bottom: 0.5em;
+}
+
+/* Styles for listing layout (hide title) */
+.layout-listing d-title, .layout-listing .d-title {
+  display: none;
+}
+
+/* Styles for posts lists (not auto-injected) */
+
+
+.posts-with-sidebar {
+  padding-left: 45px;
+  padding-right: 45px;
+}
+
+.posts-list .description h2,
+.posts-list .description p {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
+}
+
+.posts-list .description h2 {
+  font-weight: 700;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.posts-list h2.post-tag {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  padding-bottom: 12px;
+}
+.posts-list {
+  margin-top: 60px;
+  margin-bottom: 24px;
+}
+
+.posts-list .post-preview {
+  text-decoration: none;
+  overflow: hidden;
+  display: block;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 24px 0;
+}
+
+.post-preview-last {
+  border-bottom: none !important;
+}
+
+.posts-list .posts-list-caption {
+  grid-column: screen;
+  font-weight: 400;
+}
+
+.posts-list .post-preview h2 {
+  margin: 0 0 6px 0;
+  line-height: 1.2em;
+  font-style: normal;
+  font-size: 24px;
+}
+
+.posts-list .post-preview p {
+  margin: 0 0 12px 0;
+  line-height: 1.4em;
+  font-size: 16px;
+}
+
+.posts-list .post-preview .thumbnail {
+  box-sizing: border-box;
+  margin-bottom: 24px;
+  position: relative;
+  max-width: 500px;
+}
+.posts-list .post-preview img {
+  width: 100%;
+  display: block;
+}
+
+.posts-list .metadata {
+  font-size: 12px;
+  line-height: 1.4em;
+  margin-bottom: 18px;
+}
+
+.posts-list .metadata > * {
+  display: inline-block;
+}
+
+.posts-list .metadata .publishedDate {
+  margin-right: 2em;
+}
+
+.posts-list .metadata .dt-authors {
+  display: block;
+  margin-top: 0.3em;
+  margin-right: 2em;
+}
+
+.posts-list .dt-tags {
+  display: block;
+  line-height: 1em;
+}
+
+.posts-list .dt-tags .dt-tag {
+  display: inline-block;
+  color: rgba(0,0,0,0.6);
+  padding: 0.3em 0.4em;
+  margin-right: 0.2em;
+  margin-bottom: 0.4em;
+  font-size: 60%;
+  border: 1px solid rgba(0,0,0,0.2);
+  border-radius: 3px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.posts-list img {
+  opacity: 1;
+}
+
+.posts-list img[data-src] {
+  opacity: 0;
+}
+
+.posts-more {
+  clear: both;
+}
+
+
+.posts-sidebar {
+  font-size: 16px;
+}
+
+.posts-sidebar h3 {
+  font-size: 16px;
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.sidebar-section {
+  margin-bottom: 30px;
+}
+
+.categories ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.categories li {
+  color: rgba(0, 0, 0, 0.8);
+  margin-bottom: 0;
+}
+
+.categories li>a {
+  border-bottom: none;
+}
+
+.categories li>a:hover {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+}
+
+.categories .active {
+  font-weight: 600;
+}
+
+.categories .category-count {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+
+@media(min-width: 768px) {
+  .posts-list .post-preview h2 {
+    font-size: 26px;
+  }
+  .posts-list .post-preview .thumbnail {
+    float: right;
+    width: 30%;
+    margin-bottom: 0;
+  }
+  .posts-list .post-preview .description {
+    float: left;
+    width: 45%;
+  }
+  .posts-list .post-preview .metadata {
+    float: left;
+    width: 20%;
+    margin-top: 8px;
+  }
+  .posts-list .post-preview p {
+    margin: 0 0 12px 0;
+    line-height: 1.5em;
+    font-size: 16px;
+  }
+  .posts-with-sidebar .posts-list {
+    float: left;
+    width: 75%;
+  }
+  .posts-with-sidebar .posts-sidebar {
+    float: right;
+    width: 20%;
+    margin-top: 60px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+}
+
+
+/* Improve display for browsers without grid (IE/Edge <= 15) */
+
+.downlevel {
+  line-height: 1.6em;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
+  margin: 0;
+}
+
+.downlevel .d-title {
+  padding-top: 6rem;
+  padding-bottom: 1.5rem;
+}
+
+.downlevel .d-title h1 {
+  font-size: 50px;
+  font-weight: 700;
+  line-height: 1.1em;
+  margin: 0 0 0.5rem;
+}
+
+.downlevel .d-title p {
+  font-weight: 300;
+  font-size: 1.2rem;
+  line-height: 1.55em;
+  margin-top: 0;
+}
+
+.downlevel .d-byline {
+  padding-top: 0.8em;
+  padding-bottom: 0.8em;
+  font-size: 0.8rem;
+  line-height: 1.8em;
+}
+
+.downlevel .section-separator {
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.downlevel .d-article {
+  font-size: 1.06rem;
+  line-height: 1.7em;
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+}
+
+
+.downlevel .d-appendix {
+  padding-left: 0;
+  padding-right: 0;
+  max-width: none;
+  font-size: 0.8em;
+  line-height: 1.7em;
+  margin-bottom: 0;
+  color: rgba(0,0,0,0.5);
+  padding-top: 40px;
+  padding-bottom: 48px;
+}
+
+.downlevel .footnotes ol {
+  padding-left: 13px;
+}
+
+.downlevel .base-grid,
+.downlevel .distill-header,
+.downlevel .d-title,
+.downlevel .d-abstract,
+.downlevel .d-article,
+.downlevel .d-appendix,
+.downlevel .distill-appendix,
+.downlevel .d-byline,
+.downlevel .d-footnote-list,
+.downlevel .d-citation-list,
+.downlevel .distill-footer,
+.downlevel .appendix-bottom,
+.downlevel .posts-container {
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+@media(min-width: 768px) {
+  .downlevel .base-grid,
+  .downlevel .distill-header,
+  .downlevel .d-title,
+  .downlevel .d-abstract,
+  .downlevel .d-article,
+  .downlevel .d-appendix,
+  .downlevel .distill-appendix,
+  .downlevel .d-byline,
+  .downlevel .d-footnote-list,
+  .downlevel .d-citation-list,
+  .downlevel .distill-footer,
+  .downlevel .appendix-bottom,
+  .downlevel .posts-container {
+  padding-left: 150px;
+  padding-right: 150px;
+  max-width: 900px;
+}
+}
+
+.downlevel pre code {
+  display: block;
+  border-left: 2px solid rgba(0, 0, 0, .1);
+  padding: 0 0 0 20px;
+  font-size: 14px;
+}
+
+.downlevel code, .downlevel pre {
+  color: black;
+  background: none;
+  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.5;
+
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+.downlevel .posts-list .post-preview {
+  color: inherit;
+}
+
+
+
+</style>
+
+<script type="application/javascript">
+
+function is_downlevel_browser() {
+  if (bowser.isUnsupportedBrowser({ msie: "12", msedge: "16"},
+                                 window.navigator.userAgent)) {
+    return true;
+  } else {
+    return window.load_distill_framework === undefined;
+  }
+}
+
+// show body when load is complete
+function on_load_complete() {
+
+  // add anchors
+  if (window.anchors) {
+    window.anchors.options.placement = 'left';
+    window.anchors.add('d-article > h2, d-article > h3, d-article > h4, d-article > h5');
+  }
+
+
+  // set body to visible
+  document.body.style.visibility = 'visible';
+
+  // force redraw for leaflet widgets
+  if (window.HTMLWidgets) {
+    var maps = window.HTMLWidgets.findAll(".leaflet");
+    $.each(maps, function(i, el) {
+      var map = this.getMap();
+      map.invalidateSize();
+      map.eachLayer(function(layer) {
+        if (layer instanceof L.TileLayer)
+          layer.redraw();
+      });
+    });
+  }
+
+  // trigger 'shown' so htmlwidgets resize
+  $('d-article').trigger('shown');
+}
+
+function init_distill() {
+
+  init_common();
+
+  // create front matter
+  var front_matter = $('<d-front-matter></d-front-matter>');
+  $('#distill-front-matter').wrap(front_matter);
+
+  // create d-title
+  $('.d-title').changeElementType('d-title');
+
+  // separator
+  var separator = '<hr class="section-separator" style="clear: both"/>';
+  // prepend separator above appendix
+  $('.d-byline').before(separator);
+  $('.d-article').before(separator);
+
+  // create d-byline
+  var byline = $('<d-byline></d-byline>');
+  $('.d-byline').replaceWith(byline);
+
+  // create d-article
+  var article = $('<d-article></d-article>');
+  $('.d-article').wrap(article).children().unwrap();
+
+  // move posts container into article
+  $('.posts-container').appendTo($('d-article'));
+
+  // create d-appendix
+  $('.d-appendix').changeElementType('d-appendix');
+
+  // flag indicating that we have appendix items
+  var appendix = $('.appendix-bottom').children('h3').length > 0;
+
+  // replace footnotes with <d-footnote>
+  $('.footnote-ref').each(function(i, val) {
+    appendix = true;
+    var href = $(this).attr('href');
+    var id = href.replace('#', '');
+    var fn = $('#' + id);
+    var fn_p = $('#' + id + '>p');
+    fn_p.find('.footnote-back').remove();
+    var text = fn_p.html();
+    var dtfn = $('<d-footnote></d-footnote>');
+    dtfn.html(text);
+    $(this).replaceWith(dtfn);
+  });
+  // remove footnotes
+  $('.footnotes').remove();
+
+  // move refs into #references-listing
+  $('#references-listing').replaceWith($('#refs'));
+
+  $('h1.appendix, h2.appendix').each(function(i, val) {
+    $(this).changeElementType('h3');
+  });
+  $('h3.appendix').each(function(i, val) {
+    var id = $(this).attr('id');
+    $('.d-contents a[href="#' + id + '"]').parent().remove();
+    appendix = true;
+    $(this).nextUntil($('h1, h2, h3')).addBack().appendTo($('d-appendix'));
+  });
+
+  // show d-appendix if we have appendix content
+  $("d-appendix").css('display', appendix ? 'grid' : 'none');
+
+  // localize layout chunks to just output
+  $('.layout-chunk').each(function(i, val) {
+
+    // capture layout
+    var layout = $(this).attr('data-layout');
+
+    // apply layout to markdown level block elements
+    var elements = $(this).children().not('details, div.sourceCode, pre, script');
+    elements.each(function(i, el) {
+      var layout_div = $('<div class="' + layout + '"></div>');
+      if (layout_div.hasClass('shaded')) {
+        var shaded_content = $('<div class="shaded-content"></div>');
+        $(this).wrap(shaded_content);
+        $(this).parent().wrap(layout_div);
+      } else {
+        $(this).wrap(layout_div);
+      }
+    });
+
+
+    // unwrap the layout-chunk div
+    $(this).children().unwrap();
+  });
+
+  // remove code block used to force  highlighting css
+  $('.distill-force-highlighting-css').parent().remove();
+
+  // remove empty line numbers inserted by pandoc when using a
+  // custom syntax highlighting theme, except when numbering line
+  // in code chunk
+  $('pre:not(.numberLines) code.sourceCode a:empty').remove();
+
+  // load distill framework
+  load_distill_framework();
+
+  // wait for window.distillRunlevel == 4 to do post processing
+  function distill_post_process() {
+
+    if (!window.distillRunlevel || window.distillRunlevel < 4)
+      return;
+
+    // hide author/affiliations entirely if we have no authors
+    var front_matter = JSON.parse($("#distill-front-matter").html());
+    var have_authors = front_matter.authors && front_matter.authors.length > 0;
+    if (!have_authors)
+      $('d-byline').addClass('hidden');
+
+    // article with toc class
+    $('.d-contents').parent().addClass('d-article-with-toc');
+
+    // strip links that point to #
+    $('.authors-affiliations').find('a[href="#"]').removeAttr('href');
+
+    // add orcid ids
+    $('.authors-affiliations').find('.author').each(function(i, el) {
+      var orcid_id = front_matter.authors[i].orcidID;
+      var author_name = front_matter.authors[i].author
+      if (orcid_id) {
+        var a = $('<a></a>');
+        a.attr('href', 'https://orcid.org/' + orcid_id);
+        var img = $('<img></img>');
+        img.addClass('orcid-id');
+        img.attr('alt', author_name ? 'ORCID ID for ' + author_name : 'ORCID ID');
+        img.attr('src','data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg==');
+        a.append(img);
+        $(this).append(a);
+      }
+    });
+
+    // hide elements of author/affiliations grid that have no value
+    function hide_byline_column(caption) {
+      $('d-byline').find('h3:contains("' + caption + '")').parent().css('visibility', 'hidden');
+    }
+
+    // affiliations
+    var have_affiliations = false;
+    for (var i = 0; i<front_matter.authors.length; ++i) {
+      var author = front_matter.authors[i];
+      if (author.affiliation !== "&nbsp;") {
+        have_affiliations = true;
+        break;
+      }
+    }
+    if (!have_affiliations)
+      $('d-byline').find('h3:contains("Affiliations")').css('visibility', 'hidden');
+
+    // published date
+    if (!front_matter.publishedDate)
+      hide_byline_column("Published");
+
+    // document object identifier
+    var doi = $('d-byline').find('h3:contains("DOI")');
+    var doi_p = doi.next().empty();
+    if (!front_matter.doi) {
+      // if we have a citation and valid citationText then link to that
+      if ($('#citation').length > 0 && front_matter.citationText) {
+        doi.html('Citation');
+        $('<a href="#citation"></a>')
+          .text(front_matter.citationText)
+          .appendTo(doi_p);
+      } else {
+        hide_byline_column("DOI");
+      }
+    } else {
+      $('<a></a>')
+         .attr('href', "https://doi.org/" + front_matter.doi)
+         .html(front_matter.doi)
+         .appendTo(doi_p);
+    }
+
+     // change plural form of authors/affiliations
+    if (front_matter.authors.length === 1) {
+      var grid = $('.authors-affiliations');
+      grid.children('h3:contains("Authors")').text('Author');
+      grid.children('h3:contains("Affiliations")').text('Affiliation');
+    }
+
+    // remove d-appendix and d-footnote-list local styles
+    $('d-appendix > style:first-child').remove();
+    $('d-footnote-list > style:first-child').remove();
+
+    // move appendix-bottom entries to the bottom
+    $('.appendix-bottom').appendTo('d-appendix').children().unwrap();
+    $('.appendix-bottom').remove();
+
+    // hoverable references
+    $('span.citation[data-cites]').each(function() {
+      const citeChild = $(this).children()[0]
+      // Do not process if @xyz has been used without escaping and without bibliography activated
+      // https://github.com/rstudio/distill/issues/466
+      if (citeChild === undefined) return true
+
+      if (citeChild.nodeName == "D-FOOTNOTE") {
+        var fn = citeChild
+        $(this).html(fn.shadowRoot.querySelector("sup"))
+        $(this).id = fn.id
+        fn.remove()
+      }
+      var refs = $(this).attr('data-cites').split(" ");
+      var refHtml = refs.map(function(ref) {
+        // Could use CSS.escape too here, we insure backward compatibility in navigator
+        return "<p>" + $('div[id="ref-' + ref + '"]').html() + "</p>";
+      }).join("\n");
+      window.tippy(this, {
+        allowHTML: true,
+        content: refHtml,
+        maxWidth: 500,
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'light-border',
+        placement: 'bottom-start'
+      });
+    });
+
+    // fix footnotes in tables (#411)
+    // replacing broken distill.pub feature
+    $('table d-footnote').each(function() {
+      // we replace internal showAtNode methode which is triggered when hovering a footnote
+      this.hoverBox.showAtNode = function(node) {
+        // ported from https://github.com/distillpub/template/pull/105/files
+        calcOffset = function(elem) {
+            let x = elem.offsetLeft;
+            let y = elem.offsetTop;
+            // Traverse upwards until an `absolute` element is found or `elem`
+            // becomes null.
+            while (elem = elem.offsetParent && elem.style.position != 'absolute') {
+                x += elem.offsetLeft;
+                y += elem.offsetTop;
+            }
+
+            return { left: x, top: y };
+        }
+        // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/offsetTop
+        const bbox = node.getBoundingClientRect();
+        const offset = calcOffset(node);
+        this.show([offset.left + bbox.width, offset.top + bbox.height]);
+      }
+    })
+
+    // clear polling timer
+    clearInterval(tid);
+
+    // show body now that everything is ready
+    on_load_complete();
+  }
+
+  var tid = setInterval(distill_post_process, 50);
+  distill_post_process();
+
+}
+
+function init_downlevel() {
+
+  init_common();
+
+   // insert hr after d-title
+  $('.d-title').after($('<hr class="section-separator"/>'));
+
+  // check if we have authors
+  var front_matter = JSON.parse($("#distill-front-matter").html());
+  var have_authors = front_matter.authors && front_matter.authors.length > 0;
+
+  // manage byline/border
+  if (!have_authors)
+    $('.d-byline').remove();
+  $('.d-byline').after($('<hr class="section-separator"/>'));
+  $('.d-byline a').remove();
+
+  // remove toc
+  $('.d-contents').remove();
+
+  // move appendix elements
+  $('h1.appendix, h2.appendix').each(function(i, val) {
+    $(this).changeElementType('h3');
+  });
+  $('h3.appendix').each(function(i, val) {
+    $(this).nextUntil($('h1, h2, h3')).addBack().appendTo($('.d-appendix'));
+  });
+
+
+  // inject headers into references and footnotes
+  var refs_header = $('<h3></h3>');
+  refs_header.text('References');
+  $('#refs').prepend(refs_header);
+
+  var footnotes_header = $('<h3></h3');
+  footnotes_header.text('Footnotes');
+  $('.footnotes').children('hr').first().replaceWith(footnotes_header);
+
+  // move appendix-bottom entries to the bottom
+  $('.appendix-bottom').appendTo('.d-appendix').children().unwrap();
+  $('.appendix-bottom').remove();
+
+  // remove appendix if it's empty
+  if ($('.d-appendix').children().length === 0)
+    $('.d-appendix').remove();
+
+  // prepend separator above appendix
+  $('.d-appendix').before($('<hr class="section-separator" style="clear: both"/>'));
+
+  // trim code
+  $('pre>code').each(function(i, val) {
+    $(this).html($.trim($(this).html()));
+  });
+
+  // move posts-container right before article
+  $('.posts-container').insertBefore($('.d-article'));
+
+  $('body').addClass('downlevel');
+
+  on_load_complete();
+}
+
+
+function init_common() {
+
+  // jquery plugin to change element types
+  (function($) {
+    $.fn.changeElementType = function(newType) {
+      var attrs = {};
+
+      $.each(this[0].attributes, function(idx, attr) {
+        attrs[attr.nodeName] = attr.nodeValue;
+      });
+
+      this.replaceWith(function() {
+        return $("<" + newType + "/>", attrs).append($(this).contents());
+      });
+    };
+  })(jQuery);
+
+  // prevent underline for linked images
+  $('a > img').parent().css({'border-bottom' : 'none'});
+
+  // mark non-body figures created by knitr chunks as 100% width
+  $('.layout-chunk').each(function(i, val) {
+    var figures = $(this).find('img, .html-widget');
+    // ignore leaflet img layers (#106)
+    figures = figures.filter(':not(img[class*="leaflet"])')
+    if ($(this).attr('data-layout') !== "l-body") {
+      figures.css('width', '100%');
+    } else {
+      figures.css('max-width', '100%');
+      figures.filter("[width]").each(function(i, val) {
+        var fig = $(this);
+        fig.css('width', fig.attr('width') + 'px');
+      });
+
+    }
+  });
+
+  // auto-append index.html to post-preview links in file: protocol
+  // and in rstudio ide preview
+  $('.post-preview').each(function(i, val) {
+    if (window.location.protocol === "file:")
+      $(this).attr('href', $(this).attr('href') + "index.html");
+  });
+
+  // get rid of index.html references in header
+  if (window.location.protocol !== "file:") {
+    $('.distill-site-header a[href]').each(function(i,val) {
+      $(this).attr('href', $(this).attr('href').replace(/^index[.]html/, "./"));
+    });
+  }
+
+  // add class to pandoc style tables
+  $('tr.header').parent('thead').parent('table').addClass('pandoc-table');
+  $('.kable-table').children('table').addClass('pandoc-table');
+
+  // add figcaption style to table captions
+  $('caption').parent('table').addClass("figcaption");
+
+  // initialize posts list
+  if (window.init_posts_list)
+    window.init_posts_list();
+
+  // implmement disqus comment link
+  $('.disqus-comment-count').click(function() {
+    window.headroom_prevent_pin = true;
+    $('#disqus_thread').toggleClass('hidden');
+    if (!$('#disqus_thread').hasClass('hidden')) {
+      var offset = $(this).offset();
+      $(window).resize();
+      $('html, body').animate({
+        scrollTop: offset.top - 35
+      });
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  if (is_downlevel_browser())
+    init_downlevel();
+  else
+    window.addEventListener('WebComponentsReady', init_distill);
+});
+
+</script>
+
+<style type="text/css">
+/* base variables */
+
+/* Edit the CSS properties in this file to create a custom
+   Distill theme. Only edit values in the right column
+   for each row; values shown are the CSS defaults.
+   To return any property to the default,
+   you may set its value to: unset
+   All rows must end with a semi-colon.                      */
+
+/* Optional: embed custom fonts here with `@import`          */
+/* This must remain at the top of this file.                 */
+
+
+
+html {
+  /*-- Main font sizes --*/
+  --title-size:      50px;
+  --body-size:       1.06rem;
+  --code-size:       14px;
+  --aside-size:      12px;
+  --fig-cap-size:    13px;
+  /*-- Main font colors --*/
+  --title-color:     #000000;
+  --header-color:    rgba(0, 0, 0, 0.8);
+  --body-color:      rgba(0, 0, 0, 0.8);
+  --aside-color:     rgba(0, 0, 0, 0.6);
+  --fig-cap-color:   rgba(0, 0, 0, 0.6);
+  /*-- Specify custom fonts ~~~ must be imported above   --*/
+  --heading-font:    sans-serif;
+  --mono-font:       monospace;
+  --body-font:       sans-serif;
+  --navbar-font:     sans-serif;  /* websites + blogs only */
+}
+
+/*-- ARTICLE METADATA --*/
+d-byline {
+  --heading-size:    0.6rem;
+  --heading-color:   rgba(0, 0, 0, 0.5);
+  --body-size:       0.8rem;
+  --body-color:      rgba(0, 0, 0, 0.8);
+}
+
+/*-- ARTICLE TABLE OF CONTENTS --*/
+.d-contents {
+  --heading-size:    18px;
+  --contents-size:   13px;
+}
+
+/*-- ARTICLE APPENDIX --*/
+d-appendix {
+  --heading-size:    15px;
+  --heading-color:   rgba(0, 0, 0, 0.65);
+  --text-size:       0.8em;
+  --text-color:      rgba(0, 0, 0, 0.5);
+}
+
+/*-- WEBSITE HEADER + FOOTER --*/
+/* These properties only apply to Distill sites and blogs  */
+
+.distill-site-header {
+  --title-size:       18px;
+  --text-color:       rgba(255, 255, 255, 0.8);
+  --text-size:        15px;
+  --hover-color:      white;
+  --bkgd-color:       #0F2E3D;
+}
+
+.distill-site-footer {
+  --text-color:       rgba(255, 255, 255, 0.8);
+  --text-size:        15px;
+  --hover-color:      white;
+  --bkgd-color:       #0F2E3D;
+}
+
+/*-- Additional custom styles --*/
+/* Add any additional CSS rules below                      */
+</style>
+<style type="text/css">
+/* base variables */
+
+/* Edit the CSS properties in this file to create a custom
+   Distill theme. Only edit values in the right column
+   for each row; values shown are the CSS defaults.
+   To return any property to the default,
+   you may set its value to: unset
+   All rows must end with a semi-colon.                      */
+
+/* Optional: embed custom fonts here with `@import`          */
+/* This must remain at the top of this file.                 */
+
+
+
+html {
+  /*-- Main font sizes --*/
+  --title-size:      50px;
+  --body-size:       1.06rem;
+  --code-size:       14px;
+  --aside-size:      12px;
+  --fig-cap-size:    15px;
+  /*-- Main font colors --*/
+  --title-color:     #000000;
+  --header-color:    rgba(0, 0, 0, 0.8);
+  --body-color:      rgba(0, 0, 0, 0.8);
+  --aside-color:     rgba(0, 0, 0, 0.6);
+  --fig-cap-color:   rgba(0, 0, 0, 0.6);
+  /*-- Specify custom fonts ~~~ must be imported above   --*/
+  --heading-font:    sans-serif;
+  --mono-font:       monospace;
+  --body-font:       sans-serif;
+  --navbar-font:     sans-serif;  /* websites + blogs only */
+}
+
+/*-- ARTICLE METADATA --*/
+d-byline {
+  --heading-size:    0.6rem;
+  --heading-color:   rgba(0, 0, 0, 0.5);
+  --body-size:       0.8rem;
+  --body-color:      rgba(0, 0, 0, 0.8);
+}
+
+/*-- ARTICLE TABLE OF CONTENTS --*/
+.d-contents {
+  --heading-size:    18px;
+  --contents-size:   13px;
+}
+
+/*-- ARTICLE APPENDIX --*/
+d-appendix {
+  --heading-size:    15px;
+  --heading-color:   rgba(0, 0, 0, 0.65);
+  --text-size:       0.8em;
+  --text-color:      rgba(0, 0, 0, 0.5);
+}
+
+/*-- WEBSITE HEADER + FOOTER --*/
+/* These properties only apply to Distill sites and blogs  */
+
+.distill-site-header {
+  --title-size:       20px;
+  --text-color:       rgba(255, 255, 255, 0.8);
+  --text-size:        20px;
+  --hover-color:      white;
+  --bkgd-color:       #0F2E3D;
+}
+
+.distill-site-footer {
+  --text-color:       rgba(255, 255, 255, 0.8);
+  --text-size:        15px;
+  --hover-color:      white;
+  --bkgd-color:       #0F2E3D;
+}
+
+/*-- Additional custom styles --*/
+/* Add any additional CSS rules below                      */
+
+.distill-site-header .logo img {
+   display: inline-block;
+   background-size: 100% auto;
+   background-repeat: no-repeat;
+   max-height: 41px;
+   width: auto;
+   vertical-align: bottom;
+ }</style>
+<style type="text/css">
+/* base style */
+
+/* FONT FAMILIES */
+
+:root {
+  --heading-default: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono-default: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  --body-default: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
+}
+
+body,
+.posts-list .post-preview p,
+.posts-list .description p {
+  font-family: var(--body-font), var(--body-default);
+}
+
+h1, h2, h3, h4, h5, h6,
+.posts-list .post-preview h2,
+.posts-list .description h2 {
+  font-family: var(--heading-font), var(--heading-default);
+}
+
+d-article div.sourceCode code,
+d-article pre code {
+  font-family: var(--mono-font), var(--mono-default);
+}
+
+
+/*-- TITLE --*/
+d-title h1,
+.posts-list > h1 {
+  color: var(--title-color, black);
+}
+
+d-title h1 {
+  font-size: var(--title-size, 50px);
+}
+
+/*-- HEADERS --*/
+d-article h1,
+d-article h2,
+d-article h3,
+d-article h4,
+d-article h5,
+d-article h6 {
+  color: var(--header-color, rgba(0, 0, 0, 0.8));
+}
+
+/*-- BODY --*/
+d-article > p,  /* only text inside of <p> tags */
+d-article > ul, /* lists */
+d-article > ol {
+  color: var(--body-color, rgba(0, 0, 0, 0.8));
+  font-size: var(--body-size, 1.06rem);
+}
+
+
+/*-- CODE --*/
+d-article div.sourceCode code,
+d-article pre code {
+  font-size: var(--code-size, 14px);
+}
+
+/*-- ASIDE --*/
+d-article aside {
+  font-size: var(--aside-size, 12px);
+  color: var(--aside-color, rgba(0, 0, 0, 0.6));
+}
+
+/*-- FIGURE CAPTIONS --*/
+figure .caption,
+figure figcaption,
+.figure .caption {
+  font-size: var(--fig-cap-size, 13px);
+  color: var(--fig-cap-color, rgba(0, 0, 0, 0.6));
+}
+
+/*-- METADATA --*/
+d-byline h3 {
+  font-size: var(--heading-size, 0.6rem);
+  color: var(--heading-color, rgba(0, 0, 0, 0.5));
+}
+
+d-byline {
+  font-size: var(--body-size, 0.8rem);
+  color: var(--body-color, rgba(0, 0, 0, 0.8));
+}
+
+d-byline a,
+d-article d-byline a {
+  color: var(--body-color, rgba(0, 0, 0, 0.8));
+}
+
+/*-- TABLE OF CONTENTS --*/
+.d-contents nav h3 {
+  font-size: var(--heading-size, 18px);
+}
+
+.d-contents nav a {
+  font-size: var(--contents-size, 13px);
+}
+
+/*-- APPENDIX --*/
+d-appendix h3 {
+  font-size: var(--heading-size, 15px);
+  color: var(--heading-color, rgba(0, 0, 0, 0.65));
+}
+
+d-appendix {
+  font-size: var(--text-size, 0.8em);
+  color: var(--text-color, rgba(0, 0, 0, 0.5));
+}
+
+d-appendix d-footnote-list a.footnote-backlink {
+  color: var(--text-color, rgba(0, 0, 0, 0.5));
+}
+
+/*-- WEBSITE HEADER + FOOTER --*/
+.distill-site-header .title {
+  font-size: var(--title-size, 18px);
+  font-family: var(--navbar-font), var(--heading-default);
+}
+
+.distill-site-header a,
+.nav-dropdown .nav-dropbtn {
+  font-family: var(--navbar-font), var(--heading-default);
+}
+
+.nav-dropdown .nav-dropbtn {
+  color: var(--text-color, rgba(255, 255, 255, 0.8));
+  font-size: var(--text-size, 15px);
+}
+
+.distill-site-header a:hover,
+.nav-dropdown:hover .nav-dropbtn {
+  color: var(--hover-color, white);
+}
+
+.distill-site-header {
+  font-size: var(--text-size, 15px);
+  color: var(--text-color, rgba(255, 255, 255, 0.8));
+  background-color: var(--bkgd-color, #0F2E3D);
+}
+
+.distill-site-footer {
+  font-size: var(--text-size, 15px);
+  color: var(--text-color, rgba(255, 255, 255, 0.8));
+  background-color: var(--bkgd-color, #0F2E3D);
+}
+
+.distill-site-footer a:hover {
+  color: var(--hover-color, white);
+}</style>
+<!--/radix_placeholder_distill-->
+  <script src="../../site_libs/header-attrs-2.32/header-attrs.js"></script>
+  <script src="../../site_libs/kePrint-0.0.1/kePrint.js"></script>
+  <link href="../../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+  <link href="../../site_libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
+  <script src="../../site_libs/bsTable-3.3.7/bootstrapTable.js"></script>
+  <script src="../../site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+  <script src="../../site_libs/popper-2.6.0/popper.min.js"></script>
+  <link href="../../site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
+  <link href="../../site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
+  <script src="../../site_libs/tippy-6.2.7/tippy.umd.min.js"></script>
+  <script src="../../site_libs/anchor-4.2.2/anchor.min.js"></script>
+  <script src="../../site_libs/bowser-1.9.3/bowser.min.js"></script>
+  <script src="../../site_libs/webcomponents-2.0.0/webcomponents.js"></script>
+  <script src="../../site_libs/distill-2.2.21/template.v2.js"></script>
+  <!--radix_placeholder_site_in_header-->
+<script type="text/javascript" cookie-consent="tracking" async src="https://www.googletagmanager.com/gtag/js?id=G-Y6J65ER1LP"></script>
+<script type="text/javascript" cookie-consent="tracking">
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-Y6J65ER1LP');
+</script>
+<!--/radix_placeholder_site_in_header-->
+
+
+</head>
+
+<body>
+
+<!--radix_placeholder_front_matter-->
+
+<script id="distill-front-matter" type="text/json">
+{"title":"DeBERTa vs. UltraBERT: Does a Longer Context Window Help Automated Essay Scoring?","description":"Most transformer encoders used for automated essay scoring can only read the first 512 tokens of an essay. In this post, I compare DeBERTa-v3, a popular encoder with a 512-token limit, to UltraBERT, a new encoder that can read up to 32,000 tokens. Using the PERSUADE 2.0 corpus, I show how much of an essay gets cut off, why the cut falls unevenly on the best essays, and how much a longer context window actually improves agreement with human raters.\n\n(17 min read)","authors":[{"author":"Okan Bulut","authorURL":"http://www.okanbulut.com/","affiliation":"University of Alberta","affiliationURL":"https://www.ualberta.ca","orcidID":"0000-0001-5853-1267"}],"publishedDate":"2026-10-18T00:00:00.000-06:00","citationText":"Bulut, 2026"}
+</script>
+
+<!--/radix_placeholder_front_matter-->
+<!--radix_placeholder_navigation_before_body-->
+<header class="header header--fixed" role="banner">
+<nav class="distill-site-nav distill-site-header">
+<div class="nav-left">
+<a class="logo" href="https://okan.cloud/">
+<img src="../../images/blog_logo.png" alt="Logo"/>
+</a>
+<a href="../../index.html" class="title">Okan Bulut</a>
+<input id="distill-search" class="nav-search hidden" type="text" placeholder="Search..."/>
+</div>
+<div class="nav-right">
+<a href="../../index.html">Home</a>
+<a href="../../about.html">About</a>
+<a href="https://github.com/okanbulut">
+<i class="fa fa-github" aria-hidden="true"></i>
+</a>
+<a href="https://twitter.com/drokanbulut">
+<i class="fa fa-twitter" aria-hidden="true"></i>
+</a>
+<a href="../../index.xml">
+<i class="fa fa-rss" aria-hidden="true"></i>
+</a>
+<a href="javascript:void(0);" class="nav-toggle">&#9776;</a>
+</div>
+</nav>
+</header>
+<!--/radix_placeholder_navigation_before_body-->
+<!--radix_placeholder_site_before_body-->
+<!--/radix_placeholder_site_before_body-->
+
+<div class="d-title">
+<h1>DeBERTa vs. UltraBERT: Does a Longer Context Window Help Automated Essay Scoring?</h1>
+
+<!--radix_placeholder_categories-->
+<div class="dt-tags">
+  <a href="../../index.html#category:automated_scoring" class="dt-tag">automated scoring</a>
+  <a href="../../index.html#category:natural_language_processing" class="dt-tag">natural language processing</a>
+  <a href="../../index.html#category:transformers" class="dt-tag">transformers</a>
+  <a href="../../index.html#category:machine_learning" class="dt-tag">machine learning</a>
+  <a href="../../index.html#category:python" class="dt-tag">python</a>
+</div>
+<!--/radix_placeholder_categories-->
+<p><p>Most transformer encoders used for automated essay scoring can only read the first 512 tokens of an essay. In this post, I compare DeBERTa-v3, a popular encoder with a 512-token limit, to UltraBERT, a new encoder that can read up to 32,000 tokens. Using the PERSUADE 2.0 corpus, I show how much of an essay gets cut off, why the cut falls unevenly on the best essays, and how much a longer context window actually improves agreement with human raters.</p>
+<p>(17 min read)</p></p>
+</div>
+
+<div class="d-byline">
+  Okan Bulut <a href="http://www.okanbulut.com/" class="uri">http://www.okanbulut.com/</a> (University of Alberta)<a href="https://www.ualberta.ca" class="uri">https://www.ualberta.ca</a>
+  
+<br/>2026-10-18
+</div>
+
+<div class="d-article">
+<div class="d-contents d-contents-float">
+<nav class="l-text toc figcaption" id="TOC">
+<h3>Contents</h3>
+<ul>
+<li><a href="#introduction" id="toc-introduction">Introduction</a></li>
+<li><a href="#encoders-tokens-and-context-windows" id="toc-encoders-tokens-and-context-windows">Encoders, Tokens, and Context Windows</a></li>
+<li><a href="#scoring-essays-as-an-ordinal-problem" id="toc-scoring-essays-as-an-ordinal-problem">Scoring Essays as an Ordinal Problem</a></li>
+<li><a href="#example" id="toc-example">Example</a>
+<ul>
+<li><a href="#data" id="toc-data">Data</a></li>
+<li><a href="#reading-and-preparing-the-data" id="toc-reading-and-preparing-the-data">Reading and Preparing the Data</a></li>
+<li><a href="#how-long-are-the-essays" id="toc-how-long-are-the-essays">How Long Are the Essays?</a></li>
+<li><a href="#fine-tuning-the-encoders" id="toc-fine-tuning-the-encoders">Fine-Tuning the Encoders</a></li>
+<li><a href="#results" id="toc-results">Results</a></li>
+<li><a href="#does-reading-more-remove-the-length-bias" id="toc-does-reading-more-remove-the-length-bias">Does Reading More Remove the Length Bias?</a></li>
+<li><a href="#calibration-and-fairness" id="toc-calibration-and-fairness">Calibration and Fairness</a></li>
+</ul></li>
+<li><a href="#concluding-remarks" id="toc-concluding-remarks">Concluding Remarks</a></li>
+</ul>
+</nav>
+</div>
+<figure>
+<img src="deberta_vs_ultrabert.png" alt="Image generated by ChatGPT" />
+<figcaption aria-hidden="true">Image generated by ChatGPT</figcaption>
+</figure>
+<h2 id="introduction">Introduction</h2>
+<p>I recently started a new automated essay scoring (AES) project using thousands of argumentative essays written by middle and high school students. As usual, my first step was to fine-tune a transformer encoder on the essays and see how well its scores agreed with human raters. The model did a good job overall, but its predictions for the top-scoring essays were often a point too low. When I looked at those essays more closely, I noticed something they had in common: they were long. Their writers had developed their arguments over several paragraphs, added counterarguments, and closed with a careful conclusion. Then I checked the model configuration and found a likely reason. The model never saw most of those conclusions. It only read the first 512 tokens of each essay and threw the rest away.</p>
+<p>This is not a bug in a particular model. It is a design limit shared by most of the transformer encoders that the AES community has relied on, such as BERT, RoBERTa, and DeBERTa. These models can only process a fixed number of tokens at once, and for most of them that number is 512. When an essay is longer than that, we have to cut it (i.e., truncate it), and whatever comes after the cut is invisible to the model.</p>
+<p>Recently, a new family of encoders called <strong>UltraBERT</strong> was released with a native context window of 32,000 tokens <span class="citation" data-cites="park2026ultrabert">(<a href="#ref-park2026ultrabert" role="doc-biblioref">Park et al., 2026</a>)</span>. That is long enough to read almost any student essay in full. So, a natural question is: <em>If we let the model read the whole essay, do we get better scores?</em> In this post, I try to answer this question using the PERSUADE 2.0 corpus <span class="citation" data-cites="crossley2024persuade">(<a href="#ref-crossley2024persuade" role="doc-biblioref">Crossley et al., 2024</a>)</span>. I compare DeBERTa-v3 <span class="citation" data-cites="he2023debertav3">(<a href="#ref-he2023debertav3" role="doc-biblioref">He et al., 2023</a>)</span>, which has been a popular choice in recent essay scoring competitions on Kaggle, to UltraBERT. I also run a small experiment that separates two things that usually get mixed together: the benefit of a <em>better model</em> and the benefit of a <em>longer context window</em>.</p>
+<p>Before we begin, I want to note that these are initial findings from an ongoing project. I will be clear about what the results do and do not show at the end of the post.</p>
+<h2 id="encoders-tokens-and-context-windows">Encoders, Tokens, and Context Windows</h2>
+<p>Let’s start with a few terms that we will use throughout the post.</p>
+<ul>
+<li><strong>Encoder</strong>: A transformer model that reads a piece of text and turns it into a set of numerical vectors (i.e., embeddings). For essay scoring, we put a small prediction layer on top of the encoder and <em>fine-tune</em> the whole thing, so that the embeddings learn to capture the features of writing quality that human raters care about.</li>
+<li><strong>Token</strong>: The unit of text that a model actually reads. Tokens are usually words or pieces of words. For example, a tokenizer might split “unbelievable” into “un”, “believ”, and “able”. In the data set used in this post, the median essay has 375 words and about 430 tokens.</li>
+<li><strong>Context window</strong>: The maximum number of tokens an encoder can read at once. For DeBERTa-v3, it is 512 tokens. For UltraBERT, it is 32,768 tokens.</li>
+<li><strong>Truncation</strong>: Cutting the text at the context window limit. The common default is “head” truncation, which keeps the first 512 tokens and drops the rest.</li>
+</ul>
+<p>Why do most encoders stop at 512 tokens? In a standard transformer, every token “attends” to every other token, so the amount of computation grows with the <em>square</em> of the text length. Doubling the length quadruples the cost. UltraBERT gets around this with a mixed design: two out of every three layers use <em>local</em> attention (each token only looks at 128 tokens on either side), and every third layer uses <em>global</em> attention over the entire text. This keeps the computation manageable while still letting information flow across the whole document.</p>
+<p>The two models we compare in this post are as follows:</p>
+<ul>
+<li><strong>DeBERTa-v3-base</strong> <span class="citation" data-cites="he2023debertav3">(<a href="#ref-he2023debertav3" role="doc-biblioref">He et al., 2023</a>)</span>: 184 million parameters, 512-token context window. DeBERTa-v3 is known for its <em>disentangled attention</em>, which represents the content and the position of each word separately. It has been one of the strongest encoders for text classification tasks, including essay scoring.</li>
+<li><strong>UltraBERT-150M</strong> <span class="citation" data-cites="park2026ultrabert">(<a href="#ref-park2026ultrabert" role="doc-biblioref">Park et al., 2026</a>)</span>: 152 million parameters, 32,768-token context window. It is a newer encoder trained on a large mix of web, educational, scientific, and code data. Its model card recommends noticeably lower learning rates for fine-tuning than other encoders, which we will follow.</li>
+</ul>
+<h2 id="scoring-essays-as-an-ordinal-problem">Scoring Essays as an Ordinal Problem</h2>
+<p>Holistic essay scores (e.g., 1 to 6) are neither simple categories nor continuous numbers. They are <em>ordinal</em>: a 5 is better than a 4, but the difference between 4 and 5 is not necessarily the same as between 1 and 2. If we treat the scores as unordered categories, the model does not know that predicting a 5 for a 6-point essay is a smaller mistake than predicting a 1. If we treat them as continuous numbers, we impose an equal spacing that may not exist.</p>
+<p>In this post, I use the <strong>CORN</strong> approach (Conditional Ordinal Regression for Neural networks) <span class="citation" data-cites="shi2023corn">(<a href="#ref-shi2023corn" role="doc-biblioref">Shi et al., 2023</a>)</span>. The idea is simple. Instead of predicting the score directly, the model answers a series of yes/no questions:</p>
+<ul>
+<li>Is the score higher than 1?</li>
+<li><em>If yes</em>, is the score higher than 2?</li>
+<li><em>If yes</em>, is the score higher than 3?</li>
+<li>… and so on, up to “Is the score higher than 5?”</li>
+</ul>
+<p>Each question is learned only from the essays for which the previous answer was “yes”. Multiplying the conditional probabilities gives us the probability that the score exceeds each level, and from those we get a full probability distribution over the six scores. The final predicted score is the number of “yes” answers.</p>
+<p>To evaluate the models, I use <strong>quadratic weighted kappa (QWK)</strong> <span class="citation" data-cites="cohen1968weighted">(<a href="#ref-cohen1968weighted" role="doc-biblioref">Cohen, 1968</a>)</span>, the standard agreement statistic in AES. QWK compares model scores to human scores and penalizes disagreements by the <em>square</em> of their size. So, missing by two points costs four times as much as missing by one point. A QWK of 1 means perfect agreement, and 0 means agreement no better than chance. I also report <em>exact agreement</em> (the percentage of essays where the model and human scores are identical) and <em>adjacent agreement</em> (the percentage within one point).</p>
+<h2 id="example">Example</h2>
+<h3 id="data">Data</h3>
+<p>For this example, I use the <a href="https://github.com/scrosseye/persuade_corpus_2.0">PERSUADE 2.0 corpus</a> <span class="citation" data-cites="crossley2024persuade">(<a href="#ref-crossley2024persuade" role="doc-biblioref">Crossley et al., 2024</a>)</span>. It includes about 26,000 argumentative essays written by students in grades 6 to 12 in response to 15 different prompts. Each essay received a holistic score from 1 to 6. The scores were assigned by two trained raters using an SAT-style rubric, and every disagreement was resolved by a third rater. Before adjudication, the two raters agreed with a weighted kappa of .745.</p>
+<p>The data files are too large for GitHub, so they are shared through the links in the <a href="https://github.com/scrosseye/persuade_corpus_2.0">PERSUADE 2.0 README</a>. There are two files: <code>persuade_corpus_2.0_train.csv</code> and <code>persuade_corpus_2.0_test.csv</code>. The test file comes as a password-protected zip file, and the password is given in the README. Please note that the corpus is shared under the <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> license, so it can be used for non-commercial purposes only.</p>
+<h3 id="reading-and-preparing-the-data">Reading and Preparing the Data</h3>
+<p>In this section, I will show how to read the two files into Python and prepare them for essay scoring. All the steps are also available as a single script, <a href="code/prepare_persuade.py">prepare_persuade.py</a>. After downloading the data, you can put the two files in the same folder as the script and run <code>python prepare_persuade.py</code>. The script saves a clean file with one row per essay.</p>
+<p>The first thing to know about the PERSUADE 2.0 files is that they are organized by <em>discourse element</em>, not by essay. Each row is one part of an essay (e.g., a lead, a position, a claim, or a piece of evidence), and the essay-level information, such as the full text, the holistic score, the prompt, and the student’s demographics, is repeated on every row of the same essay. Since we score whole essays, we need to read both files, stack them, and keep only one row per essay. These are the columns we need:</p>
+<ul>
+<li><strong>essay_id_comp</strong>: A unique identifier for each essay</li>
+<li><strong>full_text</strong>: The full text of the essay</li>
+<li><strong>holistic_essay_score</strong>: The holistic score from 1 to 6</li>
+<li><strong>prompt_name</strong>: The name of the writing prompt (15 prompts)</li>
+<li><strong>task</strong>: Independent or text-dependent (i.e., source-based) writing</li>
+<li><strong>ell_status</strong>: Whether the student is an English language learner</li>
+</ul>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hashlib</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the two files and stack them</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>files <span class="op">=</span> [<span class="st">&quot;persuade_corpus_2.0_train.csv&quot;</span>, <span class="st">&quot;persuade_corpus_2.0_test.csv&quot;</span>]</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> pd.concat([pd.read_csv(f, low_memory<span class="op">=</span><span class="va">False</span>) <span class="cf">for</span> f <span class="kw">in</span> files], ignore_index<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(rows.shape)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep one row per essay and give the columns shorter names</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>essays <span class="op">=</span> (rows[[<span class="st">&quot;essay_id_comp&quot;</span>, <span class="st">&quot;full_text&quot;</span>, <span class="st">&quot;holistic_essay_score&quot;</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;prompt_name&quot;</span>, <span class="st">&quot;task&quot;</span>, <span class="st">&quot;ell_status&quot;</span>]]</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>          .drop_duplicates(<span class="st">&quot;essay_id_comp&quot;</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>          .rename(columns<span class="op">=</span>{<span class="st">&quot;essay_id_comp&quot;</span>: <span class="st">&quot;essay_id&quot;</span>,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;full_text&quot;</span>: <span class="st">&quot;text&quot;</span>,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;holistic_essay_score&quot;</span>: <span class="st">&quot;score&quot;</span>})</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>          .reset_index(drop<span class="op">=</span><span class="va">True</span>))</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(essays.shape)</span></code></pre></div>
+</div>
+<pre><code>(285383, 27)
+(25996, 6)</code></pre>
+<p>The output shows that the two files contain 285,383 discourse elements from 25,996 essays. Before we move on, there are three small problems in the data that we need to fix. They are easy to miss, but each of them can cause trouble later.</p>
+<ol type="1">
+<li><strong>Damaged IDs</strong>: The IDs are supposed to be 12-character codes such as “423A1CA112E2”. For 112 essays, however, the IDs look like “4.45649E+11”. This happens when a file is opened in spreadsheet software, which reads some IDs as numbers in scientific notation and rounds them. The original IDs cannot be recovered from these files, so I replace them with a new ID created from the essay text itself. The same text always produces the same ID, so the replacement is stable across runs.</li>
+<li><strong>Duplicate essays</strong>: Two essays appear twice under different IDs. If one copy ends up in the training set and the other in the test set, the model would be tested on an essay it has already seen. So, I keep only the first copy. To catch copies that differ only in spacing or capitalization, I compare the texts after collapsing white space and converting them to lower case.</li>
+<li><strong>Blank values</strong>: In the ELL status column, 92 values contain a single space instead of being empty. I convert them to missing values, so they are not counted as a separate group in the subgroup analyses.</li>
+</ol>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Problem 1: IDs damaged by spreadsheet software (e.g., &quot;4.45649E+11&quot;)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>valid <span class="op">=</span> essays[<span class="st">&quot;essay_id&quot;</span>].<span class="bu">str</span>.fullmatch(<span class="vs">r&quot;</span><span class="pp">[0-9A-F]</span><span class="op">{12}</span><span class="vs">&quot;</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;Damaged IDs:&quot;</span>, (<span class="op">~</span>valid).<span class="bu">sum</span>())</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> text_id(text):</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;A stable ID made from the essay text itself.&quot;&quot;&quot;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    key <span class="op">=</span> re.sub(<span class="vs">r&quot;</span><span class="dv">\s</span><span class="op">+</span><span class="vs">&quot;</span>, <span class="st">&quot; &quot;</span>, text).strip().lower()</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="st">&quot;X&quot;</span> <span class="op">+</span> hashlib.sha1(key.encode()).hexdigest()[:<span class="dv">11</span>].upper()</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>essays.loc[<span class="op">~</span>valid, <span class="st">&quot;essay_id&quot;</span>] <span class="op">=</span> essays.loc[<span class="op">~</span>valid, <span class="st">&quot;text&quot;</span>].<span class="bu">map</span>(text_id)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Problem 2: the same essay text appearing under two IDs</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>key <span class="op">=</span> essays[<span class="st">&quot;text&quot;</span>].<span class="bu">str</span>.replace(<span class="vs">r&quot;</span><span class="dv">\s</span><span class="op">+</span><span class="vs">&quot;</span>, <span class="st">&quot; &quot;</span>, regex<span class="op">=</span><span class="va">True</span>).<span class="bu">str</span>.strip().<span class="bu">str</span>.lower()</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;Duplicate texts:&quot;</span>, key.duplicated().<span class="bu">sum</span>())</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>essays <span class="op">=</span> essays[<span class="op">~</span>key.duplicated()].reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Problem 3: blank strings that actually mean &quot;missing&quot;</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>essays[<span class="st">&quot;ell_status&quot;</span>] <span class="op">=</span> essays[<span class="st">&quot;ell_status&quot;</span>].<span class="bu">str</span>.strip().replace(<span class="st">&quot;&quot;</span>, np.nan)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(essays.shape)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(essays[<span class="st">&quot;score&quot;</span>].value_counts().sort_index())</span></code></pre></div>
+</div>
+<pre><code>Damaged IDs: 112
+Duplicate texts: 2
+(25994, 6)
+score
+1    1028
+2    5699
+3    8368
+4    6730
+5    3296
+6     873
+Name: count, dtype: int64</code></pre>
+<p>After cleaning, we have 25,994 essays. The score distribution shows that most essays received a 2, 3, or 4, while scores of 1 and 6 are relatively rare. This is typical for holistic essay scores, and it is one of the reasons why exact agreement with human raters is harder to achieve at the two ends of the scale.</p>
+<p>The last step is to split the essays into training (70%), development (10%), and test (20%) sets. The training set is used to fine-tune the models, the development set is used to choose the best checkpoint during training and to calibrate the models, and the test set is used only once, for the final evaluation. I <em>stratify</em> the split by prompt and score. That is, within each combination of prompt and score (e.g., essays scored 4 for “Exploring Venus”), I shuffle the essays and cut them into the three sets. This way, each set has the same mix of prompts and score levels.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> stratified_split(df, dev_frac<span class="op">=</span><span class="fl">0.1</span>, test_frac<span class="op">=</span><span class="fl">0.2</span>, seed<span class="op">=</span><span class="dv">42</span>):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Shuffle each prompt x score cell and cut it into test, dev, and train.&quot;&quot;&quot;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    rng <span class="op">=</span> np.random.default_rng(seed)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    split <span class="op">=</span> pd.Series(<span class="st">&quot;train&quot;</span>, index<span class="op">=</span>df.index)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _, cell <span class="kw">in</span> df.groupby([<span class="st">&quot;prompt_name&quot;</span>, <span class="st">&quot;score&quot;</span>]):</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        idx <span class="op">=</span> rng.permutation(cell.index.to_numpy())</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        n_test <span class="op">=</span> <span class="bu">round</span>(<span class="bu">len</span>(idx) <span class="op">*</span> test_frac)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        n_dev <span class="op">=</span> <span class="bu">round</span>(<span class="bu">len</span>(idx) <span class="op">*</span> dev_frac)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        split[idx[:n_test]] <span class="op">=</span> <span class="st">&quot;test&quot;</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        split[idx[n_test:n_test <span class="op">+</span> n_dev]] <span class="op">=</span> <span class="st">&quot;dev&quot;</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> split</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>essays[<span class="st">&quot;split&quot;</span>] <span class="op">=</span> stratified_split(essays)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(essays[<span class="st">&quot;split&quot;</span>].value_counts())</span></code></pre></div>
+</div>
+<pre><code>split
+train    18197
+test      5199
+dev       2598
+Name: count, dtype: int64</code></pre>
+<p>All three models below use the exact same split, and all the numbers I report come from the 5,199 essays in the test set, which none of the models saw during training. If you run the script yourself, you will get sets of the same size, but not necessarily the same essays in each set, because my project code shuffles the essays in a slightly different order. So, your results may differ a little from the ones reported here.</p>
+<h3 id="how-long-are-the-essays">How Long Are the Essays?</h3>
+<p>Before training anything, let’s see how big the truncation problem is. The code below shows how I counted the tokens in each essay. Note that the two models use different tokenizers, so the same essay can have a slightly different number of tokens for each model.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> AutoTokenizer</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>tokenizer <span class="op">=</span> AutoTokenizer.from_pretrained(<span class="st">&quot;microsoft/deberta-v3-base&quot;</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Tokenize without special tokens and without truncation</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>token_ids <span class="op">=</span> tokenizer(essays[<span class="st">&quot;text&quot;</span>].tolist(),</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>                      add_special_tokens<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                      truncation<span class="op">=</span><span class="va">False</span>)[<span class="st">&quot;input_ids&quot;</span>]</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>essays[<span class="st">&quot;n_tokens&quot;</span>] <span class="op">=</span> [<span class="bu">len</span>(ids) <span class="cf">for</span> ids <span class="kw">in</span> token_ids]</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># DeBERTa reserves two positions for its special tokens ([CLS] and [SEP])</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>budget <span class="op">=</span> <span class="dv">512</span> <span class="op">-</span> <span class="dv">2</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>((essays[<span class="st">&quot;n_tokens&quot;</span>] <span class="op">&gt;</span> budget).mean())</span></code></pre></div>
+</div>
+<p>With the DeBERTa tokenizer, <strong>36% of the essays are longer than 512 tokens</strong>. That is already a lot. But the more interesting part is <em>which</em> essays are long. The following figure shows the percentage of essays that exceed the limit at each score level.</p>
+<div class="layout-chunk" data-layout="l-body-outset">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>trunc</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='st'>"data/truncation_by_score.csv"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>tokenizer</span> <span class='op'>==</span> <span class='st'>"DeBERTa-v3-base"</span>, <span class='va'>score</span> <span class='op'>!=</span> <span class='st'>"all"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>trunc</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span><span class='op'>(</span><span class='va'>score</span><span class='op'>)</span>, y <span class='op'>=</span> <span class='va'>share_over_512</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_col</a></span><span class='op'>(</span>fill <span class='op'>=</span> <span class='st'>"#2a78d6"</span>, width <span class='op'>=</span> <span class='fl'>0.6</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_text.html'>geom_text</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>label <span class='op'>=</span> <span class='fu'>scales</span><span class='fu'>::</span><span class='fu'><a href='https://scales.r-lib.org/reference/percent_format.html'>percent</a></span><span class='op'>(</span><span class='va'>share_over_512</span>, accuracy <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span>            vjust <span class='op'>=</span> <span class='op'>-</span><span class='fl'>0.5</span>, size <span class='op'>=</span> <span class='fl'>4.2</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_y_continuous</a></span><span class='op'>(</span>labels <span class='op'>=</span> <span class='fu'>scales</span><span class='fu'>::</span><span class='va'><a href='https://scales.r-lib.org/reference/percent_format.html'>percent</a></span>, limits <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1.08</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Human score"</span>, y <span class='op'>=</span> <span class='st'>"Essays longer than 512 tokens"</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='va'>theme_blog</span></span></code></pre>
+</div>
+<div class="figure"><span style="display:block;" id="fig:fig-truncation"></span>
+<img src="deberta-vs-ultrabert-in-automated-essay-scoring_files/figure-html5/fig-truncation-1.png" alt="Percentage of essays longer than 512 tokens (DeBERTa tokenizer) by human score" width="768" />
+<p class="caption">
+Figure 1: Percentage of essays longer than 512 tokens (DeBERTa tokenizer) by human score
+</p>
+</div>
+</div>
+<p>The figure shows that truncation is not random at all. Only about 5% to 15% of the essays scored 1, 2, or 3 are cut. In contrast, 95% of the essays scored 5 and almost every essay scored 6 are cut. In other words, a 512-token model reads the weakest essays in full, but it never sees the end of the strongest essays. This is exactly where writers tend to place their counterarguments, rebuttals, and conclusions.</p>
+<p>With the UltraBERT tokenizer, the median essay has 444 tokens, 95% of the essays have fewer than 908 tokens, and the longest essay has 2,126 tokens. So, I set UltraBERT’s maximum length to 2,048 tokens. At this length, only <strong>one</strong> essay out of 25,994 is truncated.</p>
+<h3 id="fine-tuning-the-encoders">Fine-Tuning the Encoders</h3>
+<p>Next, I fine-tuned three models. The first two are the obvious comparison: DeBERTa-v3-base at 512 tokens and UltraBERT-150M at 2,048 tokens. The third one is the key to this post: <strong>UltraBERT-150M restricted to 512 tokens</strong>. This third model has UltraBERT’s architecture and pre-training, but it reads exactly as much text as DeBERTa. This allows us to split the overall difference into two parts:</p>
+<ul>
+<li><strong>Architecture effect</strong>: UltraBERT (512) vs. DeBERTa (512). Same amount of text, different model.</li>
+<li><strong>Context effect</strong>: UltraBERT (2048) vs. UltraBERT (512). Same model, more text.</li>
+</ul>
+<p>This type of design is often called an <em>ablation</em>: we remove one ingredient at a time to see how much each one contributes. The code below shows the core of the model. An encoder produces a vector for each token, I average these vectors into a single essay vector (i.e., mean pooling), and a CORN layer with five outputs turns it into the yes/no answers described above.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch <span class="im">import</span> nn</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn.functional <span class="im">as</span> F</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> AutoModel</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> EncoderCORN(nn.Module):</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, model_name, num_classes<span class="op">=</span><span class="dv">6</span>, dropout<span class="op">=</span><span class="fl">0.1</span>):</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Load the weights in float32 (more on this below)</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.encoder <span class="op">=</span> AutoModel.from_pretrained(model_name, dtype<span class="op">=</span>torch.float32)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.dropout <span class="op">=</span> nn.Dropout(dropout)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>        <span class="co"># One output per question: &quot;Is the score higher than k?&quot;</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.head <span class="op">=</span> nn.Linear(<span class="va">self</span>.encoder.config.hidden_size, num_classes <span class="op">-</span> <span class="dv">1</span>)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, input_ids, attention_mask):</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>        hidden <span class="op">=</span> <span class="va">self</span>.encoder(input_ids<span class="op">=</span>input_ids,</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>                              attention_mask<span class="op">=</span>attention_mask).last_hidden_state</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Mean pooling: average the token vectors, ignoring padding</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>        mask <span class="op">=</span> attention_mask.unsqueeze(<span class="op">-</span><span class="dv">1</span>).<span class="bu">float</span>()</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>        pooled <span class="op">=</span> (hidden <span class="op">*</span> mask).<span class="bu">sum</span>(<span class="dv">1</span>) <span class="op">/</span> mask.<span class="bu">sum</span>(<span class="dv">1</span>)</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.head(<span class="va">self</span>.dropout(pooled))</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> corn_loss(logits, y):</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Question k is trained only on essays with y &gt;= k (y = score - 1).&quot;&quot;&quot;</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>    total, count <span class="op">=</span> <span class="fl">0.0</span>, <span class="dv">0</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(logits.shape[<span class="dv">1</span>]):</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>        keep <span class="op">=</span> y <span class="op">&gt;=</span> k</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>        target <span class="op">=</span> (y[keep] <span class="op">&gt;</span> k).<span class="bu">float</span>()</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>        total <span class="op">+=</span> F.binary_cross_entropy_with_logits(logits[keep, k], target, reduction<span class="op">=</span><span class="st">&quot;sum&quot;</span>)</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>        count <span class="op">+=</span> <span class="bu">int</span>(keep.<span class="bu">sum</span>())</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> total <span class="op">/</span> count</span></code></pre></div>
+</div>
+<p>All models were trained for four epochs with the AdamW optimizer, an effective batch size of 16 essays, and a linear learning rate schedule with warm-up. Following its model card, UltraBERT used a lower learning rate (1e-5 vs. 2e-5 for DeBERTa) and slightly different optimizer settings. Every 500 steps, I evaluated the model on the development set and kept the checkpoint with the highest QWK. I trained all the models on a single Apple Silicon computer, which is a nice reminder of how far these tools have come.</p>
+<aside>
+A practical tip: recent versions of the <strong>transformers</strong> library load model weights in the data type they were saved in. DeBERTa-v3 is saved in half precision (float16), which caused my training to crash on Apple’s GPU. Passing <code>dtype=torch.float32</code> when loading the model fixed it.
+</aside>
+<p>The following figure shows how the QWK on the development set changed during training.</p>
+<div class="layout-chunk" data-layout="l-body-outset">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>curves</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='st'>"data/training_curves.csv"</span><span class='op'>)</span></span>
+<span><span class='va'>last_points</span> <span class='op'>&lt;-</span> <span class='va'>curves</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>model</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>step</span> <span class='op'>==</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>step</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>curves</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>step</span>, y <span class='op'>=</span> <span class='va'>dev_qwk</span>, color <span class='op'>=</span> <span class='va'>model</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span>linewidth <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span>size <span class='op'>=</span> <span class='fl'>2.5</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggrepel.slowkow.com/reference/geom_text_repel.html'>geom_text_repel</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>last_points</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>label <span class='op'>=</span> <span class='va'>model</span><span class='op'>)</span>, size <span class='op'>=</span> <span class='fl'>3.8</span>,</span>
+<span>                  nudge_x <span class='op'>=</span> <span class='fl'>250</span>, hjust <span class='op'>=</span> <span class='fl'>0</span>, direction <span class='op'>=</span> <span class='st'>"y"</span>,</span>
+<span>                  segment.color <span class='op'>=</span> <span class='cn'>NA</span>, show.legend <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_manual.html'>scale_color_manual</a></span><span class='op'>(</span>values <span class='op'>=</span> <span class='va'>model_colors</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_x_continuous</a></span><span class='op'>(</span>limits <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>6300</span><span class='op'>)</span>, breaks <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>4500</span>, <span class='fl'>1500</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Training step"</span>, y <span class='op'>=</span> <span class='st'>"Development QWK"</span>, color <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='va'>theme_blog</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>legend.position <span class='op'>=</span> <span class='st'>"none"</span><span class='op'>)</span></span></code></pre>
+</div>
+<div class="figure"><span style="display:block;" id="fig:fig-curves"></span>
+<img src="deberta-vs-ultrabert-in-automated-essay-scoring_files/figure-html5/fig-curves-1.png" alt="Development-set QWK during training" width="768" />
+<p class="caption">
+Figure 2: Development-set QWK during training
+</p>
+</div>
+</div>
+<p>Two patterns stand out. First, both UltraBERT models learn faster than DeBERTa. After only 1,500 steps, the full-context UltraBERT model already reaches a development QWK of .874, which is higher than DeBERTa’s best value (.865) at the end of training. Second, the two UltraBERT models behave differently in the second half of training. The 512-token version peaks at step 2,000 and then slowly declines, while the 2,048-token version keeps improving until step 3,500. When the model can only see the beginning of long essays, it seems to run out of useful information sooner and starts to overfit.</p>
+<h3 id="results">Results</h3>
+<p>Now let’s look at the results on the test set. The table below summarizes the three models. For the calibration column, I first applied <em>temperature scaling</em> <span class="citation" data-cites="guo2017calibration">(<a href="#ref-guo2017calibration" role="doc-biblioref">Guo et al., 2017</a>)</span>, a simple method that adjusts the model’s confidence using the development set. I will come back to calibration later.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>summary_tab</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='st'>"data/model_summary.csv"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/transmute.html'>transmute</a></span><span class='op'>(</span>Model <span class='op'>=</span> <span class='va'>model</span>,</span>
+<span>            `Max tokens` <span class='op'>=</span> <span class='va'>max_tokens</span>,</span>
+<span>            `Truncated` <span class='op'>=</span> <span class='fu'>scales</span><span class='fu'>::</span><span class='fu'><a href='https://scales.r-lib.org/reference/percent_format.html'>percent</a></span><span class='op'>(</span><span class='va'>share_truncated</span>, accuracy <span class='op'>=</span> <span class='fl'>0.1</span><span class='op'>)</span>,</span>
+<span>            QWK <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span><span class='op'>(</span><span class='va'>qwk</span>, <span class='fl'>3</span><span class='op'>)</span>,</span>
+<span>            `QWK (mean of prompts)` <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span><span class='op'>(</span><span class='va'>qwk_prompt_avg</span>, <span class='fl'>3</span><span class='op'>)</span>,</span>
+<span>            `Exact` <span class='op'>=</span> <span class='fu'>scales</span><span class='fu'>::</span><span class='fu'><a href='https://scales.r-lib.org/reference/percent_format.html'>percent</a></span><span class='op'>(</span><span class='va'>exact</span>, accuracy <span class='op'>=</span> <span class='fl'>0.1</span><span class='op'>)</span>,</span>
+<span>            `Adjacent` <span class='op'>=</span> <span class='fu'>scales</span><span class='fu'>::</span><span class='fu'><a href='https://scales.r-lib.org/reference/percent_format.html'>percent</a></span><span class='op'>(</span><span class='va'>adjacent</span>, accuracy <span class='op'>=</span> <span class='fl'>0.1</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span><span class='va'>summary_tab</span>, caption <span class='op'>=</span> <span class='st'>"Test-set results (5,199 essays)"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://rdrr.io/pkg/kableExtra/man/kable_styling.html'>kable_styling</a></span><span class='op'>(</span>bootstrap_options <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"striped"</span>, <span class='st'>"hover"</span><span class='op'>)</span>, full_width <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span></code></pre>
+</div>
+<table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:tab-summary">Table 1: </span><span id="tab:tab-summary">Table 2: </span>Test-set results (5,199 essays)
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Model
+</th>
+<th style="text-align:right;">
+Max tokens
+</th>
+<th style="text-align:left;">
+Truncated
+</th>
+<th style="text-align:right;">
+QWK
+</th>
+<th style="text-align:right;">
+QWK (mean of prompts)
+</th>
+<th style="text-align:left;">
+Exact
+</th>
+<th style="text-align:left;">
+Adjacent
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+DeBERTa-v3-base (512)
+</td>
+<td style="text-align:right;">
+512
+</td>
+<td style="text-align:left;">
+35.6%
+</td>
+<td style="text-align:right;">
+0.861
+</td>
+<td style="text-align:right;">
+0.806
+</td>
+<td style="text-align:left;">
+67.2%
+</td>
+<td style="text-align:left;">
+98.8%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+UltraBERT-150M (512)
+</td>
+<td style="text-align:right;">
+512
+</td>
+<td style="text-align:left;">
+38.0%
+</td>
+<td style="text-align:right;">
+0.875
+</td>
+<td style="text-align:right;">
+0.824
+</td>
+<td style="text-align:left;">
+68.7%
+</td>
+<td style="text-align:left;">
+98.8%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+UltraBERT-150M (2048)
+</td>
+<td style="text-align:right;">
+2048
+</td>
+<td style="text-align:left;">
+0.0%
+</td>
+<td style="text-align:right;">
+0.882
+</td>
+<td style="text-align:right;">
+0.831
+</td>
+<td style="text-align:left;">
+71.0%
+</td>
+<td style="text-align:left;">
+99.4%
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>UltraBERT at 2,048 tokens is the best model on every measure: QWK increases from .861 to .882, the average QWK across the 15 prompts increases from .806 to .831, and exact agreement increases from 67.2% to 71.0%. These numbers are also well above the .745 agreement between two human raters. However, this is not a fair comparison, because the model is compared to the <em>adjudicated</em> score while the human value compares two individual raters.</p>
+<p>A difference of .021 in QWK may not sound like much. Is it real, or could it be due to the particular essays in the test set? To answer this question, I used a <strong>paired bootstrap</strong>. I resampled the 5,199 test essays with replacement 2,000 times, computed the QWK difference between the two models on each resample, and took the middle 95% of these differences as a confidence interval. “Paired” means both models are always evaluated on the same resampled essays, which removes the noise that comes from essays being harder or easier.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>decomp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='st'>"data/decomposition.csv"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/grep.html'>grepl</a></span><span class='op'>(</span><span class='st'>"^QWK"</span>, <span class='va'>comparison</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>Gain <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sprintf.html'>sprintf</a></span><span class='op'>(</span><span class='st'>"%+.3f [%+.3f, %+.3f]"</span>, <span class='va'>qwk_gain</span>, <span class='va'>ci_low</span>, <span class='va'>ci_high</span><span class='op'>)</span>,</span>
+<span>         Subset <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sprintf.html'>sprintf</a></span><span class='op'>(</span><span class='st'>"%s (n = %s)"</span>, <span class='va'>subset</span>, <span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span><span class='op'>(</span><span class='va'>n</span>, big.mark <span class='op'>=</span> <span class='st'>","</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>Subset</span>, <span class='va'>comparison</span>, <span class='va'>Gain</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_wider.html'>pivot_wider</a></span><span class='op'>(</span>names_from <span class='op'>=</span> <span class='va'>comparison</span>, values_from <span class='op'>=</span> <span class='va'>Gain</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span><span class='va'>decomp</span>, caption <span class='op'>=</span> <span class='st'>"QWK gains with 95% bootstrap confidence intervals"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://rdrr.io/pkg/kableExtra/man/kable_styling.html'>kable_styling</a></span><span class='op'>(</span>bootstrap_options <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"striped"</span>, <span class='st'>"hover"</span><span class='op'>)</span>, full_width <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span></code></pre>
+</div>
+<table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:tab-decomp">Table 3: </span><span id="tab:tab-decomp">Table 4: </span>QWK gains with 95% bootstrap confidence intervals
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Subset
+</th>
+<th style="text-align:left;">
+Architecture (UltraBERT vs DeBERTa, both 512)
+</th>
+<th style="text-align:left;">
+Context (UltraBERT 2048 vs 512)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+All test essays (n = 5,199)
+</td>
+<td style="text-align:left;">
++0.013 [+0.008, +0.019]
+</td>
+<td style="text-align:left;">
++0.007 [+0.002, +0.013]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Longer than 512 tokens (n = 2,007)
+</td>
+<td style="text-align:left;">
++0.031 [+0.015, +0.047]
+</td>
+<td style="text-align:left;">
++0.045 [+0.030, +0.060]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+512 tokens or shorter (n = 3,192)
+</td>
+<td style="text-align:left;">
++0.009 [-0.003, +0.022]
+</td>
+<td style="text-align:left;">
++0.001 [-0.009, +0.012]
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>This table is the heart of the post, so let’s read it row by row.</p>
+<ul>
+<li><strong>All test essays</strong>: Of the total gain of .021, about two-thirds (+.013) comes from the architecture and about one-third (+.007) comes from the longer context window. Both confidence intervals exclude zero, so both effects are unlikely to be due to chance. Still, the context effect is the smaller and less certain of the two.</li>
+<li><strong>Essays longer than 512 tokens</strong>: Here the picture changes. Reading the full essay improves QWK by +.045, which is <em>larger</em> than the architecture effect (+.031). For these essays, QWK goes from .735 (DeBERTa) to .766 (UltraBERT at 512) to .811 (UltraBERT at 2,048).</li>
+<li><strong>Essays of 512 tokens or shorter</strong>: The context effect is essentially zero (+.001), which is exactly what we should expect. If the essay already fits into 512 tokens, a longer window cannot show the model anything new. This row works as a built-in sanity check for the experiment.</li>
+</ul>
+<p>The same pattern appears at the prompt level. Some prompts naturally produce longer essays than others. For example, only 11% of the test essays written for “Cell phones at school” are longer than 512 tokens, compared to 76% for “Summer projects”. If the context window matters, the gain from UltraBERT should be larger for prompts with more long essays.</p>
+<div class="layout-chunk" data-layout="l-body-outset">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>prompts</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='st'>"data/per_prompt_qwk.csv"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>prompt</span>, <span class='va'>model</span>, <span class='va'>qwk</span>, <span class='va'>share_long</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_wider.html'>pivot_wider</a></span><span class='op'>(</span>names_from <span class='op'>=</span> <span class='va'>model</span>, values_from <span class='op'>=</span> <span class='va'>qwk</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>gain <span class='op'>=</span> <span class='va'>`UltraBERT-150M (2048)`</span> <span class='op'>-</span> <span class='va'>`DeBERTa-v3-base (512)`</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>prompts</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>share_long</span>, y <span class='op'>=</span> <span class='va'>gain</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_abline.html'>geom_hline</a></span><span class='op'>(</span>yintercept <span class='op'>=</span> <span class='fl'>0</span>, color <span class='op'>=</span> <span class='st'>"grey60"</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span>method <span class='op'>=</span> <span class='st'>"lm"</span>, se <span class='op'>=</span> <span class='cn'>FALSE</span>, color <span class='op'>=</span> <span class='st'>"grey70"</span>, linewidth <span class='op'>=</span> <span class='fl'>0.8</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span>size <span class='op'>=</span> <span class='fl'>3</span>, color <span class='op'>=</span> <span class='st'>"#2a78d6"</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggrepel.slowkow.com/reference/geom_text_repel.html'>geom_text_repel</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>label <span class='op'>=</span> <span class='va'>prompt</span><span class='op'>)</span>, size <span class='op'>=</span> <span class='fl'>3.3</span>, color <span class='op'>=</span> <span class='st'>"grey20"</span>,</span>
+<span>                  min.segment.length <span class='op'>=</span> <span class='fl'>0.3</span>, segment.color <span class='op'>=</span> <span class='st'>"grey70"</span>, seed <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_x_continuous</a></span><span class='op'>(</span>labels <span class='op'>=</span> <span class='fu'>scales</span><span class='fu'>::</span><span class='va'><a href='https://scales.r-lib.org/reference/percent_format.html'>percent</a></span>, expand <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/expansion.html'>expansion</a></span><span class='op'>(</span>mult <span class='op'>=</span> <span class='fl'>0.12</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Share of test essays longer than 512 tokens"</span>,</span>
+<span>       y <span class='op'>=</span> <span class='st'>"QWK gain (UltraBERT 2048 - DeBERTa 512)"</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='va'>theme_blog</span></span></code></pre>
+</div>
+<div class="figure"><span style="display:block;" id="fig:fig-prompts"></span>
+<img src="deberta-vs-ultrabert-in-automated-essay-scoring_files/figure-html5/fig-prompts-1.png" alt="QWK gain of UltraBERT (2048) over DeBERTa (512) by prompt" width="864" />
+<p class="caption">
+Figure 3: QWK gain of UltraBERT (2048) over DeBERTa (512) by prompt
+</p>
+</div>
+</div>
+<p>The correlation between the share of long essays and the QWK gain across the 15 prompts is about .54. Prompts like “Distance learning”, “Seeking multiple opinions”, and “Mandatory extracurricular activities”, where more than half of the essays are long, show gains of around .05. Most prompts with few long essays show little or no gain. With only 15 prompts, this is a rough pattern rather than a precise estimate, and there are exceptions: “The Face on Mars” gains .057 even though only 26% of its essays are long, while “Grades for extracurricular activities” gets slightly <em>worse</em>. Still, the overall direction agrees with the table above.</p>
+<h3 id="does-reading-more-remove-the-length-bias">Does Reading More Remove the Length Bias?</h3>
+<p>So far, the story seems simple: let the model read the whole essay, and it will score long essays better. But there is a catch, and it is an important one for anyone who uses AES in practice. AES models are known to reward length, partly because longer essays tend to receive higher scores from human raters, too. A model can learn “long means good” as a shortcut without learning <em>why</em> long essays are often better.</p>
+<p>To check this, I compared the average error (model score minus human score) for short and long essays <em>at the same human score</em>. If a model scores essays based on their quality, the error should not depend on length once we hold the human score constant.</p>
+<div class="layout-chunk" data-layout="l-page">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>bias</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='st'>"data/error_by_score_length.csv"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>n</span> <span class='op'>&gt;=</span> <span class='fl'>20</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>   <span class='co'># drop cells with very few essays</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>model <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span><span class='op'>(</span><span class='va'>model</span>, levels <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>model_colors</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>bias</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span><span class='op'>(</span><span class='va'>score</span><span class='op'>)</span>, y <span class='op'>=</span> <span class='va'>mean_error</span>, color <span class='op'>=</span> <span class='va'>length</span>, group <span class='op'>=</span> <span class='va'>length</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_abline.html'>geom_hline</a></span><span class='op'>(</span>yintercept <span class='op'>=</span> <span class='fl'>0</span>, color <span class='op'>=</span> <span class='st'>"grey60"</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span>linewidth <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span>size <span class='op'>=</span> <span class='fl'>2.8</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_wrap.html'>facet_wrap</a></span><span class='op'>(</span><span class='op'>~</span> <span class='va'>model</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_manual.html'>scale_color_manual</a></span><span class='op'>(</span>values <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"512 tokens or shorter"</span> <span class='op'>=</span> <span class='st'>"grey55"</span>,</span>
+<span>                                <span class='st'>"Longer than 512 tokens"</span> <span class='op'>=</span> <span class='st'>"#6250d6"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Human score"</span>, y <span class='op'>=</span> <span class='st'>"Average error (model - human)"</span>, color <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='va'>theme_blog</span></span></code></pre>
+</div>
+<div class="figure"><span style="display:block;" id="fig:fig-bias"></span>
+<img src="deberta-vs-ultrabert-in-automated-essay-scoring_files/figure-html5/fig-bias-1.png" alt="Average error (model - human) by human score and essay length" width="1056" />
+<p class="caption">
+Figure 4: Average error (model - human) by human score and essay length
+</p>
+</div>
+</div>
+<p>The figure shows that <strong>all three models still reward length</strong>. For example, among essays that human raters scored 2, DeBERTa over-scores long essays by 0.87 points on average but short essays by only 0.23 points. The full-context UltraBERT model reduces this gap (0.66 vs. 0.15), but it does not close it. Among essays scored 5, short essays are <em>under</em>-scored by 0.8 to 1.0 points by every model. So, the longer context window makes the scores more accurate, but it does not teach the model to stop using length as a signal. In fact, among the essays scored 4, the correlation between essay length and the predicted score is about .42 to .44 for all three models.</p>
+<p>This finding matters because length is easy to game. A student (or a chatbot) can add sentences without adding substance. I will test this directly in a future post by padding essays with irrelevant text and measuring how much the scores inflate.</p>
+<h3 id="calibration-and-fairness">Calibration and Fairness</h3>
+<p>Two more results are worth mentioning briefly.</p>
+<ul>
+<li><strong>Calibration</strong>: A model is <em>well calibrated</em> when its confidence matches its accuracy. For example, among the essays where it is 80% confident, it should be right about 80% of the time. Before temperature scaling, all three models were overconfident, and UltraBERT at 2,048 tokens was the most overconfident one (expected calibration error = .18). After temperature scaling, all three models were well calibrated (expected calibration error between .015 and .028). The lesson: never use the raw probabilities of a fine-tuned encoder for decisions such as sending uncertain essays to human raters. Calibrate them first.</li>
+<li><strong>Subgroup differences</strong>: Following <span class="citation" data-cites="williamson2012framework">Williamson et al. (<a href="#ref-williamson2012framework" role="doc-biblioref">2012</a>)</span>, I computed the standardized mean difference (SMD) between model and human scores for students identified as English language learners (ELL) and non-ELL students. For all three models, the SMDs were small (between -.07 and .09), well below the .10 threshold that is commonly used to flag subgroup differences.</li>
+</ul>
+<h2 id="concluding-remarks">Concluding Remarks</h2>
+<p>In this post, I compared DeBERTa-v3 and UltraBERT for automated essay scoring using the PERSUADE 2.0 corpus. Here are the main takeaways:</p>
+<ol type="1">
+<li><strong>Truncation is not neutral.</strong> At 512 tokens, about a third of the essays are cut, but almost all of them are high-scoring essays. A 512-token model systematically sees less of the best writing.</li>
+<li><strong>UltraBERT outperformed DeBERTa</strong> (QWK .882 vs. .861), and the difference was unlikely to be due to chance.</li>
+<li><strong>Most of the gain came from the model, not the context window.</strong> When both models read the same 512 tokens, UltraBERT was still better (+.013). Reading the full essay added a further +.007 overall.</li>
+<li><strong>The context window matters where it should.</strong> For essays longer than 512 tokens, reading the whole essay improved QWK by +.045. For shorter essays, it made no difference.</li>
+<li><strong>A longer context window does not remove length bias.</strong> All three models over-score long essays and under-score short ones at the same human score.</li>
+</ol>
+<p>I also want to be clear about the limitations of these initial findings. Each model was trained only once (with a single random seed), so small differences, especially the overall context effect, should be confirmed with more runs. All results come from a within-prompt setting, where the models were trained and tested on essays written for the same prompts. In a follow-up analysis, I am training the models on some prompts and testing them on prompts they have never seen. This is a much harder and more realistic test for AES systems. Finally, UltraBERT is a very new model, so I pinned the exact version I used, and the results may change as the model is updated.</p>
+<p>If you work with essays that are often longer than a few hundred words, I would recommend trying a long-context encoder like UltraBERT. Just remember to check how your model treats essay length before you trust its scores. Happy scoring!</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
+<div id="ref-cohen1968weighted" class="csl-entry" role="listitem">
+Cohen, J. (1968). Weighted kappa: Nominal scale agreement provision for scaled disagreement or partial credit. <em>Psychological Bulletin</em>, <em>70</em>(4), 213–220. <a href="https://doi.org/10.1037/h0026256">https://doi.org/10.1037/h0026256</a>
+</div>
+<div id="ref-crossley2024persuade" class="csl-entry" role="listitem">
+Crossley, S. A., Tian, Y., Baffour, P., Franklin, A., Benner, M., &amp; Boser, U. (2024). A large-scale corpus for assessing written argumentation: <span>PERSUADE</span> 2.0. <em>Assessing Writing</em>, <em>61</em>, 100865. <a href="https://doi.org/10.1016/j.asw.2024.100865">https://doi.org/10.1016/j.asw.2024.100865</a>
+</div>
+<div id="ref-guo2017calibration" class="csl-entry" role="listitem">
+Guo, C., Pleiss, G., Sun, Y., &amp; Weinberger, K. Q. (2017). On calibration of modern neural networks. <em>Proceedings of the 34th International Conference on Machine Learning</em>, 1321–1330.
+</div>
+<div id="ref-he2023debertav3" class="csl-entry" role="listitem">
+He, P., Gao, J., &amp; Chen, W. (2023). <span>DeBERTaV3</span>: Improving <span>DeBERTa</span> using <span>ELECTRA</span>-style pre-training with gradient-disentangled embedding sharing. <em>International Conference on Learning Representations</em>. <a href="https://arxiv.org/abs/2111.09543">https://arxiv.org/abs/2111.09543</a>
+</div>
+<div id="ref-park2026ultrabert" class="csl-entry" role="listitem">
+Park, J., Lee, T., &amp; Kang, J. (2026). <em><span>UltraBERT</span>: Beyond the limit of <span>BERT</span> pre-training</em>. <a href="https://arxiv.org/abs/2610.15028">https://arxiv.org/abs/2610.15028</a>
+</div>
+<div id="ref-shi2023corn" class="csl-entry" role="listitem">
+Shi, X., Cao, W., &amp; Raschka, S. (2023). Deep neural networks for rank-consistent ordinal regression based on conditional probabilities. <em>Pattern Analysis and Applications</em>, <em>26</em>, 941–955. <a href="https://doi.org/10.1007/s10044-023-01181-9">https://doi.org/10.1007/s10044-023-01181-9</a>
+</div>
+<div id="ref-williamson2012framework" class="csl-entry" role="listitem">
+Williamson, D. M., Xi, X., &amp; Breyer, F. J. (2012). A framework for evaluation and use of automated scoring. <em>Educational Measurement: Issues and Practice</em>, <em>31</em>(1), 2–13. <a href="https://doi.org/10.1111/j.1745-3992.2011.00223.x">https://doi.org/10.1111/j.1745-3992.2011.00223.x</a>
+</div>
+</div>
+<!--radix_placeholder_article_footer-->
+<div class="article-footer">
+  <p class="social_footer">
+    <span class="disqus-comments">
+      <i class="fas fa-comments"></i>
+      &nbsp;
+      <span class="disqus-comment-count" data-disqus-identifier="posts/2026-10-18-deberta-vs-ultrabert-in-automated-essay-scoring/">Comment on this article</span>
+    </span>
+    <span class="article-sharing">
+      Share: &nbsp;
+      <a href="https://twitter.com/share?text=DeBERTa%20vs.%20UltraBERT%3A%20Does%20a%20Longer%20Context%20Window%20Help%20Automated%20Essay%20Scoring%3F&amp;url=https%3A%2F%2Fokan.cloud%2Fposts%2F2026-10-18-deberta-vs-ultrabert-in-automated-essay-scoring%2F" aria-label="share on twitter">
+        <i class="fab fa-twitter" aria-hidden="true"></i>
+      </a>
+      <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Fokan.cloud%2Fposts%2F2026-10-18-deberta-vs-ultrabert-in-automated-essay-scoring%2F&amp;title=DeBERTa%20vs.%20UltraBERT%3A%20Does%20a%20Longer%20Context%20Window%20Help%20Automated%20Essay%20Scoring%3F" aria-label="share on linkedin">
+        <i class="fab fa-linkedin" aria-hidden="true"></i>
+      </a>
+      <a href="https://pinterest.com/pin/create/link/?url=https%3A%2F%2Fokan.cloud%2Fposts%2F2026-10-18-deberta-vs-ultrabert-in-automated-essay-scoring%2F&amp;description=DeBERTa%20vs.%20UltraBERT%3A%20Does%20a%20Longer%20Context%20Window%20Help%20Automated%20Essay%20Scoring%3F" aria-label="share on pinterest">
+        <i class="fab fa-pinterest" aria-hidden="true"></i>
+      </a>
+      <a href="https://www.facebook.com/sharer/sharer.php?s=100&amp;p[url]=https%3A%2F%2Fokan.cloud%2Fposts%2F2026-10-18-deberta-vs-ultrabert-in-automated-essay-scoring%2F" aria-label="share on facebook">
+        <i class="fab fa-facebook" aria-hidden="true"></i>
+      </a>
+    </span>
+  </p>
+  <script id="dsq-count-scr" src="https://okan-cloud.disqus.com/count.js" async></script>
+  <div id="disqus_thread" class="hidden"></div>
+  <script type="text/javascript" cookie-consent="functionality">
+var disqus_config = function () {
+  this.page.url = 'https://okan.cloud/posts/2026-10-18-deberta-vs-ultrabert-in-automated-essay-scoring/';
+  this.page.identifier = 'posts/2026-10-18-deberta-vs-ultrabert-in-automated-essay-scoring/';
+};
+(function() {
+  var d = document, s = d.createElement('script');
+  s.src = 'https://okan-cloud.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();
+</script>
+  <p>
+    <div class="subscribe"><form method='post' action='https://blogtrottr.com'>
+  <p>Enjoy this blog? Get notified of new posts via email:</p>
+  <input type='text' name='btr_email' />
+  <input type='hidden' name='btr_url'
+         value='https://okan.cloud/index.xml'/>
+  <input type='hidden' name='schedule_type' value='0' />
+  <input type='submit' value='Subscribe' />
+</form>
+</div>
+  </p>
+</div>
+<!--/radix_placeholder_article_footer-->
+</div>
+
+<div class="d-appendix">
+</div>
+
+
+<!--radix_placeholder_site_after_body-->
+<!--/radix_placeholder_site_after_body-->
+<!--radix_placeholder_appendices-->
+<div class="appendix-bottom">
+  <h3 id="references">References</h3>
+  <div id="references-listing"></div>
+  <h3 id="reuse">Reuse</h3>
+  <p>Text and figures are licensed under Creative Commons Attribution <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. The figures that have been reused from other sources don't fall under this license and can be recognized by a note in their caption: "Figure from ...".</p>
+  <h3 id="citation">Citation</h3>
+  <p>For attribution, please cite this work as</p>
+  <pre class="citation-appendix short">Bulut (2026, Oct. 18). Okan Bulut: DeBERTa vs. UltraBERT: Does a Longer Context Window Help Automated Essay Scoring?. Retrieved from https://okan.cloud/posts/2026-10-18-deberta-vs-ultrabert-in-automated-essay-scoring/</pre>
+  <p>BibTeX citation</p>
+  <pre class="citation-appendix long">@misc{bulut2026deberta,
+  author = {Bulut, Okan},
+  title = {Okan Bulut: DeBERTa vs. UltraBERT: Does a Longer Context Window Help Automated Essay Scoring?},
+  url = {https://okan.cloud/posts/2026-10-18-deberta-vs-ultrabert-in-automated-essay-scoring/},
+  year = {2026}
+}</pre>
+</div>
+<!--/radix_placeholder_appendices-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<!--radix_placeholder_navigation_after_body--><html><body>
+<div class="distill-site-nav distill-site-footer">
+<p>© Copyright Okan Bulut 2024. Made with the R <a href="https://rstudio.github.io/distill/">distill</a> package.</p>
+</div>
+<!--/radix_placeholder_navigation_after_body-->
+</body></html>
+
+
+</body>
+
+</html>
